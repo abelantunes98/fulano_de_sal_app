@@ -1,5 +1,8 @@
-# fulano-de-sal-app
-Aplicativo Mobile para o sistema de marmitaria
+# Fulano De Sal
+> Aplicativo Mobile para o sistema de marmitaria
 
-## Instalação
-yarn install
+## Tecnologias utilizadas:
+* React Native
+
+## Para executar o projeto:
+Para conseguir executar o projeto siga os passos do [CONTRIBUTING.md](CONTRIBUTING.md).
