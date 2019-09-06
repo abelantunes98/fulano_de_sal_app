@@ -25,6 +25,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 
 import Login from './src/pages/Login';
+import Cadastro from './src/pages/Cadastro';
 
 const App = () => {
 
