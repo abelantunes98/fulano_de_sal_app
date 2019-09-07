@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { KeyboardAvoidingView,
     TextInput,
@@ -6,9 +5,10 @@ import { KeyboardAvoidingView,
     StyleSheet,
     Text,
     View,
-    Image
+    ScrollView,
 } from 'react-native';
 
+import { Card, Button, Input } from "react-native-elements";
 
 export default Login = () => {
     const [email, setEmail] = useState('');
@@ -19,48 +19,55 @@ export default Login = () => {
     };
 
     return (
-        <View style={styles.mainContainer}>
-
-            {
-                //<Image src={logo}></Image>
-            }            
-
-            <KeyboardAvoidingView style={styles.loginForm}>
-                <Text style={styles.inputText} >Email</Text>
-                <TextInput
-                    autoCapitalize='none'
-                    value={email}
-                    onChangeText={setEmail}
-                    style={styles.input}
-                />
-                <Text style={styles.inputText} >Senha</Text>
-                <TextInput
-                    autoCapitalize='none'
-                    value={password}
-                    onChangeText={setPassword}
-                    style={styles.input}
-                    secureTextEntry={true}
-                />
-                <TouchableOpacity 
-                    style={styles.loginButton}
-                    onPress={handleSubmit}
-                >
-                   <Text>Entrar</Text>
-                </TouchableOpacity>
-            </KeyboardAvoidingView>
-
-            <View style={styles.forgotContainer}>
-               <TouchableOpacity style={styles.forgotButton}>
-               <Text>Esqueci a senha</Text>
-               </TouchableOpacity> 
+        <ScrollView style={styles.mainContainer}>
+            <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Card containerStyle={{ width: 300, paddingTop: 10 }}>
+                    <Text style={{ textAlign: "center", fontSize: 28 }}>Login</Text>
+                    <Text style={styles.text} >Email</Text>
+                    <Input
+                        placeholder="Digite seu Email"
+                        autoCapitalize='none'
+                        value={email}
+                        onChangeText={setEmail}
+                        style={styles.input}
+                    />
+                    <Text style={styles.text} >Senha</Text>
+                    <Input
+                        placeholder="Digite sua Senha"
+                        autoCapitalize='none'
+                        value={password}
+                        onChangeText={setPassword}
+                        containerStyle={styles.input}
+                        secureTextEntry={true}
+                    />    
+                    <View style={styles.forgotContainer}>
+                        <Button 
+                            title="Entrar"
+                            onPress={handleSubmit}
+                            buttonStyle={styles.btnEntrar}
+                        />
+                        <Button 
+                            title="Esqueci a senha"
+                            buttonStyle={styles.btnEntrar}
+                        />
+                        <Button 
+                            title="Cadastrar-se"
+                            buttonStyle={styles.btnEntrar}
+                        />
+                        <Button 
+                            title="Entrar com Google"
+                            buttonStyle={styles.btnEntrar}
+                        />
+                    </View>
+                </Card>
             </View>
-
-        </View>
+        </ScrollView>
     );
 };
 const styles = StyleSheet.create({
     mainContainer: {
-
+        flex: 1,
+        paddingTop: 20
     },
     loginForm: {
 
@@ -68,13 +75,16 @@ const styles = StyleSheet.create({
     input: {
 
     },
-    loginButton: {
-
+    text: {
+        paddingTop: 10,
+        fontSize: 16
+    },
+    btnEntrar: {
+        marginTop: 10
     },
     forgotContainer: {
-
+        marginTop: 10
     },
     forgotButton: {
-
     },
 });

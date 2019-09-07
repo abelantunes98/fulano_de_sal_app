@@ -27,11 +27,8 @@ import {
 import Login from './src/pages/Login';
 import Cadastro from './src/pages/Cadastro';
 
-const App = () => {
+import Routes from "./src/routes";
 
-  return (
-    <Login></Login>
-  );
-};
-
-export default App;
+export default function App() {
+  	return <Routes />
+}
