@@ -20,8 +20,8 @@ export default Login = () => {
 
     return (
         <ScrollView style={styles.mainContainer}>
-            <View style={{ justifyContent: "center", alignItems: "center" }}>
-                <Card containerStyle={{ width: 300, paddingTop: 10 }}>
+            <View style={ styles.infoContainer }>
+                <Card containerStyle={ styles.inforCard }>
                     <Text style={{ textAlign: "center", fontSize: 28 }}>Login</Text>
                     <Text style={styles.text} >Email</Text>
                     <Input
@@ -69,11 +69,18 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingTop: 20
     },
+    infoContainer: {
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	inforCard: {
+		width: 300,
+		paddingTop: 10,
+		marginBottom: 20,
+	},
     loginForm: {
-
     },
     input: {
-
     },
     text: {
         paddingTop: 10,

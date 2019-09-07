@@ -4,9 +4,11 @@ import { KeyboardAvoidingView,
     TouchableOpacity,
     StyleSheet,
     Text,
-    View,
+	View,
+	ScrollView
 } from 'react-native';
 
+import { Card, Button, Input } from "react-native-elements";
 
 export default Cadastro = () => {
 	const [email, setEmail] = useState('');
@@ -19,82 +21,97 @@ export default Cadastro = () => {
    	
    	}
 
-
     return (
-        <View style={styles.mainContainer}>
+		<ScrollView style={styles.mainContainer}>
+			<View style={ styles.infoContainer }>
+				<Card containerStyle={ styles.inforCard }>
+					<Text style={{ textAlign: "center", fontSize: 28 }}>Cadastrar</Text>
+					
+					<Text style={styles.text} >Nome</Text>
+					<Input
+                        placeholder="Digite seu nome"
+                        autoCapitalize='none'
+                        value={name}
+                        onChangeText={setName}
+                        style={styles.input}
+					/>
 
-            <KeyboardAvoidingView style={styles.signUpForm}>
-            	<Text style={styles.inputText} >Nome</Text>
-	            <TextInput
-	                value={name}
-	                onChangeText={setName}
-	                style={styles.input}
-	            />
+					<Text style={styles.text} >Email</Text>
+					<Input
+                        placeholder="Digite seu email"
+                        autoCapitalize='none'
+                        value={email}
+                        onChangeText={setEmail}
+                        style={styles.input}
+					/>
 
-            	<Text style={styles.inputText} >Email</Text>
-	            <TextInput
-	                autoCapitalize='none'
-	                value={email}
-	                onChangeText={setEmail}
-	                style={styles.input}
-	            />
+					<Text style={styles.text} >Senha</Text>
+					<Input
+                        placeholder="Digite sua senha"
+                        autoCapitalize='none'
+                        value={password}
+                        onChangeText={setPassword}
+                        style={styles.input}
+                    />
 
-            	<Text style={styles.inputText} >Senha</Text>
-	            <TextInput
-	                autoCapitalize='none'
-	                value={password}
-	                onChangeText={setPassword}
-	                style={styles.input}
-	                secureTextEntry={true}
-	            />
+					<Text style={styles.text} >Telefone</Text>
+					<Input
+                        placeholder="Digite seu telefone"
+                        autoCapitalize='none'
+                        value={telNumber}
+                        onChangeText={setTelNumber}
+                        style={styles.input}
+                    />
 
-            	<Text style={styles.inputText} >Telefone</Text>
-	            <TextInput
-	                autoCapitalize='none'
-	                value={telNumber}
-	                onChangeText={setTelNumber}
-	                style={styles.input}
-	            />
-
-            	<Text style={styles.inputText} >Endereço</Text>
-	            <TextInput
-	                autoCapitalize='none'
-	                value={address}
-	                onChangeText={setAddress}
-	                style={styles.input}
-	            />
-	            <TouchableOpacity 
-	            	style={styles.signUpButton}
-	            	onPress={handleSignUp}
-	            >
-	               <Text>Cadastrar</Text>
-	            </TouchableOpacity>
-	            <TouchableOpacity style={styles.signUpCancel}>
-	               <Text>Cancelar</Text>
-	            </TouchableOpacity>
-	        </KeyboardAvoidingView>
-        </View>
+					<Text style={styles.text} >Endereço</Text>
+					<Input
+                        placeholder="Digite seu endereço"
+                        autoCapitalize='none'
+                        value={address}
+                        onChangeText={setAddress}
+                        style={styles.input}
+					/>
+					<View style={ styles.buttonContainer }>
+						<Button 
+							title="Cadastrar"
+							buttonStyle={styles.button}
+						/>
+						<Button 
+							title="Cancelar"
+							buttonStyle={styles.button}
+						/>
+					</View>
+				</Card>
+			</View>
+		</ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
 	mainContainer: {
-
+		flex: 1,
+		paddingTop: 20
 	},
-
-	inputText: {
-
+	infoContainer: {
+		justifyContent: "center",
+		alignItems: "center",
+	},
+	inforCard: {
+		width: 300,
+		paddingTop: 10,
+		marginBottom: 20,
+	},
+	buttonContainer: {
+		marginTop: 10,
+	},
+	text: {
+		paddingTop: 10
 	},
 
 	input: {
-
 	},
 
-	signUpButton: {
-
-	},
-
-	signUpCancel: {
-
+	button: {
+		marginTop: 10
 	},
 })
