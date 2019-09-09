@@ -14,7 +14,7 @@ export default createAppContainer(
     }, {
         defaultNavigationOptions: {
             headerStyle:{
-                backgroundColor: "#1385F7"
+                backgroundColor: "#76DC4E"
             },
             headerTitleStyle: {
                 color: "#FFF"
