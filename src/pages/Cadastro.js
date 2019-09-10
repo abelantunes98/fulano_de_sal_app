@@ -24,7 +24,7 @@ export default Cadastro = () => {
    	}
 
     return (
-		<ScrollView style={styles.mainContainer}>
+		<ScrollView contentContainerStyle={ styles.mainContainer }>
 			<KeyboardAvoidingView>
 				<View style={ styles.infoContainer }>
 					<Card containerStyle={ styles.inforCard }>
@@ -152,38 +152,34 @@ export default Cadastro = () => {
 
 const styles = StyleSheet.create({
 	mainContainer: {
-		flex: 1,
-		paddingTop: 15
+		flexGrow : 1, 
+        justifyContent : 'center',
 	},
-
 	infoContainer: {
 		justifyContent: "center",
 		alignItems: "center",
 	},
-
 	inforCard: {
-		width: 300,
+		width: 400,
 		paddingTop: 10,
 		marginBottom: 20,
 	},
-
 	buttonContainer: {
+		flexDirection: "row",
+		justifyContent: "space-around",
 		marginTop: 10,
 	},
-
+	button: {
+		marginTop: 10,
+        backgroundColor: "#76DC4E",
+        width: 115,
+	},
 	text: {
 		paddingTop: 10
 	},
-
 	input: {
 	},
-
 	icons: {
 		paddingRight: 10
-	},
-
-	button: {
-		marginTop: 10,
-		backgroundColor: "#76DC4E"
 	},
 })

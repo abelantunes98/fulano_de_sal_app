@@ -8,9 +8,9 @@ import Cadastro from "./pages/Cadastro";
 
 export default createAppContainer(
     createStackNavigator({
-        Cadastro,
         Login,
-        
+        Cadastro,
+
     }, {
         defaultNavigationOptions: {
             headerStyle:{

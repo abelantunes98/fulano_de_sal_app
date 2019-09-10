@@ -9,6 +9,8 @@ import { KeyboardAvoidingView,
 } from 'react-native';
 
 import { Card, Button, Input } from "react-native-elements";
+import IconFont from 'react-native-vector-icons/FontAwesome';
+import IconMaterial from "react-native-vector-icons/MaterialCommunityIcons";
 
 export default Login = () => {
     const [email, setEmail] = useState('');
@@ -19,64 +21,79 @@ export default Login = () => {
     };
 
     return (
-        <ScrollView style={styles.mainContainer}>
-            <View style={ styles.infoContainer }>
-                <Card containerStyle={ styles.inforCard }>
-                    <Text style={{ textAlign: "center", fontSize: 28 }}>Login</Text>
-                    <Text style={styles.text} >Email</Text>
-                    <Input
-                        placeholder="Digite seu Email"
-                        autoCapitalize='none'
-                        value={email}
-                        onChangeText={setEmail}
-                        style={styles.input}
-                    />
-                    <Text style={styles.text} >Senha</Text>
-                    <Input
-                        placeholder="Digite sua Senha"
-                        autoCapitalize='none'
-                        value={password}
-                        onChangeText={setPassword}
-                        containerStyle={styles.input}
-                        secureTextEntry={true}
-                    />    
-                    <View style={styles.forgotContainer}>
-                        <Button 
-                            title="Entrar"
-                            onPress={handleSubmit}
-                            buttonStyle={styles.btnEntrar}
+        <ScrollView contentContainerStyle={ styles.mainContainer }>
+            <KeyboardAvoidingView>
+                <View style={ styles.infoContainer }>
+                    <Card containerStyle={ styles.inforCard }>
+                        <Text style={{ textAlign: "center", fontSize: 28 }}>Entrar</Text>
+                        <Text style={styles.text} >Email</Text>
+                        <Input
+                            leftIcon={
+                                <IconFont
+                                    name='envelope'
+                                    size={15}
+                                    color='black'
+                                    style={ styles.icons }
+                                />
+                            }
+                            placeholder="Digite seu email"
+                            keyboardType="email-address"
+                            value={email}
+                            onChangeText={setEmail}
+                            style={styles.input}
                         />
+                        <Text style={styles.text} >Senha</Text>
+                        <Input
+                            leftIcon={
+                                <IconFont
+                                    name='user-secret'
+                                    size={15}
+                                    color='black'
+                                    style={ styles.icons }
+                                />
+                            }
+                            placeholder="Digite sua senha"
+                            secureTextEntry={true}
+                            value={password}
+                            onChangeText={setPassword}
+                            containerStyle={styles.input}
+                            secureTextEntry={true}
+                        />    
+                        <View style={styles.forgotContainer}>
+                            <Button 
+                                title="Entrar"
+                                onPress={handleSubmit}
+                                buttonStyle={styles.button}
+                            />
+                            <Button 
+                                title="Cadastrar-se"
+                                buttonStyle={styles.button}
+                            />
+                        </View>
                         <Button 
-                            title="Esqueci a senha"
-                            buttonStyle={styles.btnEntrar}
+                            title="Esqueceu a senha ?"
+                            type="clear"
+                            buttonStyle={styles.btnEsqueceuSenha}
                         />
-                        <Button 
-                            title="Cadastrar-se"
-                            buttonStyle={styles.btnEntrar}
-                        />
-                        <Button 
-                            title="Entrar com Google"
-                            buttonStyle={styles.btnEntrar}
-                        />
-                    </View>
-                </Card>
-            </View>
+                    </Card>
+                </View>
+            </KeyboardAvoidingView>
         </ScrollView>
     );
 };
 const styles = StyleSheet.create({
     mainContainer: {
-        flex: 1,
-        paddingTop: 20
+        flexGrow : 1, 
+        justifyContent : 'center',
     },
     infoContainer: {
 		justifyContent: "center",
 		alignItems: "center",
 	},
 	inforCard: {
-		width: 300,
+		width: 400,
 		paddingTop: 10,
-		marginBottom: 20,
+        marginBottom: 20,
 	},
     loginForm: {
     },
@@ -84,13 +101,23 @@ const styles = StyleSheet.create({
     },
     text: {
         paddingTop: 10,
-        fontSize: 16
-    },
-    btnEntrar: {
-        marginTop: 10
+        fontSize: 16,
     },
     forgotContainer: {
-        marginTop: 10
+        flexDirection: "row",
+        justifyContent: "space-around",
+        marginTop: 10,
+    },
+    button: {
+        marginTop: 10,
+        backgroundColor: "#76DC4E",
+        width: 115,
+    },
+    btnEsqueceuSenha: {
+        marginTop: 10,
+    },
+    icons: {
+        paddingRight: 10,
     },
     forgotButton: {
     },
