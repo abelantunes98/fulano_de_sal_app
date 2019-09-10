@@ -1,5 +1,3 @@
-import React from "react";
-import { Image } from "react-native";
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack"
 
@@ -8,13 +6,17 @@ import Cadastro from "./pages/Cadastro";
 
 export default createAppContainer(
     createStackNavigator({
-        Login,
-        Cadastro,
-
+        Login:{
+            screen:Login
+        },
+        Cadastro:{
+            screen:Cadastro
+        }
+       
     }, {
         defaultNavigationOptions: {
             headerStyle:{
-                backgroundColor: "#76DC4E"
+                backgroundColor: "#0f6124"
             },
             headerTitleStyle: {
                 color: "#FFF"

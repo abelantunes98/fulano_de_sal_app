@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
+import React, {Component} from 'react';
 import { KeyboardAvoidingView,
-    TextInput,
-    TouchableOpacity,
     StyleSheet,
     Text,
     View,
@@ -10,77 +8,83 @@ import { KeyboardAvoidingView,
 
 import { Card, Button, Input } from "react-native-elements";
 import IconFont from 'react-native-vector-icons/FontAwesome';
-import IconMaterial from "react-native-vector-icons/MaterialCommunityIcons";
+  
+class Login extends Component {
 
-export default Login = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+    constructor(props){
+        super(props);
+        
+    }
 
-    function handleSubmit() {
+    handleSubmit() {
         
     };
 
-    return (
-        <ScrollView contentContainerStyle={ styles.mainContainer }>
-            <KeyboardAvoidingView>
-                <View style={ styles.infoContainer }>
-                    <Card containerStyle={ styles.inforCard }>
-                        <Text style={{ textAlign: "center", fontSize: 28 }}>Entrar</Text>
-                        <Text style={styles.text} >Email</Text>
-                        <Input
-                            leftIcon={
-                                <IconFont
-                                    name='envelope'
-                                    size={15}
-                                    color='black'
-                                    style={ styles.icons }
-                                />
-                            }
-                            placeholder="Digite seu email"
-                            keyboardType="email-address"
-                            value={email}
-                            onChangeText={setEmail}
-                            style={styles.input}
-                        />
-                        <Text style={styles.text} >Senha</Text>
-                        <Input
-                            leftIcon={
-                                <IconFont
-                                    name='user-secret'
-                                    size={15}
-                                    color='black'
-                                    style={ styles.icons }
-                                />
-                            }
-                            placeholder="Digite sua senha"
-                            secureTextEntry={true}
-                            value={password}
-                            onChangeText={setPassword}
-                            containerStyle={styles.input}
-                            secureTextEntry={true}
-                        />    
-                        <View style={styles.forgotContainer}>
-                            <Button 
-                                title="Entrar"
-                                onPress={handleSubmit}
-                                buttonStyle={styles.button}
+    
+
+    render(){
+
+        return (
+            <ScrollView contentContainerStyle={ styles.mainContainer }>
+                <KeyboardAvoidingView>
+                    <View style={ styles.infoContainer }>
+                        <Card containerStyle={ styles.inforCard }>
+                            <Text style={{ textAlign: "center", fontSize: 28 }}>Entrar</Text>
+                            <Text style={styles.text} >Email</Text>
+                            <Input
+                                leftIcon={
+                                    <IconFont
+                                        name='envelope'
+                                        size={15}
+                                        color='black'
+                                        style={ styles.icons }
+                                    />
+                                }
+                                placeholder="Digite seu email"
+                                keyboardType="email-address"
+                                style={styles.input}
                             />
+                            <Text style={styles.text} >Senha</Text>
+                            <Input
+                                leftIcon={
+                                    <IconFont
+                                        name='user-secret'
+                                        size={15}
+                                        color='black'
+                                        style={ styles.icons }
+                                    />
+                                }
+                                placeholder="Digite sua senha"
+                                secureTextEntry={true}
+                                containerStyle={styles.input}
+                                secureTextEntry={true}
+                            />    
+                            <View style={styles.forgotContainer}>
+                                <Button 
+                                    title="Entrar"
+                                    buttonStyle={styles.button}
+                                />
+                                <Button 
+                                    title="Cadastrar-se"
+                                    buttonStyle={styles.button}
+                                    onPress={()=>{this.props.navigation.navigate('Cadastro')}}
+                                />
+                            </View>
                             <Button 
-                                title="Cadastrar-se"
-                                buttonStyle={styles.button}
+                                title="Esqueceu a senha ?"
+                                type="clear"
+                                buttonStyle={styles.btnEsqueceuSenha}
                             />
-                        </View>
-                        <Button 
-                            title="Esqueceu a senha ?"
-                            type="clear"
-                            buttonStyle={styles.btnEsqueceuSenha}
-                        />
-                    </Card>
-                </View>
-            </KeyboardAvoidingView>
-        </ScrollView>
-    );
+                        </Card>
+                    </View>
+                </KeyboardAvoidingView>
+            </ScrollView>
+        );
+    }
 };
+
+export default Login;
+
 const styles = StyleSheet.create({
     mainContainer: {
         flexGrow : 1, 
@@ -91,9 +95,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	inforCard: {
-		width: 400,
-		paddingTop: 10,
-        marginBottom: 20,
+        width: "97%",
 	},
     loginForm: {
     },
@@ -110,7 +112,7 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: 10,
-        backgroundColor: "#76DC4E",
+        backgroundColor: "#0f6124",
         width: 115,
     },
     btnEsqueceuSenha: {
