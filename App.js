@@ -26,6 +26,7 @@ import {
 
 import Login from './src/pages/Login';
 import Cadastro from './src/pages/Cadastro';
+import { createAppContainer } from 'react-navigation';
 
 import Routes from "./src/routes";
 
