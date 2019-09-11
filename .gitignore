@@ -1,6 +1,9 @@
 # Created by https://www.gitignore.io/api/reactnative
 # Edit at https://www.gitignore.io/?templates=reactnative
 
+#Arquivo para linkar diretorio do Android SDK
+/local.properties
+
 ### ReactNative ###
 # React Native Stack Base
 
