@@ -16,6 +16,7 @@ class Login extends Component {
         this.handleChange= this.handleChange.bind(this);   
     }
 
+    // Funcao que verifica mudanca nos campos de texto.
     handleChange(event = {}) {
         const name = event.target && event.target.name;
         const value = event.target && event.target.value;
@@ -47,7 +48,7 @@ class Login extends Component {
                                 }
                                 placeholder="Digite seu email"
                                 keyboardType="email-address"
-                                // Passando os valores do input para um state
+                                // Passando os valores do input para um state.
                                 onChangeText={(value) => {this.setState({emailLogin: value})}}
                                 style={styles.input}
                             />
@@ -66,15 +67,15 @@ class Login extends Component {
                                 secureTextEntry={true}
                                 containerStyle={styles.input}
                                 secureTextEntry={true}
-                                // Passando os valores do input para um state
+                                // Passando os valores do input para um state.
                                 onChangeText={(value) => {this.setState({passwordLogin: value})}}
                             />    
                             <View style={styles.forgotContainer}>
                                 <Button 
                                     title="Entrar"
                                     buttonStyle={styles.button}
-                                    //Fazer funcao que verifica se algo foi digitado em ambos os campos.
-                                    //Determina o que fazer apos precionar o botao "Entrar"
+                                    // Fazer funcao que verifica se algo foi digitado em ambos os campos.
+                                    // Determina o que fazer apos precionar o botao "Entrar".
                                     //onPress={()=>{alert(this.state.passwordLogin)}} 
                                 />
                                 <Button 
