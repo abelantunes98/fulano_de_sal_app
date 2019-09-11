@@ -9,7 +9,8 @@ import { KeyboardAvoidingView,
 
 import { Card, Button, Input } from "react-native-elements";
 import IconFont from 'react-native-vector-icons/FontAwesome';
-  
+import{styles} from "../../styles/styles";
+
 const Login = (props)=>{
     const [email, setEmail]= useState('');
     const [senha, setSenha]= useState('');
@@ -23,7 +24,7 @@ const Login = (props)=>{
             <KeyboardAvoidingView>
                 <View style={ styles.infoContainer }>
                     <Card containerStyle={ styles.inforCard }>
-                        <Text style={{ textAlign: "center", fontSize: 28 }}>Entrar</Text>
+                        <Text style={{ fontFamily: "Oswald-Bold",textAlign: "center", fontSize: 28 }}>Entrar</Text>
                         <Text style={styles.text} >Email</Text>
                         <Input
                             leftIcon={
@@ -37,7 +38,7 @@ const Login = (props)=>{
                             placeholder="Digite seu email"
                             keyboardType="email-address"
                             value={email}
-                            onChangeText={(email)=>{setEmail(email)}}
+                            onChangeText={setEmail}
                             style={styles.input}
                         />
                         <Text style={styles.text} >Senha</Text>
@@ -55,24 +56,27 @@ const Login = (props)=>{
                             containerStyle={styles.input}
                             secureTextEntry={true}
                             value={senha}
-                            onChangeText={(senha)=>{setSenha(senha)}}
+                            onChangeText={setSenha}
                         />    
                         <View style={styles.forgotContainer}>
                             <Button 
                                 title="Entrar"
                                 buttonStyle={styles.button}
-                                onPress={handler_entrar}                         
+                                onPress={handler_entrar}  
+                                titleStyle={styles.titleStyle}                       
                             />
                             <Button
                                 title="Cadastrar-se"
                                 buttonStyle={styles.button}
-                                onPress={()=>{props.navigation.navigate('Cadastro')}}
+                                onPress={_=>{props.navigation.navigate('CadastroPage')}}
+                                titleStyle={styles.titleStyle}  
                             />
                         </View>
                         <Button 
                             title="Esqueceu a senha ?"
                             type="clear"
                             buttonStyle={styles.btnEsqueceuSenha}
+                            onPress={_=>{props.navigation.navigate('SolicitacaoRecuperacaoPage')}}
                         />
                     </Card>
                 </View>
@@ -82,43 +86,3 @@ const Login = (props)=>{
 };
 
 export default Login;
-
-const styles = StyleSheet.create({
-    mainContainer: {
-        flexGrow : 1, 
-        justifyContent : 'center',
-    },
-    infoContainer: {
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	inforCard: {
-        width: "97%",
-	},
-    loginForm: {
-    },
-    input: {
-    },
-    text: {
-        paddingTop: 10,
-        fontSize: 16,
-    },
-    forgotContainer: {
-        flexDirection: "row",
-        justifyContent: "space-around",
-        marginTop: 10,
-    },
-    button: {
-        marginTop: 10,
-        backgroundColor: "#0f6124",
-        width: 115,
-    },
-    btnEsqueceuSenha: {
-        marginTop: 10,
-    },
-    icons: {
-        paddingRight: 10,
-    },
-    forgotButton: {
-    },
-});

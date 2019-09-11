@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import { KeyboardAvoidingView,
-    StyleSheet,
     Text,
 	View,
 	ScrollView
@@ -9,6 +8,7 @@ import { KeyboardAvoidingView,
 import { Card, Button, Input } from "react-native-elements";
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import IconMaterial from "react-native-vector-icons/MaterialCommunityIcons";
+import{styles} from "../../styles/styles";
 
 const Cadastro = (props) => {
 		const[nome,setNome] = useState('');
@@ -43,7 +43,7 @@ const Cadastro = (props) => {
 								autoCapitalize='words'
 								style={styles.input}
 								value={nome}
-								onChangeText={(nome)=>{setNome(nome)}}
+								onChangeText={setNome}
 							/>
 
 							<Text style={styles.text} >Email</Text>
@@ -60,7 +60,7 @@ const Cadastro = (props) => {
 								keyboardType="email-address"
 								style={styles.input}
 								value={email}
-								onChangeText={(email)=>{setEmail(email)}}
+								onChangeText={setEmail}
 							/>
 
 							<Text style={styles.text} >Telefone</Text>
@@ -77,7 +77,7 @@ const Cadastro = (props) => {
 								keyboardType="phone-pad"
 								style={styles.input}
 								value={telefone}
-								onChangeText={(telefone)=>{setTelefone(telefone)}}
+								onChangeText={setTelefone}
 							/>
 
 							<Text style={styles.text} >Endereço</Text>
@@ -94,7 +94,7 @@ const Cadastro = (props) => {
 								autoCapitalize='words'
 								style={styles.input}
 								value={endereco}
-								onChangeText={(endereco)=>{setEndereco(endereco)}}
+								onChangeText={setEndereco}
 							/>
 							<Text style={styles.text} >Senha</Text>
 							<Input
@@ -110,7 +110,7 @@ const Cadastro = (props) => {
 								secureTextEntry={true}
 								style={styles.input}
 								value={senha}
-								onChangeText={(senha)=>{setSenha(senha)}}
+								onChangeText={setSenha}
 							/>
 							<Text style={styles.text} >Confirme a senha</Text>
 							<Input
@@ -126,7 +126,7 @@ const Cadastro = (props) => {
 								secureTextEntry={true}
 								style={styles.input}
 								value={senhaConfirm}
-								onChangeText={(senhaConfirm)=>{setSenhaConfirm(senhaConfirm)}}
+								onChangeText={setSenhaConfirm}
 							/>
 
 							<View style={ styles.buttonContainer }>
@@ -144,6 +144,7 @@ const Cadastro = (props) => {
 									title="Cadastrar"
 									buttonStyle={styles.button}
 									onPress={handler_cadastrar}
+									titleStyle={styles.titleStyle}  
 								/>
 								<Button 
 									icon={
@@ -157,7 +158,8 @@ const Cadastro = (props) => {
 									iconLeft
 									title="Cancelar"
 									buttonStyle={styles.buttonCancel}
-									onPress={()=>{props.navigation.navigate('Login')}}
+									onPress={()=>{props.navigation.navigate('LoginPage')}}
+									titleStyle={styles.titleStyle}  
 								/>
 							</View>
 						</Card>
@@ -167,42 +169,3 @@ const Cadastro = (props) => {
 		);
 };
 export default Cadastro;
-
-const styles = StyleSheet.create({
-	mainContainer: {
-		flexGrow : 1, 
-        justifyContent : 'center',
-	},
-	infoContainer: {
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	inforCard: {
-		width: "97%"
-	},
-	buttonContainer: {
-		flexDirection: "row",
-		justifyContent: "space-around",
-		marginTop: 10,
-	},
-	button: {
-		marginTop: 10,
-        backgroundColor: "#0f6124",
-        width: 115,
-	},
-	buttonCancel: {
-		marginTop: 10,
-        backgroundColor: "#82080a",
-        width: 115,
-	},
-	text: {
-		fontFamily: "Oswald-Regular",
-		fontSize: 16,
-		paddingTop: 10
-	},
-	input: {
-	},
-	icons: {
-		paddingRight: 10
-	},
-})

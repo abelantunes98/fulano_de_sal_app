@@ -6,28 +6,7 @@
  * @flow
  */
 
-import React, {Fragment} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-} from 'react-native';
-
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-import Login from './src/pages/Login';
-import Cadastro from './src/pages/Cadastro';
-import { createAppContainer } from 'react-navigation';
-
+import React from 'react';
 import Routes from "./src/routes";
 
 export default function App() {
