@@ -19,7 +19,8 @@ export default createAppContainer(
                 backgroundColor: "#0f6124"
             },
             headerTitleStyle: {
-                color: "#FFF"
+                color: "#FFF",
+                fontFamily: "Roboto-Thin"
             },
             headerTitle: "Fulano de Sal",
             headerBackTitle: null,

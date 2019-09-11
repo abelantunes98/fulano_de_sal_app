@@ -277,4 +277,7 @@ DerivedData/
 !*.xcworkspace/contents.xcworkspacedata
 /*.gcno
 
+## fonts
+src/assets/
+
 # End of https://www.gitignore.io/api/reactnative

@@ -21,7 +21,7 @@ class Cadastro extends Component {
 				<KeyboardAvoidingView>
 					<View style={ styles.infoContainer }>
 						<Card containerStyle={ styles.inforCard }>
-							<Text style={{ textAlign: "center", fontSize: 28 }}>Cadastrar</Text>
+							<Text style={{ fontFamily: "Oswald-Bold", textAlign: "center", fontSize: 28 }}>Cadastrar</Text>
 							
 							<Text style={styles.text} >Nome</Text>
 							<Input
@@ -164,6 +164,8 @@ const styles = StyleSheet.create({
         width: 115,
 	},
 	text: {
+		fontFamily: "Oswald-Regular",
+		fontSize: 16,
 		paddingTop: 10
 	},
 	input: {

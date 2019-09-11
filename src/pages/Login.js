@@ -29,7 +29,11 @@ class Login extends Component {
                 <KeyboardAvoidingView>
                     <View style={ styles.infoContainer }>
                         <Card containerStyle={ styles.inforCard }>
-                            <Text style={{ textAlign: "center", fontSize: 28 }}>Entrar</Text>
+                            <Text style={{ 
+                                fontFamily: "Oswald-Bold",
+                                textAlign: "center", 
+                                fontSize: 28 
+                                }}>Entrar</Text>
                             <Text style={styles.text} >Email</Text>
                             <Input
                                 leftIcon={
@@ -62,10 +66,12 @@ class Login extends Component {
                             <View style={styles.forgotContainer}>
                                 <Button 
                                     title="Entrar"
+                                    textStyle={{ fontFamily: "Roboto-BlackItalic" }}
                                     buttonStyle={styles.button}
                                 />
                                 <Button 
                                     title="Cadastrar-se"
+                                    textStyle={{ fontFamily: "Roboto-BlackItalic" }}
                                     buttonStyle={styles.button}
                                     onPress={()=>{this.props.navigation.navigate('Cadastro')}}
                                 />
@@ -102,8 +108,10 @@ const styles = StyleSheet.create({
     input: {
     },
     text: {
+        fontFamily: "Oswald-Regular",
         paddingTop: 10,
-        fontSize: 16,
+        fontSize: 18,
+        marginLeft: 5,
     },
     forgotContainer: {
         flexDirection: "row",
@@ -122,5 +130,5 @@ const styles = StyleSheet.create({
         paddingRight: 10,
     },
     forgotButton: {
-    },
+    }
 });
