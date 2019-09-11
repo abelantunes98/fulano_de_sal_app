@@ -13,14 +13,19 @@ class Login extends Component {
 
     constructor(props){
         super(props);
-        
+        this.handleChange= this.handleChange.bind(this);   
     }
+
+    handleChange(event = {}) {
+        const name = event.target && event.target.name;
+        const value = event.target && event.target.value;
+      
+        this.setState({name: value});
+      }
 
     handleSubmit() {
         
     };
-
-    
 
     render(){
 
@@ -29,11 +34,7 @@ class Login extends Component {
                 <KeyboardAvoidingView>
                     <View style={ styles.infoContainer }>
                         <Card containerStyle={ styles.inforCard }>
-                            <Text style={{ 
-                                fontFamily: "Oswald-Bold",
-                                textAlign: "center", 
-                                fontSize: 28 
-                                }}>Entrar</Text>
+                            <Text style={{ textAlign: "center", fontSize: 28 }}>Entrar</Text>
                             <Text style={styles.text} >Email</Text>
                             <Input
                                 leftIcon={
@@ -46,8 +47,11 @@ class Login extends Component {
                                 }
                                 placeholder="Digite seu email"
                                 keyboardType="email-address"
+                                // Passando os valores do input para um state
+                                onChangeText={(value) => {this.setState({emailLogin: value})}}
                                 style={styles.input}
                             />
+
                             <Text style={styles.text} >Senha</Text>
                             <Input
                                 leftIcon={
@@ -62,16 +66,19 @@ class Login extends Component {
                                 secureTextEntry={true}
                                 containerStyle={styles.input}
                                 secureTextEntry={true}
+                                // Passando os valores do input para um state
+                                onChangeText={(value) => {this.setState({passwordLogin: value})}}
                             />    
                             <View style={styles.forgotContainer}>
                                 <Button 
                                     title="Entrar"
-                                    textStyle={{ fontFamily: "Roboto-BlackItalic" }}
                                     buttonStyle={styles.button}
+                                    //Fazer funcao que verifica se algo foi digitado em ambos os campos.
+                                    //Determina o que fazer apos precionar o botao "Entrar"
+                                    //onPress={()=>{alert(this.state.passwordLogin)}} 
                                 />
                                 <Button 
                                     title="Cadastrar-se"
-                                    textStyle={{ fontFamily: "Roboto-BlackItalic" }}
                                     buttonStyle={styles.button}
                                     onPress={()=>{this.props.navigation.navigate('Cadastro')}}
                                 />
@@ -108,10 +115,8 @@ const styles = StyleSheet.create({
     input: {
     },
     text: {
-        fontFamily: "Oswald-Regular",
         paddingTop: 10,
-        fontSize: 18,
-        marginLeft: 5,
+        fontSize: 16,
     },
     forgotContainer: {
         flexDirection: "row",
@@ -130,5 +135,5 @@ const styles = StyleSheet.create({
         paddingRight: 10,
     },
     forgotButton: {
-    }
+    },
 });
