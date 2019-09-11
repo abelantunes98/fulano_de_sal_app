@@ -1,100 +1,84 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import { KeyboardAvoidingView,
     StyleSheet,
     Text,
     View,
     ScrollView,
+    ToastAndroid
 } from 'react-native';
 
 import { Card, Button, Input } from "react-native-elements";
 import IconFont from 'react-native-vector-icons/FontAwesome';
   
-class Login extends Component {
+const Login = (props)=>{
+    const [email, setEmail]= useState('');
+    const [senha, setSenha]= useState('');
 
-    constructor(props){
-        super(props);
-        this.handleChange= this.handleChange.bind(this);   
+    function handler_entrar(){
+        ToastAndroid.show("Email: " + email + " Senha: " + senha, ToastAndroid.SHORT);
     }
-
-    // Funcao que verifica mudanca nos campos de texto.
-    handleChange(event = {}) {
-        const name = event.target && event.target.name;
-        const value = event.target && event.target.value;
-      
-        this.setState({name: value});
-      }
-
-    handleSubmit() {
         
-    };
-
-    render(){
-
-        return (
-            <ScrollView contentContainerStyle={ styles.mainContainer }>
-                <KeyboardAvoidingView>
-                    <View style={ styles.infoContainer }>
-                        <Card containerStyle={ styles.inforCard }>
-                            <Text style={{ textAlign: "center", fontSize: 28 }}>Entrar</Text>
-                            <Text style={styles.text} >Email</Text>
-                            <Input
-                                leftIcon={
-                                    <IconFont
-                                        name='envelope'
-                                        size={15}
-                                        color='black'
-                                        style={ styles.icons }
-                                    />
-                                }
-                                placeholder="Digite seu email"
-                                keyboardType="email-address"
-                                // Passando os valores do input para um state.
-                                onChangeText={(value) => {this.setState({emailLogin: value})}}
-                                style={styles.input}
-                            />
-
-                            <Text style={styles.text} >Senha</Text>
-                            <Input
-                                leftIcon={
-                                    <IconFont
-                                        name='user-secret'
-                                        size={15}
-                                        color='black'
-                                        style={ styles.icons }
-                                    />
-                                }
-                                placeholder="Digite sua senha"
-                                secureTextEntry={true}
-                                containerStyle={styles.input}
-                                secureTextEntry={true}
-                                // Passando os valores do input para um state.
-                                onChangeText={(value) => {this.setState({passwordLogin: value})}}
-                            />    
-                            <View style={styles.forgotContainer}>
-                                <Button 
-                                    title="Entrar"
-                                    buttonStyle={styles.button}
-                                    // Fazer funcao que verifica se algo foi digitado em ambos os campos.
-                                    // Determina o que fazer apos precionar o botao "Entrar".
-                                    //onPress={()=>{alert(this.state.passwordLogin)}} 
+    return (
+        <ScrollView contentContainerStyle={ styles.mainContainer }>
+            <KeyboardAvoidingView>
+                <View style={ styles.infoContainer }>
+                    <Card containerStyle={ styles.inforCard }>
+                        <Text style={{ textAlign: "center", fontSize: 28 }}>Entrar</Text>
+                        <Text style={styles.text} >Email</Text>
+                        <Input
+                            leftIcon={
+                                <IconFont
+                                     name='envelope'
+                                    size={15}
+                                    color='black'
+                                    style={ styles.icons }
                                 />
-                                <Button 
-                                    title="Cadastrar-se"
-                                    buttonStyle={styles.button}
-                                    onPress={()=>{this.props.navigation.navigate('Cadastro')}}
+                            }
+                            placeholder="Digite seu email"
+                            keyboardType="email-address"
+                            value={email}
+                            onChangeText={(email)=>{setEmail(email)}}
+                            style={styles.input}
+                        />
+                        <Text style={styles.text} >Senha</Text>
+                        <Input
+                            leftIcon={
+                                <IconFont
+                                    name='user-secret'
+                                    size={15}
+                                    color='black'
+                                    style={ styles.icons }
                                 />
-                            </View>
+                            }
+                            placeholder="Digite sua senha"
+                            secureTextEntry={true}
+                            containerStyle={styles.input}
+                            secureTextEntry={true}
+                            value={senha}
+                            onChangeText={(senha)=>{setSenha(senha)}}
+                        />    
+                        <View style={styles.forgotContainer}>
                             <Button 
-                                title="Esqueceu a senha ?"
-                                type="clear"
-                                buttonStyle={styles.btnEsqueceuSenha}
+                                title="Entrar"
+                                buttonStyle={styles.button}
+                                onPress={handler_entrar}                         
                             />
-                        </Card>
-                    </View>
-                </KeyboardAvoidingView>
-            </ScrollView>
-        );
-    }
+                            <Button
+                                title="Cadastrar-se"
+                                buttonStyle={styles.button}
+                                onPress={()=>{props.navigation.navigate('Cadastro')}}
+                            />
+                        </View>
+                        <Button 
+                            title="Esqueceu a senha ?"
+                            type="clear"
+                            buttonStyle={styles.btnEsqueceuSenha}
+                        />
+                    </Card>
+                </View>
+            </KeyboardAvoidingView>
+        </ScrollView>
+    );
 };
 
 export default Login;
