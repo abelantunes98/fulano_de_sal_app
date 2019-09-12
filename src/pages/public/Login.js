@@ -7,9 +7,11 @@ import { KeyboardAvoidingView,
     ToastAndroid
 } from 'react-native';
 
-import { Card, Button, Input } from "react-native-elements";
+import { Card, Button, Input } from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
-import{styles} from "../../styles/styles";
+import{styles} from '../../styles/styles';
+
+import api from '../../services/api'
 
 const Login = (props)=>{
     const [email, setEmail]= useState('');
