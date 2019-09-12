@@ -35,8 +35,9 @@ const Login = (props)=>{
                                     style={ styles.icons }
                                 />
                             }
-                            placeholder="Digite seu email"
-                            keyboardType="email-address"
+                            placeholder='Digite seu email'
+                            autoCapitalize='none'
+                            keyboardType='email-address'
                             value={email}
                             onChangeText={setEmail}
                             style={styles.input}

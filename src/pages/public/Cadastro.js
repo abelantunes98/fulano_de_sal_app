@@ -39,7 +39,7 @@ const Cadastro = (props) => {
 										style={ styles.icons }
 									/>
 								}
-								placeholder="Digite seu nome"
+								placeholder='Digite seu nome'
 								autoCapitalize='words'
 								style={styles.input}
 								value={nome}
@@ -56,8 +56,9 @@ const Cadastro = (props) => {
 										style={ styles.icons }
 									/>
 								}
-								placeholder="Digite seu email"
-								keyboardType="email-address"
+								placeholder='Digite seu email'
+								autoCapitalize='none'
+								keyboardType='email-address'
 								style={styles.input}
 								value={email}
 								onChangeText={setEmail}
@@ -122,7 +123,7 @@ const Cadastro = (props) => {
 										style={ styles.icons }
 									/>
 								}
-								placeholder="Digite sua senha"
+								placeholder="Digite novamente sua senha"
 								secureTextEntry={true}
 								style={styles.input}
 								value={senhaConfirm}

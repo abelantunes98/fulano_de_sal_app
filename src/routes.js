@@ -1,9 +1,9 @@
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack"
 
-import Login from "./pages/publico/Login";
-import Cadastro from "./pages/publico/Cadastro";
-import SolicitacaoRecuperacao from "./pages/publico/SolicitacaoRecuperacao";
+import Login from "./pages/public/Login";
+import Cadastro from "./pages/public/Cadastro";
+import SolicitacaoRecuperacao from "./pages/public/SolicitacaoRecuperacao";
 
 export default createAppContainer(
     createStackNavigator({
