@@ -1,9 +1,9 @@
-import { createAppContainer } from "react-navigation";
-import { createStackNavigator } from "react-navigation-stack"
+import { createAppContainer } from 'react-navigation';
+import { createStackNavigator } from 'react-navigation-stack'
 
-import Login from "./pages/public/Login";
-import Cadastro from "./pages/public/Cadastro";
-import SolicitacaoRecuperacao from "./pages/public/SolicitacaoRecuperacao";
+import Login from './pages/public/Login';
+import Cadastro from './pages/public/Cadastro';
+import SolicitacaoRecuperacao from './pages/public/SolicitacaoRecuperacao';
 
 export default createAppContainer(
     createStackNavigator({
@@ -20,16 +20,16 @@ export default createAppContainer(
     }, {
         defaultNavigationOptions: {
             headerStyle:{
-                backgroundColor: "#0f6124"
+                backgroundColor: '#0f6124'
             },
             headerTitleStyle: {
-                color: "#FFF",
-                fontFamily: "Roboto-Thin"
+                color: '#FFF',
+                fontFamily: 'Roboto-Thin'
             },
-            headerTitle: "Fulano de Sal",
+            headerTitle: 'Fulano de Sal',
             headerBackTitle: null,
         },
-        mode: "modal",
-        headerLayoutPreset: "center"
+        mode: 'modal',
+        headerLayoutPreset: 'center'
     })
 );

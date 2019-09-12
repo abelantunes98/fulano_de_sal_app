@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import { KeyboardAvoidingView,
+import { 
+    KeyboardAvoidingView,
     StyleSheet,
     Text,
     View,
@@ -9,16 +10,16 @@ import { KeyboardAvoidingView,
 
 import { Card, Button, Input } from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
-import{styles} from '../../styles/styles';
+import { styles } from '../../styles/styles';
 
 import api from '../../services/api'
 
-const Login = (props)=>{
+const Login = (props) => {
     const [email, setEmail]= useState('');
     const [senha, setSenha]= useState('');
 
     function handler_entrar(){
-        ToastAndroid.show("Email: " + email + " Senha: " + senha, ToastAndroid.SHORT);
+        ToastAndroid.show(`Email: ${email}, Senha: ${senha}`, ToastAndroid.SHORT);
     }
         
     return (
@@ -26,12 +27,16 @@ const Login = (props)=>{
             <KeyboardAvoidingView>
                 <View style={ styles.infoContainer }>
                     <Card containerStyle={ styles.inforCard }>
-                        <Text style={{ fontFamily: "Oswald-Bold",textAlign: "center", fontSize: 28 }}>Entrar</Text>
-                        <Text style={styles.text} >Email</Text>
+                        <Text style={{ 
+                            fontFamily: 'Oswald-Bold', 
+                            textAlign: 'center', 
+                            fontSize: 28 }}>Entrar</Text>
+                        <Text style={
+                            styles.text} >Email</Text>
                         <Input
                             leftIcon={
                                 <IconFont
-                                     name='envelope'
+                                    name='envelope'
                                     size={15}
                                     color='black'
                                     style={ styles.icons }
@@ -54,7 +59,7 @@ const Login = (props)=>{
                                     style={ styles.icons }
                                 />
                             }
-                            placeholder="Digite sua senha"
+                            placeholder='Digite sua senha'
                             secureTextEntry={true}
                             containerStyle={styles.input}
                             secureTextEntry={true}
@@ -63,21 +68,21 @@ const Login = (props)=>{
                         />    
                         <View style={styles.forgotContainer}>
                             <Button 
-                                title="Entrar"
+                                title='Entrar'
                                 buttonStyle={styles.button}
                                 onPress={handler_entrar}  
                                 titleStyle={styles.titleStyle}                       
                             />
                             <Button
-                                title="Cadastrar-se"
+                                title='Cadastrar-se'
                                 buttonStyle={styles.button}
                                 onPress={_=>{props.navigation.navigate('CadastroPage')}}
                                 titleStyle={styles.titleStyle}  
                             />
                         </View>
                         <Button 
-                            title="Esqueceu a senha ?"
-                            type="clear"
+                            title='Esqueceu a senha?'
+                            type='clear'
                             buttonStyle={styles.btnEsqueceuSenha}
                             onPress={_=>{props.navigation.navigate('SolicitacaoRecuperacaoPage')}}
                         />

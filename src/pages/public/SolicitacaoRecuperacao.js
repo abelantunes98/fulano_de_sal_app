@@ -6,17 +6,16 @@ import { KeyboardAvoidingView,
     ToastAndroid
 } from 'react-native';
 
-import { Card, Button, Input} from "react-native-elements";
+import { Card, Button, Input} from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
-import IconMaterial from "react-native-vector-icons/MaterialCommunityIcons";
-import{styles} from "../../styles/styles";
+import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
+import{styles} from '../../styles/styles';
 
 const SolicitacaoRecuperacao = (props)=>{
     const [email, setEmail]= useState('');
 
-
     function handler_entrar(){
-        ToastAndroid.show("Email: " + email , ToastAndroid.SHORT);
+        ToastAndroid.show(`Email: ${email}` , ToastAndroid.SHORT);
     }
         
     return (
@@ -24,26 +23,32 @@ const SolicitacaoRecuperacao = (props)=>{
             <KeyboardAvoidingView>
                 <View style={ styles.infoContainer }>
                     <Card containerStyle={ styles.inforCard }>
-                        <Text style={{fontFamily: "Oswald-Bold", textAlign: "center", fontSize: 28 }}>Solicitar Recuperação</Text>
+                        <Text style={{
+                            fontFamily: 'Oswald-Bold', 
+                            textAlign: 'center', 
+                            fontSize: 28 }}>Solicitar Recuperação</Text>
+
                         <Text style={styles.text} >Email</Text>
                         <Input
                             leftIcon={
                                 <IconFont
-                                     name='envelope'
+                                    name='envelope'
                                     size={15}
                                     color='black'
                                     style={ styles.icons }
                                 />
                             }
-                            placeholder="Digite seu email"
-                            keyboardType="email-address"
+                            autoCapitalize='none'
+                            placeholder='Digite seu email'
+                            keyboardType='email-address'
                             value={email}
                             onChangeText={setEmail}
                             style={styles.input}
                         />
+
                         <View style={styles.forgotContainer}>
                             <Button 
-                                title="Solicitar"
+                                title='Solicitar'
                                 buttonStyle={styles.button}
                                 onPress={handler_entrar}   
                                 titleStyle={styles.titleStyle}                        
@@ -58,7 +63,7 @@ const SolicitacaoRecuperacao = (props)=>{
                                     />
                                 }
                                 iconLeft
-                                title="Cancelar"
+                                title='Cancelar'
                                 buttonStyle={styles.buttonCancel}
                                 onPress={_=>{props.navigation.navigate('LoginPage')}}
                                 titleStyle={styles.titleStyle}  

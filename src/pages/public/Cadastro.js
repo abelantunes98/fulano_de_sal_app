@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
-import { KeyboardAvoidingView,
+import { 
+	KeyboardAvoidingView,
     Text,
 	View,
 	ScrollView
 } from 'react-native';
 
-import { Card, Button, Input } from "react-native-elements";
+import { Card, Button, Input } from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
-import IconMaterial from "react-native-vector-icons/MaterialCommunityIcons";
-import{styles} from "../../styles/styles";
+import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
+import { styles } from '../../styles/styles';
 
 const Cadastro = (props) => {
 		const[nome,setNome] = useState('');
@@ -18,7 +19,7 @@ const Cadastro = (props) => {
 		const[telefone,setTelefone] = useState('');
 		const[endereco,setEndereco] = useState('');
 
-		function handler_cadastrar(){
+		handler_cadastrar = () => {
 
 		}
 
@@ -27,9 +28,13 @@ const Cadastro = (props) => {
 				<KeyboardAvoidingView>
 					<View style={ styles.infoContainer }>
 						<Card containerStyle={ styles.inforCard }>
-							<Text style={{ fontFamily: "Oswald-Bold", textAlign: "center", fontSize: 28 }}>Cadastrar</Text>
-							
-							<Text style={styles.text} >Nome</Text>
+							<Text style={{ 
+								fontFamily: 'Oswald-Bold', 
+								textAlign: 'center', 
+								fontSize: 28 }}>Cadastrar
+							</Text>
+
+							<Text style={styles.text}>Nome</Text>
 							<Input
 								leftIcon={
 									<IconFont
@@ -74,8 +79,8 @@ const Cadastro = (props) => {
 										style={ styles.icons }
 									/>
 								}
-								placeholder="Digite seu telefone"
-								keyboardType="phone-pad"
+								placeholder='Digite seu telefone'
+								keyboardType='phone-pad'
 								style={styles.input}
 								value={telefone}
 								onChangeText={setTelefone}
@@ -91,12 +96,13 @@ const Cadastro = (props) => {
 										style={ styles.icons }
 									/>
 								}
-								placeholder="Digite seu endereço"
+								placeholder='Digite seu endereço'
 								autoCapitalize='words'
 								style={styles.input}
 								value={endereco}
 								onChangeText={setEndereco}
 							/>
+
 							<Text style={styles.text} >Senha</Text>
 							<Input
 								leftIcon={
@@ -107,12 +113,13 @@ const Cadastro = (props) => {
 										style={ styles.icons }
 									/>
 								}
-								placeholder="Digite sua senha"
+								placeholder='Digite sua senha'
 								secureTextEntry={true}
 								style={styles.input}
 								value={senha}
 								onChangeText={setSenha}
 							/>
+
 							<Text style={styles.text} >Confirme a senha</Text>
 							<Input
 								leftIcon={
@@ -123,7 +130,7 @@ const Cadastro = (props) => {
 										style={ styles.icons }
 									/>
 								}
-								placeholder="Digite novamente sua senha"
+								placeholder='Digite novamente sua senha'
 								secureTextEntry={true}
 								style={styles.input}
 								value={senhaConfirm}
@@ -141,8 +148,7 @@ const Cadastro = (props) => {
 										/>
 									}
 									iconLeft
-									// loading
-									title="Cadastrar"
+									title='Cadastrar'
 									buttonStyle={styles.button}
 									onPress={handler_cadastrar}
 									titleStyle={styles.titleStyle}  
@@ -157,7 +163,7 @@ const Cadastro = (props) => {
 										/>
 									}
 									iconLeft
-									title="Cancelar"
+									title='Cancelar'
 									buttonStyle={styles.buttonCancel}
 									onPress={()=>{props.navigation.navigate('LoginPage')}}
 									titleStyle={styles.titleStyle}  
@@ -169,4 +175,5 @@ const Cadastro = (props) => {
 			</ScrollView>
 		);
 };
+
 export default Cadastro;
