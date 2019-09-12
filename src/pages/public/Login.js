@@ -13,13 +13,19 @@ import IconFont from 'react-native-vector-icons/FontAwesome';
 import { styles } from '../../styles/styles';
 
 import api from '../../services/api'
+import Axios from 'axios';
 
 const Login = (props) => {
-    const [email, setEmail]= useState('');
-    const [senha, setSenha]= useState('');
+    const [emailLogin, setEmail]= useState('');
+    const [senhaLogin, setSenha]= useState('');
 
-    function handler_entrar(){
-        ToastAndroid.show(`Email: ${email}, Senha: ${senha}`, ToastAndroid.SHORT);
+    async function handler_entrar(){
+        try {
+        var response = await Axios.post('/usuario/login/', {email: "teste",
+        senha: "teste"});
+        } catch (erro) {
+            alert(erro)
+        }  
     }
         
     return (
@@ -45,7 +51,7 @@ const Login = (props) => {
                             placeholder='Digite seu email'
                             autoCapitalize='none'
                             keyboardType='email-address'
-                            value={email}
+                            value={emailLogin}
                             onChangeText={setEmail}
                             style={styles.input}
                         />
@@ -63,7 +69,7 @@ const Login = (props) => {
                             secureTextEntry={true}
                             containerStyle={styles.input}
                             secureTextEntry={true}
-                            value={senha}
+                            value={senhaLogin}
                             onChangeText={setSenha}
                         />    
                         <View style={styles.forgotContainer}>

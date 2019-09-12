@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
+    "cors": "^2.8.5",
+    "peer": "^0.2.10",
     "react": "16.8.6",
     "react-native": "0.60.5",
     "react-native-elements": "^1.1.0",
@@ -36,5 +38,6 @@
       "src/assets/fonts/Roboto",
       "src/assets/fonts/Oswald"
     ]
-  }
+  },
+  "proxy": "http://fulano-de-sal-api.herokuapp.com/api"
 }
