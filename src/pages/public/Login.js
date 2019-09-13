@@ -11,14 +11,17 @@ import {
 import { Card, Button, Input } from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import { styles } from '../../styles/styles';
+import LinearGradient from 'react-native-linear-gradient';
 
 import api from '../../services/api'
 
 const Login = (props) => {
+    const[load,setLoad]=useState(false);
     const [email, setEmail]= useState('');
     const [senha, setSenha]= useState('');
 
     async function handler_entrar(){
+        setLoad(true);
         try {
             const response = await api.post('/usuario/login/', {email, senha});
             
@@ -27,35 +30,11 @@ const Login = (props) => {
                 const responseData = response.data;
                 ToastAndroid.show('Login efetuado!\nOlá ' + responseData.nome + '!', ToastAndroid.SHORT);
             }
-
-            else {
-                ToastAndroid.show(`Erro, tente novamente mais tarde.`, ToastAndroid.SHORT);
-            }
-            
         } catch (error) {
-            // error.response tambem eh um JSON com status, data, etc.
-            if (error.response) {
-
-                responseError = error.response;
-                if (responseError.status == 403) {
-                    ToastAndroid.show(`A senha inserida está incorreta.`, ToastAndroid.SHORT);
-                }
-            
-                else if (responseError.status == 404) {
-                    ToastAndroid.show(`O E-mail inserido não está cadastrado.`, ToastAndroid.SHORT);
-                }
-
-                // Eh feito o request mas recebe um erro desconhecido.
-                else {
-                    ToastAndroid.show(`Desculpe, estamos com problemas no servidor.`, ToastAndroid.SHORT);
-                }
-            }
-            
-            // Nao consegue efetuar o request.
-            else {
-                ToastAndroid.show(`Erro ao contatar o servidor.`, ToastAndroid.SHORT);
-            }
-        }  
+            //Qualquer status diferente de 200 entra no catch e a api retorna a mensagem específica atraves das exceções lançadas
+            ToastAndroid.show(error.response.data['message'],ToastAndroid.SHORT);
+        } 
+        setLoad(false); 
     }
         
     return (
@@ -103,12 +82,21 @@ const Login = (props) => {
                             onChangeText={setSenha}
                         />    
                         <View style={styles.forgotContainer}>
-                            <Button 
-                                title='Entrar'
-                                buttonStyle={styles.button}
-                                onPress={handler_entrar}  
-                                titleStyle={styles.titleStyle}                       
-                            />
+                            {!load &&
+                                <Button 
+                                    title='Entrar'
+                                    buttonStyle={styles.button}
+                                    onPress={handler_entrar}  
+                                    titleStyle={styles.titleStyle} 
+                                />
+                            }
+                            {load &&
+                                    <Button 
+                                    buttonStyle={styles.button}
+                                    titleStyle={styles.titleStyle}                    
+                                    loading
+                                />
+                            }
                             <Button
                                 title='Cadastrar-se'
                                 buttonStyle={styles.button}
