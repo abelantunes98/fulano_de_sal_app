@@ -13,18 +13,48 @@ import IconFont from 'react-native-vector-icons/FontAwesome';
 import { styles } from '../../styles/styles';
 
 import api from '../../services/api'
-import Axios from 'axios';
 
 const Login = (props) => {
-    const [emailLogin, setEmail]= useState('');
-    const [senhaLogin, setSenha]= useState('');
+    const [email, setEmail]= useState('');
+    const [senha, setSenha]= useState('');
 
     async function handler_entrar(){
         try {
-        var response = await Axios.post('/usuario/login/', {email: "teste",
-        senha: "teste"});
-        } catch (erro) {
-            alert(erro)
+            const response = await api.post('/usuario/login/', {email, senha});
+            
+            // O response ja eh retornado como um JSON com status, data, etc.
+            if (response.status == 200) {
+                const responseData = response.data;
+                ToastAndroid.show('Login efetuado!\nOlá ' + responseData.nome + '!', ToastAndroid.SHORT);
+            }
+
+            else {
+                ToastAndroid.show(`Erro, tente novamente mais tarde.`, ToastAndroid.SHORT);
+            }
+            
+        } catch (error) {
+            // error.response tambem eh um JSON com status, data, etc.
+            if (error.response) {
+
+                responseError = error.response;
+                if (responseError.status == 403) {
+                    ToastAndroid.show(`A senha inserida está incorreta.`, ToastAndroid.SHORT);
+                }
+            
+                else if (responseError.status == 404) {
+                    ToastAndroid.show(`O E-mail inserido não está cadastrado.`, ToastAndroid.SHORT);
+                }
+
+                // Eh feito o request mas recebe um erro desconhecido.
+                else {
+                    ToastAndroid.show(`Desculpe, estamos com problemas no servidor.`, ToastAndroid.SHORT);
+                }
+            }
+            
+            // Nao consegue efetuar o request.
+            else {
+                ToastAndroid.show(`Erro ao contatar o servidor.`, ToastAndroid.SHORT);
+            }
         }  
     }
         
@@ -51,7 +81,7 @@ const Login = (props) => {
                             placeholder='Digite seu email'
                             autoCapitalize='none'
                             keyboardType='email-address'
-                            value={emailLogin}
+                            value={email}
                             onChangeText={setEmail}
                             style={styles.input}
                         />
@@ -69,7 +99,7 @@ const Login = (props) => {
                             secureTextEntry={true}
                             containerStyle={styles.input}
                             secureTextEntry={true}
-                            value={senhaLogin}
+                            value={senha}
                             onChangeText={setSenha}
                         />    
                         <View style={styles.forgotContainer}>
