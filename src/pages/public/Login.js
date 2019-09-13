@@ -82,21 +82,14 @@ const Login = (props) => {
                             onChangeText={setSenha}
                         />    
                         <View style={styles.forgotContainer}>
-                            {!load &&
-                                <Button 
-                                    title='Entrar'
-                                    buttonStyle={styles.button}
-                                    onPress={handler_entrar}  
-                                    titleStyle={styles.titleStyle} 
-                                />
-                            }
-                            {load &&
-                                    <Button 
-                                    buttonStyle={styles.button}
-                                    titleStyle={styles.titleStyle}                    
-                                    loading
-                                />
-                            }
+                            <Button 
+                                title='Entrar'
+                                buttonStyle={styles.button}
+                                onPress={handler_entrar}  
+                                titleStyle={styles.titleStyle} 
+                                loading={load}
+                            />
+                           
                             <Button
                                 title='Cadastrar-se'
                                 buttonStyle={styles.button}
