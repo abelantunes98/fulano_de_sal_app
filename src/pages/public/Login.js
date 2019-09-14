@@ -13,6 +13,7 @@ import { styles } from '../../styles/styles';
 import { criptografar } from '../../services/criptografia';
 
 import api from '../../services/api'
+import { validaEmail } from '../../services/validation';
 
 const Login = (props) => {
     const [load,setLoad] = useState(false);
@@ -22,6 +23,7 @@ const Login = (props) => {
     handler_entrar = async () => {
         setLoad(true);
         try {
+<<<<<<< HEAD
             let senhaCriptografada = criptografar(senha);
             const response = await api.post('/usuario/login/', {
                 "email":email, 
@@ -32,6 +34,18 @@ const Login = (props) => {
             if (response.status == 200) {
                 const responseData = response.data;
                 ToastAndroid.show('Login efetuado!\nOlá ' + responseData.nome + '!', ToastAndroid.SHORT);
+=======
+            if(validaEmail(email)){
+                let senhaCriptografada = criptografar(senha);
+                const response = await api.post('/usuario/login/', {"email":email, "senha":senhaCriptografada});
+                // O response ja eh retornado como um JSON com status, data, etc.
+                if (response.status == 200) {
+                    const responseData = response.data;
+                    ToastAndroid.show('Login efetuado!\nOlá ' + responseData.nome + '!', ToastAndroid.SHORT);
+                }
+            }else{
+                ToastAndroid.show("Email incorreto!",ToastAndroid.SHORT);
+>>>>>>> 5a1faad5b547b0c0ed5749f80efea264b86ba7d7
             }
         } catch (error) {
             //Qualquer status diferente de 200 entra no catch e a api retorna a mensagem específica atraves das exceções lançadas
