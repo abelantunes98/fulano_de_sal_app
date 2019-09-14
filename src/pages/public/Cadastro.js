@@ -23,7 +23,13 @@ const Cadastro = (props) => {
 
 		handler_cadastrar = async () => {
 			try{
-				const response = await api.post('/cliente/',{email, endereco, nome, senha, telefone});
+				const response = await api.post('/cliente/',{
+					email, 
+					endereco, 
+					nome, 
+					senha, 
+					telefone
+				});
 
 				if(response.status == 201){
 					alert('Confirme seu cadastro no seu e-mail, por favor.');
