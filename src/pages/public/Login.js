@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import { 
     KeyboardAvoidingView,
-    StyleSheet,
     Text,
     View,
     ScrollView,
@@ -11,7 +10,7 @@ import {
 import { Card, Button, Input } from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import { styles } from '../../styles/styles';
-import LinearGradient from 'react-native-linear-gradient';
+import {criptografar} from '../../services/criptografia';
 
 import api from '../../services/api'
 
@@ -23,7 +22,8 @@ const Login = (props) => {
     async function handler_entrar(){
         setLoad(true);
         try {
-            const response = await api.post('/usuario/login/', {email, senha});
+            let senhaCriptografada = criptografar(senha);
+            const response = await api.post('/usuario/login/', {"email":email, "senha":senhaCriptografada});
             
             // O response ja eh retornado como um JSON com status, data, etc.
             if (response.status == 200) {
