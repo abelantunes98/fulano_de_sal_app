@@ -3,7 +3,8 @@ import {
 	KeyboardAvoidingView,
     Text,
 	View,
-	ScrollView
+	ScrollView,
+	ToastAndroid
 } from 'react-native';
 
 import { Card, Button, Input } from 'react-native-elements';
@@ -12,6 +13,7 @@ import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from '../../styles/styles';
 
 import api from '../../services/api';
+import { criptografar } from '../../services/criptografia';
 
 const Cadastro = (props) => {
 		const[nome,setNome] = useState('');
@@ -20,21 +22,28 @@ const Cadastro = (props) => {
 		const[senhaConfirm,setSenhaConfirm] = useState('');
 		const[telefone,setTelefone] = useState('');
 		const[endereco,setEndereco] = useState('');
+		const[load, setLoad] = useState(false);
 
 		handler_cadastrar = async () => {
-			try{
-				const response = await api.post('/cliente/',{email, endereco, nome, senha, telefone});
+			setLoad(true);
 
-				if(response.status == 201){
-					alert('Confirme seu cadastro no seu e-mail, por favor.');
-					props.navigation.navigate('LoginPage');
-				}else{
-					alert(response.data.message);
-				}
+			let cliente = {
+				"email": email,
+				"endereco": endereco,
+				"nome": nome,
+				"senha": criptografar(senha),
+				"telefone": telefone
+			}
+
+			try{
+				await api.post('/cliente/',cliente);
+				alert('Confirme seu cadastro no seu e-mail, por favor.');
+				props.navigation.navigate('LoginPage');
 			}catch(error){
 				// alguma informacao incorreta, o back devolve a msg de erro.
-				alert(error.response.data.message);
+				ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
 			}
+			setLoad(false);
 		}
 
 		return (
@@ -165,7 +174,8 @@ const Cadastro = (props) => {
 									title='Cadastrar'
 									buttonStyle={styles.button}
 									onPress={handler_cadastrar}
-									titleStyle={styles.titleStyle}  
+									titleStyle={styles.titleStyle} 
+									loading={load} 
 								/>
 								<Button 
 									icon={
