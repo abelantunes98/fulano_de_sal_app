@@ -33,14 +33,10 @@
   "jest": {
     "preset": "react-native"
   },
-<<<<<<< HEAD
   "rnpm": {
     "assets": [
       "src/assets/fonts/Roboto",
       "src/assets/fonts/Oswald"
     ]
   }
-=======
-  "proxy": "http://fulano-de-sal-api.herokuapp.com/api"
->>>>>>> 5a1faad5b547b0c0ed5749f80efea264b86ba7d7
 }
