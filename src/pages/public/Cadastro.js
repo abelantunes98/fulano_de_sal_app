@@ -11,6 +11,8 @@ import IconFont from 'react-native-vector-icons/FontAwesome';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from '../../styles/styles';
 
+import api from '../../services/api';
+
 const Cadastro = (props) => {
 		const[nome,setNome] = useState('');
 		const[email,setEmail] = useState('');
@@ -19,8 +21,20 @@ const Cadastro = (props) => {
 		const[telefone,setTelefone] = useState('');
 		const[endereco,setEndereco] = useState('');
 
-		handler_cadastrar = () => {
+		handler_cadastrar = async () => {
+			try{
+				const response = await api.post('/cliente/',{email, endereco, nome, senha, telefone});
 
+				if(response.status == 201){
+					alert('Confirme seu cadastro no seu e-mail, por favor.');
+					props.navigation.navigate('LoginPage');
+				}else{
+					alert(response.data.message);
+				}
+			}catch(error){
+				// alguma informacao incorreta, o back devolve a msg de erro.
+				alert(error.response.data.message);
+			}
 		}
 
 		return (
