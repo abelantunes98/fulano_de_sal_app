@@ -10,12 +10,26 @@ import { Card, Button, Input} from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 import{styles} from '../../styles/styles';
+import api from '../../services/api';
 
 const SolicitacaoRecuperacao = (props)=>{
+    const [loadSolicitar,setLoadSolicitar] = useState(false);
     const [email, setEmail]= useState('');
 
-    function handler_entrar(){
-        ToastAndroid.show(`Email: ${email}` , ToastAndroid.SHORT);
+    async function handler_entrar(){
+        setLoadSolicitar(true);
+        try{
+        const response = await api.get('/usuario/solicitarRecuperacao',{
+            params:{
+                email:email
+            }
+        });
+        ToastAndroid.show(response.data['message'],ToastAndroid.SHORT);
+        }catch(error){
+            ToastAndroid.show(error.response.data['message'],ToastAndroid.SHORT);
+        }
+        setLoadSolicitar(false);
+
     }
         
     return (
@@ -51,7 +65,8 @@ const SolicitacaoRecuperacao = (props)=>{
                                 title='Solicitar'
                                 buttonStyle={styles.button}
                                 onPress={handler_entrar}   
-                                titleStyle={styles.titleStyle}                        
+                                titleStyle={styles.titleStyle}  
+                                loading={loadSolicitar}                      
                             />
                             <Button
                                 icon={
