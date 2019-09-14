@@ -3,7 +3,8 @@ import {
 	KeyboardAvoidingView,
     Text,
 	View,
-	ScrollView
+	ScrollView,
+	ToastAndroid
 } from 'react-native';
 
 import { Card, Button, Input } from 'react-native-elements';
@@ -22,18 +23,14 @@ const Cadastro = (props) => {
 		const[endereco,setEndereco] = useState('');
 
 		handler_cadastrar = async () => {
+				
 			try{
 				const response = await api.post('/cliente/',{email, endereco, nome, senha, telefone});
-
-				if(response.status == 201){
-					alert('Confirme seu cadastro no seu e-mail, por favor.');
-					props.navigation.navigate('LoginPage');
-				}else{
-					alert(response.data.message);
-				}
+				alert('Confirme seu cadastro no seu e-mail, por favor.');
+				props.navigation.navigate('LoginPage');
 			}catch(error){
-				// alguma informacao incorreta, o back devolve a msg de erro.
-				alert(error.response.data.message);
+				// alguma informacao incorreta, a API devolve a msg de erro.
+				ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
 			}
 		}
 
