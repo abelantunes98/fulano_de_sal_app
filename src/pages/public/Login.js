@@ -10,20 +10,24 @@ import {
 import { Card, Button, Input } from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import { styles } from '../../styles/styles';
-import {criptografar} from '../../services/criptografia';
+import { criptografar } from '../../services/criptografia';
 
 import api from '../../services/api'
+import { validaEmail } from '../../services/validation';
 
 const Login = (props) => {
-    const[load,setLoad]=useState(false);
-    const [email, setEmail]= useState('');
-    const [senha, setSenha]= useState('');
+    const [load,setLoad] = useState(false);
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
 
-    async function handler_entrar(){
+    handler_entrar = async () => {
         setLoad(true);
         try {
             let senhaCriptografada = criptografar(senha);
-            const response = await api.post('/usuario/login/', {"email":email, "senha":senhaCriptografada});
+            const response = await api.post('/usuario/login/', {
+                "email":email, 
+                "senha":senhaCriptografada
+            });
             
             // O response ja eh retornado como um JSON com status, data, etc.
             if (response.status == 200) {

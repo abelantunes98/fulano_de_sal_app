@@ -14,6 +14,7 @@ import { styles } from '../../styles/styles';
 
 import api from '../../services/api';
 import { criptografar } from '../../services/criptografia';
+import { validaEmail }	from '../../services/validation';
 
 const Cadastro = (props) => {
 		const[nome,setNome] = useState('');
@@ -27,21 +28,25 @@ const Cadastro = (props) => {
 		handler_cadastrar = async () => {
 			setLoad(true);
 
-			let cliente = {
-				"email": email,
-				"endereco": endereco,
-				"nome": nome,
-				"senha": criptografar(senha),
-				"telefone": telefone
-			}
-
-			try{
-				await api.post('/cliente/',cliente);
-				alert('Confirme seu cadastro no seu e-mail, por favor.');
-				props.navigation.navigate('LoginPage');
-			}catch(error){
-				// alguma informacao incorreta, o back devolve a msg de erro.
-				ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
+			if(validaEmail(email)){
+				let cliente = {
+					"email": email,
+					"endereco": endereco,
+					"nome": nome,
+					"senha": criptografar(senha),
+					"telefone": telefone
+				}
+	
+				try{
+					await api.post('/cliente/',cliente);
+					alert('Confirme seu cadastro no seu e-mail, por favor.');
+					props.navigation.navigate('LoginPage');
+				}catch(error){
+					// alguma informacao incorreta, a api devolve a msg de erro.
+					ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
+				}
+			}else{
+				ToastAndroid.show('E-mail inválido.', ToastAndroid.SHORT);
 			}
 			setLoad(false);
 		}
