@@ -1,9 +1,11 @@
 import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack'
+import { createDrawerNavigator } from 'react-navigation-drawer'
 
 import Login from './pages/public/Login';
 import Cadastro from './pages/public/Cadastro';
 import SolicitacaoRecuperacao from './pages/public/SolicitacaoRecuperacao';
+import HomeCliente from './pages/public/HomeCliente';
 
 export default createAppContainer(
     createStackNavigator({
@@ -31,5 +33,11 @@ export default createAppContainer(
         },
         mode: 'modal',
         headerLayoutPreset: 'center'
+    }),
+
+    createDrawerNavigator({
+        ClienteHome: {
+            screen: HomeCliente
+        },
     })
 );
