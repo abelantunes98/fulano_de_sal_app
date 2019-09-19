@@ -4,10 +4,11 @@ import {
     Text,
 	View,
 	ScrollView,
-	ToastAndroid
+	ToastAndroid,
+	Alert
 } from 'react-native';
 
-import { Card, Button, Input } from 'react-native-elements';
+import { Card, Button, Input} from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from '../../styles/styles';
@@ -25,20 +26,31 @@ const Cadastro = (props) => {
 		const[endereco,setEndereco] = useState('');
 		const[load, setLoad] = useState(false);
 
+		
+
 		handler_cadastrar = async () => {
 			setLoad(true);
 			let cliente = {
 				"email": email,
 				"endereco": endereco,
 				"nome": nome,
-				"senha": criptografar(senha),
+				"senha": await criptografar(senha),
 				"telefone": telefone
 			}
 	
 			try{
 				await api.post('/cliente/',cliente);
-				alert('Confirme seu cadastro no seu e-mail, por favor.');
-				props.navigation.navigate('LoginPage');
+
+				Alert.alert(
+					'Cadastro Realizado',
+					'Confira seu email para confirmação do cadastro.',
+						[
+						{text: 'OK', onPress: () => props.navigation.navigate('LoginPage')},,
+					  ],
+					
+					{cancelable: false},
+				  );
+				
 			}catch(error){
 				// alguma informacao incorreta, a api devolve a msg de erro.
 				ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
