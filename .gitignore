@@ -4,6 +4,7 @@
 #Arquivo para linkar diretorio do Android SDK
 /local.properties
 
+/__test__/__snapshots__/*
 ### ReactNative ###
 # React Native Stack Base
 
