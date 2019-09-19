@@ -23,7 +23,7 @@ const Login = (props) => {
     handler_entrar = async () => {
         setLoad(true);
         try {
-            let senhaCriptografada = criptografar(senha);
+            let senhaCriptografada = await criptografar(senha);
             const response = await api.post('/usuario/login/', {
                 "email":email, 
                 "senha":senhaCriptografada
