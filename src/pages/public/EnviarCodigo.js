@@ -32,7 +32,11 @@ const SolicitacaoRecuperacao = (props)=>{
             email
         });
 
-        props.navigation.navigate('NovaSenhaPage');
+        if (response.data) {
+            props.navigation.navigate('NovaSenhaPage');
+        } else {
+            ToastAndroid.show('O código está errado!', ToastAndroid.SHORT);
+        }
 
         }catch(error){
             ToastAndroid.show(error.response.data['message'],ToastAndroid.SHORT);

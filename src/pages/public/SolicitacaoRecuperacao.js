@@ -24,7 +24,7 @@ const SolicitacaoRecuperacao = (props)=>{
         } catch(error) {
             ToastAndroid.show(error, ToastAndroid.SHORT);
         }
-
+        
         try{
         const response = await api.get('/publico/usuario/solicitarRecuperacao',{
             params:{

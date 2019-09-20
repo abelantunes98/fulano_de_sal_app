@@ -9,6 +9,7 @@ import { KeyboardAvoidingView,
 
 import { Card, Button, Input} from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
+import { criptografar } from '../../services/criptografia';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 import{styles} from '../../styles/styles';
 import api from '../../services/api';
@@ -19,25 +20,33 @@ const SolicitacaoRecuperacao = (props)=>{
     const [novaSenha2, setNovaSenha2] = useState('');
 
     async function handler_entrar(){
-        setLoadSolicitar(true);        
-       try {
-            var email = await  AsyncStorage.getItem('email');
-        }
-        catch(error) {
-            ToastAndroid.show(error, ToastAndroid.SHORT);
-        }
+        if (novaSenha == novaSenha2) {
+            setLoadSolicitar(true);        
+            try {
+                var email = await  AsyncStorage.getItem('email');
+            }
+            catch(error) {
+                ToastAndroid.show(error, ToastAndroid.SHORT);
+            }
         
-        try{
-        const response = await api.post('/publico/usuario/recuperarSenha',{
-                email,
-                senha:novaSenha
-        });
-        ToastAndroid.show(response.data['message'],ToastAndroid.SHORT);
-        }catch(error){
-            ToastAndroid.show(error.response.data['message'],ToastAndroid.SHORT);
-        }
-        setLoadSolicitar(false);
+            let senhaCriptografada = await criptografar(novaSenha);
+            try{
+            const response = await api.post('/publico/usuario/recuperarSenha',{
+                    email,
+                    senha:senhaCriptografada
+            });
+            ToastAndroid.show(response.data['message'],ToastAndroid.SHORT);
+            }catch(error){
+                ToastAndroid.show(error.response.data['message'],ToastAndroid.SHORT);
+            }
+            setLoadSolicitar(false);
 
+            ToastAndroid.show('Senha alterada com sucesso!' ,ToastAndroid.SHORT);
+            props.navigation.navigate('LoginPage');
+        }
+        else {
+            alert('As senhas não conferem!');
+        }
     }
         
     return (
