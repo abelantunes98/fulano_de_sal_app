@@ -4,6 +4,8 @@ import { createStackNavigator } from 'react-navigation-stack'
 import Login from './pages/public/Login';
 import Cadastro from './pages/public/Cadastro';
 import SolicitacaoRecuperacao from './pages/public/SolicitacaoRecuperacao';
+import EnviarCodigo from './pages/public/EnviarCodigo';
+import NovaSenha from './pages/public/NovaSenha';
 
 export default createAppContainer(
     createStackNavigator({
@@ -15,6 +17,12 @@ export default createAppContainer(
         },
         SolicitacaoRecuperacaoPage:{
             screen:SolicitacaoRecuperacao
+        },
+        EnviarCodigoPage:{
+            screen:EnviarCodigo
+        },
+        NovaSenhaPage:{
+            screen:NovaSenha
         }
        
     }, {

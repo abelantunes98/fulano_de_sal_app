@@ -23,7 +23,7 @@ const Cadastro = (props) => {
 
 		handler_cadastrar = async () => {
 			try{
-				const response = await api.post('/cliente/',{
+				const response = await api.post('/publico/cliente/',{
 					email, 
 					endereco, 
 					nome, 

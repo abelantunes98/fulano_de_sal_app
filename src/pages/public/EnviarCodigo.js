@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import { KeyboardAvoidingView,
     Text,
-    View,
     AsyncStorage,
+    View,
     ScrollView,
     ToastAndroid
 } from 'react-native';
@@ -15,24 +15,24 @@ import api from '../../services/api';
 
 const SolicitacaoRecuperacao = (props)=>{
     const [loadSolicitar,setLoadSolicitar] = useState(false);
-    const [email, setEmail]= useState('');
+    const [codigo, setCodigo]= useState('');
 
     async function handler_entrar(){
         setLoadSolicitar(true);
         try {
-            await AsyncStorage.setItem('email', email);
-        } catch(error) {
+            var email = await  AsyncStorage.getItem('email');
+        }
+        catch(error) {
             ToastAndroid.show(error, ToastAndroid.SHORT);
         }
 
         try{
-        const response = await api.get('/publico/usuario/solicitarRecuperacao',{
-            params:{
-                email:email
-            }
+        const response = await api.post('/publico/usuario/confirmaCodigo',{
+            codigo,    
+            email
         });
 
-        props.navigation.navigate('EnviarCodigoPage');
+        props.navigation.navigate('NovaSenhaPage');
 
         }catch(error){
             ToastAndroid.show(error.response.data['message'],ToastAndroid.SHORT);
@@ -51,7 +51,7 @@ const SolicitacaoRecuperacao = (props)=>{
                             textAlign: 'center', 
                             fontSize: 28 }}>Solicitar Recuperação</Text>
 
-                        <Text style={styles.text} >Email</Text>
+                        <Text style={styles.text} >Código recebido em seu E-mail</Text>
                         <Input
                             leftIcon={
                                 <IconFont
@@ -62,16 +62,16 @@ const SolicitacaoRecuperacao = (props)=>{
                                 />
                             }
                             autoCapitalize='none'
-                            placeholder='Digite seu email'
-                            keyboardType='email-address'
-                            value={email}
-                            onChangeText={setEmail}
+                            placeholder='Código'
+                            keyboardType='default'
+                            value={codigo}
+                            onChangeText={setCodigo}
                             style={styles.input}
                         />
 
                         <View style={styles.forgotContainer}>
                             <Button 
-                                title='Solicitar'
+                                title='Enviar'
                                 buttonStyle={styles.button}
                                 onPress={handler_entrar}   
                                 titleStyle={styles.titleStyle}  

@@ -24,7 +24,7 @@ const Login = (props) => {
         setLoad(true);
         try {
             let senhaCriptografada = criptografar(senha);
-            const response = await api.post('/usuario/login/', {
+            const response = await api.post('/publico/usuario/login/', {
                 "email":email, 
                 "senha":senhaCriptografada
             });
