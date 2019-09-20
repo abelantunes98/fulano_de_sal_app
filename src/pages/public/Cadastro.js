@@ -15,7 +15,6 @@ import { styles } from '../../styles/styles';
 
 import api from '../../services/api';
 import { criptografar } from '../../services/criptografia';
-import { validaEmail }	from '../../services/validation';
 
 const Cadastro = (props) => {
 		const[nome,setNome] = useState('');
@@ -30,16 +29,17 @@ const Cadastro = (props) => {
 
 		handler_cadastrar = async () => {
 			setLoad(true);
+			
 			let cliente = {
-				"email": email,
-				"endereco": endereco,
-				"nome": nome,
-				"senha": await criptografar(senha),
-				"telefone": telefone
+				'email': email,
+				'endereco': endereco,
+				'nome': nome,
+				'senha': await criptografar(senha),
+				'telefone': telefone
 			}
 	
 			try{
-				await api.post('/cliente/',cliente);
+				await api.post('/publico/cliente/',cliente);
 
 				Alert.alert(
 					'Cadastro Realizado',
@@ -186,7 +186,13 @@ const Cadastro = (props) => {
 									iconLeft
 									title='Cadastrar'
 									buttonStyle={styles.button}
-									onPress={handler_cadastrar}
+									onPress={()=>{
+										if(senha===senhaConfirm){
+											handler_cadastrar();
+										}else{
+											ToastAndroid.show("As senhas não correspondem.",ToastAndroid.SHORT);
+										}
+									}}
 									titleStyle={styles.titleStyle} 
 									loading={load} 
 								/>

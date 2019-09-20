@@ -7,11 +7,12 @@ import {
 
 import styles from '../../styles/styles';
 
-const HomeAdmin = () => {
+const HomeAdmin = (props) => {
+    const administrador = props.navigation.getParam('usuario');
     return (
         <ScrollView style={ styles.mainContainer }>
             <Text>Pedidos</Text>
-            <Text>Hello, admin!</Text>
+            <Text>Hello, {administrador.nome}!</Text>
         </ScrollView>
     )
 }
