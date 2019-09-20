@@ -2,13 +2,13 @@ import React, {useState} from 'react';
 import { KeyboardAvoidingView,
     Text,
     View,
-    AsyncStorage,
     ScrollView,
     ToastAndroid
 } from 'react-native';
 
 import { Card, Button, Input} from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
+import { saveString } from '../../services/banco';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 import{styles} from '../../styles/styles';
 import api from '../../services/api';
@@ -19,11 +19,7 @@ const SolicitacaoRecuperacao = (props)=>{
 
     async function handler_entrar(){
         setLoadSolicitar(true);
-        try {
-            await AsyncStorage.setItem('email', email);
-        } catch(error) {
-            ToastAndroid.show(error, ToastAndroid.SHORT);
-        }
+        saveString('email', email);
         
         try{
         const response = await api.get('/publico/usuario/solicitarRecuperacao',{

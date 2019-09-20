@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import { KeyboardAvoidingView,
     Text,
-    AsyncStorage,
     View,
     ScrollView,
     ToastAndroid
@@ -12,6 +11,7 @@ import IconFont from 'react-native-vector-icons/FontAwesome';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 import{styles} from '../../styles/styles';
 import api from '../../services/api';
+import { findString } from '../../services/banco';
 
 const SolicitacaoRecuperacao = (props)=>{
     const [loadSolicitar,setLoadSolicitar] = useState(false);
@@ -19,12 +19,7 @@ const SolicitacaoRecuperacao = (props)=>{
 
     async function handler_entrar(){
         setLoadSolicitar(true);
-        try {
-            var email = await  AsyncStorage.getItem('email');
-        }
-        catch(error) {
-            ToastAndroid.show(error, ToastAndroid.SHORT);
-        }
+        var email = await findString('email'); 
 
         try{
         const response = await api.post('/publico/usuario/confirmaCodigo',{
@@ -32,6 +27,7 @@ const SolicitacaoRecuperacao = (props)=>{
             email
         });
 
+        // response.data é um Boolean.
         if (response.data) {
             props.navigation.navigate('NovaSenhaPage');
         } else {

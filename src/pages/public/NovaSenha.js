@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
 import { KeyboardAvoidingView,
     Text,
-    AsyncStorage,
     View,
     ScrollView,
     ToastAndroid
 } from 'react-native';
 
 import { Card, Button, Input} from 'react-native-elements';
+import { findString } from '../../services/banco';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import { criptografar } from '../../services/criptografia';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -20,16 +20,13 @@ const SolicitacaoRecuperacao = (props)=>{
     const [novaSenha2, setNovaSenha2] = useState('');
 
     async function handler_entrar(){
+        // Confere se as senhas digitadas nos dois campos são iguais
         if (novaSenha == novaSenha2) {
+            
             setLoadSolicitar(true);        
-            try {
-                var email = await  AsyncStorage.getItem('email');
-            }
-            catch(error) {
-                ToastAndroid.show(error, ToastAndroid.SHORT);
-            }
-        
+            var email = await findString('email');
             let senhaCriptografada = await criptografar(novaSenha);
+            
             try{
             const response = await api.post('/publico/usuario/recuperarSenha',{
                     email,
