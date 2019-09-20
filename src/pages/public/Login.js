@@ -4,35 +4,75 @@ import {
     Text,
     View,
     ScrollView,
-    ToastAndroid
+    ToastAndroid,
+    Alert
 } from 'react-native';
 
 import { Card, Button, Input } from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import { styles } from '../../styles/styles';
 import { criptografar } from '../../services/criptografia';
-
-import api from '../../services/api'
-import { validaEmail } from '../../services/validation';
+import api from '../../services/api';
+import {save, find} from '../../services/banco';
+import{USER_CURRENTY} from '../../services/key';
 
 const Login = (props) => {
     const [load,setLoad] = useState(false);
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
 
-    handler_entrar = async () => {
+    async function redireciona(usuario){
+        if(usuario.cadastroPendente){
+            Alert.alert(
+                'Confirmação pendente',
+                'Confira seu email para confirmação do cadastro.',
+                    [{text:'Reenviar email',onPress:()=>{reenviarEmail(usuario.email)}},
+                    {text: 'OK'},
+                  ],
+                
+                {cancelable: false},
+              );
+        }else{          
+            let paginaDestino = 'HomeClientePage';
+            if(usuario.tipo === 'ADMINISTRADOR'){
+                paginaDestino = 'HomeAdministradorPage';
+            }
+            props.navigation.navigate(paginaDestino,{usuario:usuario});
+        }
+    }
+
+    async function reenviarEmail(email){
+        try{
+            const response = await api.get('/publico/usuario/reenviarEmail', {
+                params: {
+                    emailSender:email
+                 }
+            });
+            ToastAndroid.show("Email enviado",ToastAndroid.SHORT);
+        }catch(e){
+            ToastAndroid.show("Erro ao tentar reenviar",ToastAndroid.SHORT);
+        }
+
+    }
+
+    async function handler_entrar(){
         setLoad(true);
         try {
-            let senhaCriptografada = criptografar(senha);
+
+            let senhaCriptografada = await criptografar(senha);
             const response = await api.post('/publico/usuario/login/', {
-                "email":email, 
-                "senha":senhaCriptografada
+                'email':email, 
+                'senha':senhaCriptografada
             });
             
             // O response ja eh retornado como um JSON com status, data, etc.
             if (response.status == 200) {
-                const responseData = response.data;
-                ToastAndroid.show('Login efetuado!\nOlá ' + responseData.nome + '!', ToastAndroid.SHORT);
+                let responseData = response.data
+                
+                save(USER_CURRENTY,responseData);
+
+                let usuario = await find(USER_CURRENTY);
+                redireciona(usuario);
             }
         } catch (error) {
             //Qualquer status diferente de 200 entra no catch e a api retorna a mensagem específica atraves das exceções lançadas

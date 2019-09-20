@@ -3,15 +3,18 @@ import {
 	KeyboardAvoidingView,
     Text,
 	View,
-	ScrollView
+	ScrollView,
+	ToastAndroid,
+	Alert
 } from 'react-native';
 
-import { Card, Button, Input } from 'react-native-elements';
+import { Card, Button, Input} from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 import { styles } from '../../styles/styles';
 
 import api from '../../services/api';
+import { criptografar } from '../../services/criptografia';
 
 const Cadastro = (props) => {
 		const[nome,setNome] = useState('');
@@ -20,27 +23,40 @@ const Cadastro = (props) => {
 		const[senhaConfirm,setSenhaConfirm] = useState('');
 		const[telefone,setTelefone] = useState('');
 		const[endereco,setEndereco] = useState('');
+		const[load, setLoad] = useState(false);
+
+		
 
 		handler_cadastrar = async () => {
-			try{
-				const response = await api.post('/publico/cliente/',{
-					email, 
-					endereco, 
-					nome, 
-					senha, 
-					telefone
-				});
-
-				if(response.status == 201){
-					alert('Confirme seu cadastro no seu e-mail, por favor.');
-					props.navigation.navigate('LoginPage');
-				}else{
-					alert(response.data.message);
-				}
-			}catch(error){
-				// alguma informacao incorreta, o back devolve a msg de erro.
-				alert(error.response.data.message);
+			setLoad(true);
+			
+			let cliente = {
+				'email': email,
+				'endereco': endereco,
+				'nome': nome,
+				'senha': await criptografar(senha),
+				'telefone': telefone
 			}
+	
+			try{
+
+				await api.post('/publico/cliente/',cliente);
+				Alert.alert(
+					'Cadastro Realizado',
+					'Confira seu email para confirmação do cadastro.',
+						[
+						{text: 'OK', onPress: () => props.navigation.navigate('LoginPage')},,
+					  ],
+					
+					{cancelable: false},
+				  );
+				
+			}catch(error){
+				// alguma informacao incorreta, a api devolve a msg de erro.
+				ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
+			}
+			
+			setLoad(false);
 		}
 
 		return (
@@ -170,8 +186,15 @@ const Cadastro = (props) => {
 									iconLeft
 									title='Cadastrar'
 									buttonStyle={styles.button}
-									onPress={handler_cadastrar}
-									titleStyle={styles.titleStyle}  
+									onPress={()=>{
+										if(senha===senhaConfirm){
+											handler_cadastrar();
+										}else{
+											ToastAndroid.show("As senhas não correspondem.",ToastAndroid.SHORT);
+										}
+									}}
+									titleStyle={styles.titleStyle} 
+									loading={load} 
 								/>
 								<Button 
 									icon={
