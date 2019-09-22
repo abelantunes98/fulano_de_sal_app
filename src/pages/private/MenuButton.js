@@ -1,10 +1,9 @@
 import React from 'react';
-import { StyleSheets, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const MenuButton = (props) => {
-
-    return(
+    return (
         <Ionicons 
             name='md-menu'
             style={styles.menu}
@@ -12,7 +11,6 @@ const MenuButton = (props) => {
             onPress={() => {props.navigation.toggleDrawer();}}
         />
     );
-
 };
 
 const styles = StyleSheet.create(

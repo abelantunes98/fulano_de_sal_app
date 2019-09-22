@@ -2,17 +2,19 @@ import {
     createAppContainer, 
     createSwitchNavigator,
 } from 'react-navigation';
-
 import { createStackNavigator } from 'react-navigation-stack'
 import { createDrawerNavigator } from 'react-navigation-drawer'
 
 import Login from './pages/public/Login';
 import Cadastro from './pages/public/Cadastro';
 import SolicitacaoRecuperacao from './pages/public/SolicitacaoRecuperacao';
-import HomeCliente from './pages/private/HomeCliente';
-import HomeAdmin from './pages/private/admin/HomeAdmin';
 import EnviarCodigo from './pages/public/EnviarCodigo';
 import NovaSenha from './pages/public/NovaSenha';
+
+import HomeCliente from './pages/private/HomeCliente';
+import PerfilCliente from './pages/private/PerfilCliente';
+
+import HomeAdmin from './pages/private/admin/HomeAdmin';
 import PedidosAdmin from './pages/private/admin/PedidosAdmin';
 import ProdutosAdmin from './pages/private/admin/ProdutosAdmin';
 import QuentinhaAdmin from './pages/private/admin/QuentinhaAdmin';
@@ -27,8 +29,11 @@ const homeAdminNavigator = createDrawerNavigator({
     Quentinha: QuentinhaAdmin
 });
 
-//Implementar semelhante ao homeAdminNavigator
-//const HomeClienteNavigator = 
+// Navigator páginas cliente
+const homeClienteNavigator = createDrawerNavigator({
+    Início: HomeCliente,
+    Perfil: PerfilCliente,
+});
 
 // Navigator inicial
 const initNavigator = createStackNavigator({
@@ -53,9 +58,11 @@ const initNavigator = createStackNavigator({
     headerLayoutPreset: 'center'
 });
 
-const switchNavigator = createSwitchNavigator({
+// Alternador entre os navigator's
+const SwitchNavigator = createSwitchNavigator({
     initNavigatorPage: initNavigator,
     homeAdminNavigatorPage: homeAdminNavigator,
+    homeClienteNavigatorPage: homeClienteNavigator,
 });
 
-export default createAppContainer(switchNavigator);
+export default createAppContainer(SwitchNavigator);

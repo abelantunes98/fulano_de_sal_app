@@ -13,52 +13,47 @@ import IconFont from 'react-native-vector-icons/FontAwesome';
 import { styles } from '../../styles/styles';
 import { criptografar } from '../../services/criptografia';
 import api from '../../services/api';
-import {save, find} from '../../services/banco';
-import{USER_CURRENTY} from '../../services/key';
-import { NavigationActions } from 'react-navigation';
+import { save, find } from '../../services/banco';
+import { USER_CURRENTY } from '../../services/key';
 
 const Login = (props) => {
     const [load,setLoad] = useState(false);
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
 
-    async function redireciona(usuario){
-        if(usuario.cadastroPendente){
+    async function redireciona(usuario) {
+        if (usuario.cadastroPendente) {
             Alert.alert(
                 'Confirmação pendente',
                 'Confira seu email para confirmação do cadastro.',
                     [{text:'Reenviar email',onPress:()=>{reenviarEmail(usuario.email)}},
                     {text: 'OK'},
                   ],
-                
                 {cancelable: false},
               );
-        }else{          
+        } else {          
             let paginaDestino = 'homeClienteNavigatorPage';
-            if(usuario.tipo === 'ADMINISTRADOR'){
+            if (usuario.tipo === 'ADMINISTRADOR') {
                 paginaDestino = 'homeAdminNavigatorPage';
             }
-            //O usuário deverá ser armazenado em um storage
-            //Trocar 'homeAdminNavigatorPage' por paginaDestino quando homeClienteNavigatorPage for implementado
-            props.navigation.navigate('homeAdminNavigatorPage');
+            props.navigation.navigate(paginaDestino);
         }
     }
 
     async function reenviarEmail(email){
-        try{
+        try {
             const response = await api.get('/publico/usuario/reenviarEmail', {
                 params: {
                     emailSender:email
                  }
             });
             ToastAndroid.show("Email enviado",ToastAndroid.SHORT);
-        }catch(e){
+        } catch(e) {
             ToastAndroid.show("Erro ao tentar reenviar",ToastAndroid.SHORT);
         }
-
     }
 
-    async function handler_entrar(){
+    async function handler_entrar() {
         setLoad(true);
         try {
 
@@ -72,7 +67,7 @@ const Login = (props) => {
             if (response.status == 200) {
                 let responseData = response.data
                 
-                save(USER_CURRENTY,responseData);
+                save(USER_CURRENTY, responseData);
 
                 let usuario = await find(USER_CURRENTY);
                 redireciona(usuario);
