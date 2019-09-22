@@ -1,4 +1,5 @@
-import { createAppContainer, 
+import { 
+    createAppContainer, 
     createSwitchNavigator,
 } from 'react-navigation';
 
@@ -19,72 +20,42 @@ import CardapioAdmin from './pages/private/admin/CardapioAdmin';
 
 // Navigator páginas admin
 const homeAdminNavigator = createDrawerNavigator({
-    Início:{
-        screen:HomeAdmin
-    },
-    Pedidos:{
-        screen:PedidosAdmin
-    },
-    Produtos:{
-        screen:ProdutosAdmin
-    },
-    Cardápio:{
-        screen:CardapioAdmin
-    },
-    Quentinha:{
-        screen:QuentinhaAdmin
-    }
-},
-
-);
+    Início: HomeAdmin,
+    Pedidos: PedidosAdmin,
+    Produtos: ProdutosAdmin,
+    Cardápio: CardapioAdmin,
+    Quentinha: QuentinhaAdmin
+});
 
 //Implementar semelhante ao homeAdminNavigator
 //const HomeClienteNavigator = 
 
 // Navigator inicial
 const initNavigator = createStackNavigator({
-        LoginPage:{
-            screen:Login
+    LoginPage: Login,
+    CadastroPage: Cadastro,
+    SolicitacaoRecuperacaoPage: SolicitacaoRecuperacao,
+    EnviarCodigoPage: EnviarCodigo,
+    NovaSenhaPage: NovaSenha,
+}, {
+    defaultNavigationOptions: {
+        headerStyle:{
+            backgroundColor: '#0f6124'
         },
-        CadastroPage:{
-            screen:Cadastro
+        headerTitleStyle: {
+            color: '#FFF',
+            fontFamily: 'Roboto-Thin'
         },
-        SolicitacaoRecuperacaoPage:{
-            screen:SolicitacaoRecuperacao
-        },
-
-        EnviarCodigoPage:{
-            screen:EnviarCodigo
-        },
-        NovaSenhaPage:{
-            screen:NovaSenha
-        },
-        },
-       
-        {
-        defaultNavigationOptions: {
-            headerStyle:{
-                backgroundColor: '#0f6124'
-            },
-            headerTitleStyle: {
-                color: '#FFF',
-                fontFamily: 'Roboto-Thin'
-            },
-            headerTitle: 'Fulano de Sal',
-            headerBackTitle: null,
-        },
-        mode: 'modal',
-        headerLayoutPreset: 'center'
+        headerTitle: 'Fulano de Sal',
+        headerBackTitle: null,
+    },
+    mode: 'modal',
+    headerLayoutPreset: 'center'
 });
 
 const switchNavigator = createSwitchNavigator({
-    initNavigatorPage: {
-        screen:initNavigator
-    },
-    homeAdminNavigatorPage: {
-        screen:homeAdminNavigator
-    },
+    initNavigatorPage: initNavigator,
+    homeAdminNavigatorPage: homeAdminNavigator,
 });
-
 
 export default createAppContainer(switchNavigator);
