@@ -78,11 +78,11 @@ const initNavigator = createStackNavigator({
 });
 
 const switchNavigator = createSwitchNavigator({
-    homeAdminNavigatorPage: {
-        screen:homeAdminNavigator
-    },
     initNavigatorPage: {
         screen:initNavigator
+    },
+    homeAdminNavigatorPage: {
+        screen:homeAdminNavigator
     },
 });
 
