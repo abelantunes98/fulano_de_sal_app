@@ -1,4 +1,7 @@
-import { createAppContainer,createSwitchNavigator } from 'react-navigation';
+import { createAppContainer, 
+    createSwitchNavigator,
+} from 'react-navigation';
+
 import { createStackNavigator } from 'react-navigation-stack'
 import { createDrawerNavigator } from 'react-navigation-drawer'
 
@@ -6,13 +9,40 @@ import Login from './pages/public/Login';
 import Cadastro from './pages/public/Cadastro';
 import SolicitacaoRecuperacao from './pages/public/SolicitacaoRecuperacao';
 import HomeCliente from './pages/private/HomeCliente';
-import HomeAdmin from './pages/private/HomeAdmin';
+import HomeAdmin from './pages/private/admin/HomeAdmin';
 import EnviarCodigo from './pages/public/EnviarCodigo';
 import NovaSenha from './pages/public/NovaSenha';
+import PedidosAdmin from './pages/private/admin/PedidosAdmin';
+import ProdutosAdmin from './pages/private/admin/ProdutosAdmin';
+import QuentinhaAdmin from './pages/private/admin/QuentinhaAdmin';
+import CardapioAdmin from './pages/private/admin/CardapioAdmin';
 
+// Navigator páginas admin
+const homeAdminNavigator = createDrawerNavigator({
+    Início:{
+        screen:HomeAdmin
+    },
+    Pedidos:{
+        screen:PedidosAdmin
+    },
+    Produtos:{
+        screen:ProdutosAdmin
+    },
+    Cardápio:{
+        screen:CardapioAdmin
+    },
+    Quentinha:{
+        screen:QuentinhaAdmin
+    }
+},
 
-export default createAppContainer(
-    createStackNavigator({
+);
+
+//Implementar semelhante ao homeAdminNavigator
+//const HomeClienteNavigator = 
+
+// Navigator inicial
+const initNavigator = createStackNavigator({
         LoginPage:{
             screen:Login
         },
@@ -29,12 +59,6 @@ export default createAppContainer(
         NovaSenhaPage:{
             screen:NovaSenha
         },
-        HomeClientePage:{
-            screen:HomeCliente
-        },
-        HomeAdministradorPage:{
-            screen:HomeAdmin
-        }
         },
        
         {
@@ -51,5 +75,16 @@ export default createAppContainer(
         },
         mode: 'modal',
         headerLayoutPreset: 'center'
-    })
-);
+});
+
+const switchNavigator = createSwitchNavigator({
+    homeAdminNavigatorPage: {
+        screen:homeAdminNavigator
+    },
+    initNavigatorPage: {
+        screen:initNavigator
+    },
+});
+
+
+export default createAppContainer(switchNavigator);

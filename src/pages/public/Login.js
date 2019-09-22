@@ -15,6 +15,7 @@ import { criptografar } from '../../services/criptografia';
 import api from '../../services/api';
 import {save, find} from '../../services/banco';
 import{USER_CURRENTY} from '../../services/key';
+import { NavigationActions } from 'react-navigation';
 
 const Login = (props) => {
     const [load,setLoad] = useState(false);
@@ -33,11 +34,13 @@ const Login = (props) => {
                 {cancelable: false},
               );
         }else{          
-            let paginaDestino = 'HomeClientePage';
+            let paginaDestino = 'homeClienteNavigatorPage';
             if(usuario.tipo === 'ADMINISTRADOR'){
-                paginaDestino = 'HomeAdministradorPage';
+                paginaDestino = 'homeAdminNavigatorPage';
             }
-            props.navigation.navigate(paginaDestino,{usuario:usuario});
+            //O usuário deverá ser armazenado em um storage
+            //Trocar 'homeAdminNavigatorPage' por paginaDestino quando homeClienteNavigatorPage for implementado
+            props.navigation.navigate('homeAdminNavigatorPage');
         }
     }
 
