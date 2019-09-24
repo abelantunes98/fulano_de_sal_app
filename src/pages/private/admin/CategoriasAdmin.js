@@ -7,13 +7,13 @@ import {
 import { styles } from '../../../styles/styles';
 import MenuButton from '../MenuButton';
 
-const CardapioAdmin = (props) => {
+const CategoriasAdmin = (props) => {
     return (
         <View style={ styles.mainContainer }>
             <MenuButton navigation={props.navigation}/>
-            <Text style={{alignSelf: 'center'}}>Cardápio</Text>
+            <Text style={{alignSelf: 'center'}}>Categorias</Text>
         </View>
     )
 }
 
-export default CardapioAdmin;
+export default CategoriasAdmin;

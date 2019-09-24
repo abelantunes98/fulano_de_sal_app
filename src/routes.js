@@ -17,16 +17,22 @@ import ConfiguracoesCliente from './pages/private/ConfiguracoesCliente'
 import LogoutCliente from './pages/private/LogoutCliente'
 
 import PedidosAdmin from './pages/private/admin/PedidosAdmin';
-import ProdutosAdmin from './pages/private/admin/ProdutosAdmin';
-import QuentinhaAdmin from './pages/private/admin/QuentinhaAdmin';
 import CardapioAdmin from './pages/private/admin/CardapioAdmin';
+import ProdutosAdmin from './pages/private/admin/ProdutosAdmin';
+import MarmitaAdmin from './pages/private/admin/MarmitaAdmin';
+import CategoriasAdmin from './pages/private/admin/CategoriasAdmin';
+import ConfiguracoesAdmin from './pages/private/admin/ConfiguracoesAdmin';
+import LogoutAdmin from './pages/private/admin/LogoutAdmin';
 
 // Navigator páginas admin
 const homeAdminNavigator = createDrawerNavigator({
     Pedidos: PedidosAdmin,
     Cardápio: CardapioAdmin,
     Produtos: ProdutosAdmin,
-    Marmitas: QuentinhaAdmin,
+    Marmitas: MarmitaAdmin,
+    Categorias: CategoriasAdmin,
+    Configurações: ConfiguracoesAdmin,
+    Sair: LogoutAdmin,
 });
 
 // Navigator páginas cliente
