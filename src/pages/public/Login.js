@@ -36,7 +36,7 @@ const Login = (props) => {
             if (usuario.tipo === 'ADMINISTRADOR') {
                 paginaDestino = 'homeAdminNavigatorPage';
             }
-            props.navigation.navigate('homeAdminNavigatorPage');
+            props.navigation.navigate(paginaDestino);
         }
     }
 
