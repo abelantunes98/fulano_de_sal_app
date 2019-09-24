@@ -12,12 +12,7 @@ const CardapioAdmin = (props) => {
     return (
         <View style={ styles.mainContainer }>
             <MenuButton navigation={props.navigation}/>
-            <Text>Cardápio</Text>
-            <View>
-                {
-                    //Implentar as funcionalidades da página cardápio
-                }
-            </View>
+            <Text style={{alignSelf: 'center'}}>Cardápio</Text>
         </View>
     )
 }

@@ -13,12 +13,7 @@ const ProdutosAdmin = (props) => {
     return (
         <View style={ styles.mainContainer }>
             <MenuButton navigation={props.navigation}/>
-            <Text>Produtos</Text>
-            <View>
-                {
-                    //Implentar as funcionalidades da página produtos
-                }
-            </View>
+            <Text style={{alignSelf: 'center'}}>Produtos</Text>
         </View>
     )
 }

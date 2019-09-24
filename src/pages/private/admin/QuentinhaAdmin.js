@@ -12,12 +12,7 @@ const QuentinhaAdmin = (props) => {
     return (
         <View style={ styles.mainContainer }>
             <MenuButton navigation={props.navigation}/>
-            <Text>Quentinhas</Text>
-            <View>
-                {
-                    //Implentar as funcionalidades da página quentinha
-                }
-            </View>
+            <Text style={{alignSelf: 'center'}}>Marmitas</Text>
         </View>
     )
 }

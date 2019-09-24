@@ -12,9 +12,10 @@ import EnviarCodigo from './pages/public/EnviarCodigo';
 import NovaSenha from './pages/public/NovaSenha';
 
 import HomeCliente from './pages/private/HomeCliente';
-import PerfilCliente from './pages/private/PerfilCliente';
+import PedidosCliente from './pages/private/PedidosCliente';
+import ConfiguracoesCliente from './pages/private/ConfiguracoesCliente'
+import LogoutCliente from './pages/private/LogoutCliente'
 
-import HomeAdmin from './pages/private/admin/HomeAdmin';
 import PedidosAdmin from './pages/private/admin/PedidosAdmin';
 import ProdutosAdmin from './pages/private/admin/ProdutosAdmin';
 import QuentinhaAdmin from './pages/private/admin/QuentinhaAdmin';
@@ -22,17 +23,18 @@ import CardapioAdmin from './pages/private/admin/CardapioAdmin';
 
 // Navigator páginas admin
 const homeAdminNavigator = createDrawerNavigator({
-    Início: HomeAdmin,
     Pedidos: PedidosAdmin,
-    Produtos: ProdutosAdmin,
     Cardápio: CardapioAdmin,
-    Quentinha: QuentinhaAdmin
+    Produtos: ProdutosAdmin,
+    Marmitas: QuentinhaAdmin,
 });
 
 // Navigator páginas cliente
 const homeClienteNavigator = createDrawerNavigator({
     Início: HomeCliente,
-    Perfil: PerfilCliente,
+    Pedidos: PedidosCliente,
+    Configurações: ConfiguracoesCliente,
+    Sair: LogoutCliente,
 });
 
 // Navigator inicial
