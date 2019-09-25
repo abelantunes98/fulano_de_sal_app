@@ -38,7 +38,7 @@ const homeAdminNavigator = createDrawerNavigator({
 // Navigator páginas cliente
 const homeClienteNavigator = createDrawerNavigator({
     Home: HomeCliente,
-    Pedidos: PedidosCliente,
+    PedidosCliente: PedidosCliente,
     Configuracoes: ConfiguracoesCliente,
     Sair: LogoutCliente,
 },{

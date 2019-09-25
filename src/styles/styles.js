@@ -17,6 +17,14 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-around',
 		marginTop: 10,
 	},
+	buttonPedido: {
+		borderRadius: 50,
+		width: 50,
+		height: 50,
+		backgroundColor: '#82080a',
+		alignSelf: 'flex-end',
+		marginRight: 10,
+	},
 	button: {
 		marginTop: 10,
         backgroundColor: '#0f6124',
