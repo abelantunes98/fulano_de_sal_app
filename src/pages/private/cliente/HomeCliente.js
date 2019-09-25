@@ -4,8 +4,8 @@ import {
     Text,
 } from 'react-native';
 
-import { styles } from '../../styles/styles';
-import MenuButton from './MenuButton';
+import { styles } from '../../../styles/styles';
+import MenuButton from '../MenuButton';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import { Button } from 'react-native-elements';
 

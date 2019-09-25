@@ -21,6 +21,7 @@ export default class MarmitaAdmin extends Component {
 
     constructor(props){
         super(props);
+        this.loadRepositories();
     }
     
     state = {
@@ -70,8 +71,6 @@ export default class MarmitaAdmin extends Component {
             data={this.state.data}
             renderItem={this.renderItem}
             keyExtractor={item => item.idMarmita}
-            onEndReached={this.loadRepositories}
-
             />
         </View>
       );
