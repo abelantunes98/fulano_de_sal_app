@@ -11,10 +11,10 @@ import SolicitacaoRecuperacao from './pages/public/SolicitacaoRecuperacao';
 import EnviarCodigo from './pages/public/EnviarCodigo';
 import NovaSenha from './pages/public/NovaSenha';
 
-import HomeCliente from './pages/private/HomeCliente';
-import PedidosCliente from './pages/private/PedidosCliente';
-import ConfiguracoesCliente from './pages/private/ConfiguracoesCliente'
-import LogoutCliente from './pages/private/LogoutCliente'
+import HomeCliente from './pages/private/cliente/HomeCliente';
+import PedidosCliente from './pages/private/cliente/PedidosCliente';
+import ConfiguracoesCliente from './pages/private/cliente/ConfiguracoesCliente'
+import LogoutCliente from './pages/private/cliente/LogoutCliente'
 
 import PedidosAdmin from './pages/private/admin/PedidosAdmin';
 import CardapioAdmin from './pages/private/admin/CardapioAdmin';

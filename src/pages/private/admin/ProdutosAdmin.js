@@ -8,6 +8,7 @@ import {
 
 import { styles } from '../../../styles/styles';
 import MenuButton from '../MenuButton';
+import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const ProdutosAdmin = (props) => {
     return (
@@ -15,6 +16,18 @@ const ProdutosAdmin = (props) => {
             <MenuButton navigation={props.navigation}/>
             <Text style={{alignSelf: 'center'}}>Produtos</Text>
         </View>
+    )
+}
+
+ProdutosAdmin.navigationOptions = {
+    drawerLabel: 'Produtos',
+    drawerIcon:({focused, tintColor}) => (
+        <IconMaterial
+            name='food-variant'
+            size={20}
+            color='black'
+            style={ styles.iconsDrawer }
+        />
     )
 }
 

@@ -6,6 +6,7 @@ import {
 
 import { styles } from '../../../styles/styles';
 import MenuButton from '../MenuButton';
+import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const LogoutAdmin = (props) => {
     return (
@@ -13,6 +14,18 @@ const LogoutAdmin = (props) => {
             <MenuButton navigation={props.navigation}/>
             <Text style={{alignSelf: 'center'}}>Sair</Text>
         </View>
+    )
+}
+
+LogoutAdmin.navigationOptions = {
+    drawerLabel: 'Sair',
+    drawerIcon:({focused, tintColor}) => (
+        <IconMaterial
+            name='exit-to-app'
+            size={20}
+            color='black'
+            style={ styles.iconsDrawer }
+        />
     )
 }
 
