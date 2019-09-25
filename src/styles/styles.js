@@ -37,7 +37,10 @@ const styles = StyleSheet.create({
 	},
 	icons: {
 		paddingRight: 10
-    },
+	},
+	iconsDrawer: {
+		paddingRight: 2
+	},
     forgotContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',

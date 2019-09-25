@@ -37,10 +37,17 @@ const homeAdminNavigator = createDrawerNavigator({
 
 // Navigator páginas cliente
 const homeClienteNavigator = createDrawerNavigator({
-    Início: HomeCliente,
+    Home: HomeCliente,
     Pedidos: PedidosCliente,
-    Configurações: ConfiguracoesCliente,
+    Configuracoes: ConfiguracoesCliente,
     Sair: LogoutCliente,
+},{
+    contentOptions:{
+        activeTintColor: 'green',
+        labelStyle:{
+            fontSize: 16,
+        }    
+    }
 });
 
 // Navigator inicial
