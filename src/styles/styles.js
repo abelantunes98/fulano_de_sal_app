@@ -3,7 +3,8 @@ import {StyleSheet}from   'react-native';
 const styles = StyleSheet.create({
 	mainContainer: {
 		flexGrow : 1, 
-        justifyContent : 'center',
+		justifyContent : 'center',
+		backgroundColor: '#ffffff'
 	},
 	infoContainer: {
 		justifyContent: 'center',
@@ -56,7 +57,28 @@ const styles = StyleSheet.create({
     },
     titleStyle:{
         fontFamily: 'Roboto-Thin'
-    }
+	},
+	listItem: {
+		backgroundColor: '#EEE',
+		marginTop: 20,
+		padding: 30,
+	},
+	list: {
+		paddingHorizontal: 20,
+	},
+	floatButton:{
+		borderWidth:1,
+        borderColor:'rgba(0,0,0,0.2)',
+        alignItems:'center',
+        justifyContent:'center',
+        width:70,
+        position: 'absolute',                                          
+        bottom: 25,                                                    
+        right: 25,
+        height:70,
+        backgroundColor:'#0f6124',
+        borderRadius:100,
+	}
 });
 
 export {styles};

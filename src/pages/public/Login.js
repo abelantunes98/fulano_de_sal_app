@@ -5,7 +5,8 @@ import {
     View,
     ScrollView,
     ToastAndroid,
-    Alert
+    Alert,
+    ProgressBarAndroid
 } from 'react-native';
 
 import { Card, Button, Input } from 'react-native-elements';
@@ -20,6 +21,33 @@ const Login = (props) => {
     const [load,setLoad] = useState(false);
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
+    const [loginSave,setLoginSave] = useState(true);
+
+    useEffect(()=>{
+        loadUser();
+    });
+
+    async function loadUser(){
+        let usuario = await find(USER_CURRENTY);
+        if(usuario != null){
+            
+            const response = await api.post('/publico/usuario/login/', {
+                'email':usuario.email, 
+                'senha':usuario.senha
+            });
+
+            if (response.status == 200) {
+                let responseData = response.data
+                
+                save(USER_CURRENTY, responseData);
+
+                let usuario = await find(USER_CURRENTY);
+                redireciona(usuario);
+            }
+        }else{
+            setLoginSave(false);
+        }
+    }
 
     async function redireciona(usuario) {
         if (usuario.cadastroPendente) {
@@ -66,10 +94,11 @@ const Login = (props) => {
             // O response ja eh retornado como um JSON com status, data, etc.
             if (response.status == 200) {
                 let responseData = response.data
-                
+               
                 save(USER_CURRENTY, responseData);
 
                 let usuario = await find(USER_CURRENTY);
+                
                 redireciona(usuario);
             }
         } catch (error) {
@@ -80,7 +109,7 @@ const Login = (props) => {
         
     return (
         <ScrollView contentContainerStyle={ styles.mainContainer }>
-            <KeyboardAvoidingView>
+            {!loginSave && <KeyboardAvoidingView>
                 <View style={ styles.infoContainer }>
                     <Card containerStyle={ styles.inforCard }>
                         <Text style={{ 
@@ -146,7 +175,10 @@ const Login = (props) => {
                         />
                     </Card>
                 </View>
+                
             </KeyboardAvoidingView>
+            }
+            {loginSave &&  <ProgressBarAndroid />}
         </ScrollView>
     );
 };
