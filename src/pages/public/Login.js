@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { 
     KeyboardAvoidingView,
     Text,
@@ -75,8 +75,7 @@ const Login = (props) => {
         } catch (error) {
             //Qualquer status diferente de 200 entra no catch e a api retorna a mensagem específica atraves das exceções lançadas
             ToastAndroid.show(error.response.data['message'],ToastAndroid.SHORT);
-        } 
-        setLoad(false); 
+        }
     }
         
     return (
