@@ -21,11 +21,11 @@ export default function App() {
 			Alert.alert(
                 'O aplicativo necessita de internet.',
                 'Confira a sua conexão com a internet e tente novamente.',
-                    [
+				[
                     {text: 'OK',onPress:_=>{
 						BackHandler.exitApp();
 					}},
-                  ],
+				],
                 {cancelable: false},
               );	
 		}

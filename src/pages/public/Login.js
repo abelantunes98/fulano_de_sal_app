@@ -29,7 +29,7 @@ const Login = (props) => {
 
     async function loadUser(){
         let usuario = await find(USER_CURRENTY);
-        if(usuario != null){
+        if(usuario !== null){
             
             const response = await api.post('/publico/usuario/login/', {
                 'email':usuario.email, 
@@ -39,7 +39,7 @@ const Login = (props) => {
             if (response.status == 200) {
                 let responseData = response.data
                 
-                save(USER_CURRENTY, responseData);
+                await save(USER_CURRENTY, responseData);
 
                 let usuario = await find(USER_CURRENTY);
                 redireciona(usuario);
@@ -54,10 +54,17 @@ const Login = (props) => {
             Alert.alert(
                 'Confirmação pendente',
                 'Confira seu email para confirmação do cadastro.',
-                    [{text:'Reenviar email',onPress:()=>{reenviarEmail(usuario.email)}},
-                    {text: 'OK'},
-                  ],
-                {cancelable: false},
+                [
+                    {
+                        text:'Reenviar email',onPress:()=>{reenviarEmail(usuario.email)}
+                    },
+                    {
+                        text: 'Ok'
+                    },
+                ],
+                {
+                    cancelable: false
+                },
               );
         } else {          
             let paginaDestino = 'homeClienteNavigatorPage';
@@ -75,9 +82,9 @@ const Login = (props) => {
                     emailSender:email
                  }
             });
-            ToastAndroid.show("Email enviado",ToastAndroid.SHORT);
+            ToastAndroid.show('Email enviado',ToastAndroid.SHORT);
         } catch(e) {
-            ToastAndroid.show("Erro ao tentar reenviar",ToastAndroid.SHORT);
+            ToastAndroid.show('Erro ao tentar reenviar',ToastAndroid.SHORT);
         }
     }
 

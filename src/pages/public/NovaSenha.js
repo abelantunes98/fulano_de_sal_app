@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import { KeyboardAvoidingView,
     Text,
     View,
@@ -28,9 +28,9 @@ const SolicitacaoRecuperacao = (props)=>{
             let senhaCriptografada = await criptografar(novaSenha);
             
             try{
-            const response = await api.post('/publico/usuario/recuperarSenha',{
-                    email,
-                    senha:senhaCriptografada
+            const response = await api.post('/publico/usuario/recuperarSenha', {
+                email,
+                senha:senhaCriptografada
             });
             ToastAndroid.show(response.data['message'],ToastAndroid.SHORT);
             }catch(error){
