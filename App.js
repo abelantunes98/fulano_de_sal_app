@@ -9,9 +9,13 @@
 import React, { useState } from 'react';
 import Routes from "./src/routes";
 import NetInfo from "@react-native-community/netinfo";
-import { Alert,BackHandler} from 'react-native';
+import { Alert, BackHandler, YellowBox} from 'react-native';
 
 export default function App() {
+	YellowBox.ignoreWarnings([
+		'Warning: componentWillMount is deprecated',
+	])
+	
 	const[connected,setIsConnected] = useState(false);
 
 	NetInfo.fetch().then(state => {
