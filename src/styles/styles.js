@@ -20,12 +20,19 @@ const styles = StyleSheet.create({
 	},
 	buttonPedido: {
 		borderRadius: 50,
-		width: 50,
-		height: 50,
-		backgroundColor: '#82080a',
-		alignSelf: 'flex-end',
+		width: 60,
+		height: 60,
+		backgroundColor: '#32CD32',
+		alignSelf: "center",
 		marginRight: 10,
+		marginBottom: 20,
 	},
+	titleButtonStyle: {
+		fontSize: 25,
+		textAlign: "center",
+		color: '#ffffff'
+	},
+
 	button: {
 		marginTop: 10,
         backgroundColor: '#0f6124',
@@ -38,8 +45,29 @@ const styles = StyleSheet.create({
     },
     btnEsqueceuSenha: {
         marginTop: 10,
-    },
-	text: {
+	},
+	containerPedidos: {
+		flexGrow: 5,
+		marginTop: 100,
+		alignItems: "center",
+		justifyContent: "center"
+	   },
+
+	itemPedidos: {
+		padding: 5,
+		textAlign: "center",
+		backgroundColor: '#228B22',
+		alignSelf: "center",
+		fontSize: 18,
+		color: '#F0F8FF',
+		height: 44,
+		marginVertical: 8,
+		width: 200,
+		borderRadius: 5,
+		marginHorizontal: 10
+	  },
+	
+	  text: {
 		fontFamily: 'Oswald-Regular',
 		fontSize: 16,
 		paddingTop: 10
