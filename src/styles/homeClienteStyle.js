@@ -18,7 +18,6 @@ const stylesHC = StyleSheet.create({
 		borderRadius: 50,
 		width: 180,
         height: 60,
-        fontSize: 40,
 		backgroundColor: '#0f6124',
 		alignSelf: 'center'
         

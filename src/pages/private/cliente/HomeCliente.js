@@ -17,10 +17,13 @@ const HomeCliente = (props) => {
     return (
         <View style = { stylesHC.mainContainer }>
             <MenuButton navigation={props.navigation}/>
-            <Text style={ { fontSize: 24,
+            <Text 
+                style={ { fontSize: 24,
                             marginTop: 30,
                             textAlign: 'center'
-                            } }>Bem Vindo</Text>
+                }}>
+                Bem Vindo
+            </Text>
 
             <View style={stylesHC.containerCardapio}>
                 <Text style={ stylesHC.textTitle }>Cardápio do dia:</Text>   
@@ -33,6 +36,7 @@ const HomeCliente = (props) => {
             <View style={{height: 100}}>
                 <Button 
                     title='Fazer Pedido'
+                    titleStyle={{fontSize: 18}}
                     buttonStyle={stylesHC.buttonPedido}
                     onPress={()=>{props.navigation.navigate('PedidosCliente')}}
                 />
