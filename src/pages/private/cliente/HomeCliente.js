@@ -9,31 +9,37 @@ import MenuButton from '../MenuButton';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import { Button } from 'react-native-elements';
 
+import { stylesHC } from '../../../styles/homeClienteStyle'
+
 const HomeCliente = (props) => {
     const cliente = props.navigation.getParam('usuario');
  
     return (
-        <View style = { styles.mainContainer }>
+        <View style = { stylesHC.mainContainer }>
             <MenuButton navigation={props.navigation}/>
-            <Text style={{alignSelf: 'center'}}>Bem Vindo, Fulano</Text>
+            <Text style={ { fontSize: 24,
+                            marginTop: 30,
+                            textAlign: 'center'
+                            } }>Bem Vindo</Text>
 
-            <View>
-                <Text style={{alignSelf: 'center'}}>Cardápio do dia:</Text>   
+            <View style={stylesHC.containerCardapio}>
+                <Text style={ stylesHC.textTitle }>Cardápio do dia:</Text>   
                 <Button 
                     title='Ver'
-                    buttonStyle={styles.button}
+                    buttonStyle={stylesHC.button}
                 />
             </View>
 
-            <View>
+            <View style={{height: 100}}>
                 <Button 
-                    title='+'
-                    buttonStyle={styles.buttonPedido}
+                    title='Fazer Pedido'
+                    buttonStyle={stylesHC.buttonPedido}
                     onPress={()=>{props.navigation.navigate('PedidosCliente')}}
                 />
             </View>                          
         </View>
     )
+
 }
 
 // usando o static no componente funcional || Propriedade estática
