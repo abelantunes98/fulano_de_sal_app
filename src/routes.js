@@ -17,7 +17,7 @@ import ConfiguracoesCliente from './pages/private/cliente/ConfiguracoesCliente'
 import LogoutCliente from './pages/private/cliente/LogoutCliente'
 
 import PedidosAdmin from './pages/private/admin/PedidosAdmin';
-import CardapioAdmin from './pages/private/admin/CardapioAdmin';
+import CardapioAdmin from './pages/private/admin/cardapio/CardapioAdmin';
 import ProdutosAdmin from './pages/private/admin/ProdutosAdmin';
 import MarmitaAdmin from './pages/private/admin/MarmitaAdmin';
 import CategoriasAdmin from './pages/private/admin/CategoriasAdmin';
