@@ -39,10 +39,10 @@ const ConfiguracoesAdmin = (props) => {
             }}>
                 <Image
                     source={{uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/old_logo.png',}}
-                    style={{ width: 150, height: 150, borderRadius: 150 / 2, alignContent: "center", alignItems: "center" }}
+                    style={{ width: 150, height: 150, borderRadius: 150 / 2, alignContent: 'center', alignItems: 'center' }}
                 />
-                <Text style={{ textAlign: "center" }}>{ admin.nome }</Text>
-                <Text style={{ textAlign: "center" }}>{ admin.email }</Text>
+                <Text style={{ textAlign: 'center' }}>{ admin.nome }</Text>
+                <Text style={{ textAlign: 'center' }}>{ admin.email }</Text>
                 <View style={styles.forgotContainer}>
                     <Button title='Alterar dados' buttonStyle={styles.button} titleStyle={styles.titleStyle} onPress={alterarDados} />
                 </View>
