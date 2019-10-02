@@ -3,19 +3,17 @@ import {
     View,
     Text,
     FlatList,
+    TouchableOpacity
 } from 'react-native'
 
 import { styles } from '../../../styles/styles';
 import MenuButton from '../MenuButton';
-import { Button } from 'react-native-elements';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const PedidosCliente = (props) => {
     return (
         <View style = {styles.mainContainer}>
             <MenuButton navigation={props.navigation}/>
-            <Text style={{alignSelf: 'center'}}>PedidosCliente</Text>
-
             <View style = {styles.containerPedidos}>
                 <FlatList
                     data={[
@@ -28,12 +26,14 @@ const PedidosCliente = (props) => {
                     />
             </View>
             <View>
-                <Button 
-                    title='+'
-                    titleStyle={styles.titleButtonStyle}
-                    buttonStyle={styles.buttonPedido}
-                    onPress={()=>{props.navigation.navigate('PedidosCliente')}}
-                />
+                <TouchableOpacity style={styles.floatButton}>
+                    <IconMaterial
+                        name='plus'
+                        size={20}
+                        color='#ffffff'
+                        style={ styles.iconsDrawer }
+                        />
+                </TouchableOpacity>
             </View>  
         </View>
     )
