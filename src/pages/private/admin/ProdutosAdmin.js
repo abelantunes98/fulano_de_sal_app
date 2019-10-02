@@ -24,13 +24,14 @@ const ProdutosAdmin = (props) => {
     loadRepositories = async () => {
         let usuario = await find(USER_CURRENTY);
         //const response = await api.get('/protegido/produto/lista',{ headers: {Authorization: usuario.token,}});
-        setData([{id:1,descricao:'Arroz Branco'},{id:2,descricao:'Feijão Preto'}]);
+        setData([{id:1,descricao:'Arroz Branco',categoria:'Arroz'},{id:2,descricao:'Feijão Preto',categoria:'Feijão'},{id:3,descricao:'Macarrão Amarelinho',categoria:'Massas'}]);
     }
      
     renderItem = ({ item }) => (
          <View >
           <Card style={styles.listItem}>
             <Text>{item.descricao}</Text>
+            <Text style={{ textAlign: 'right',fontSize: 10}}>{item.categoria}</Text>
           </Card>
       </View>
     );
