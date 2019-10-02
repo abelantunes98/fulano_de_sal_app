@@ -27,7 +27,7 @@ Com isso, uma pasta `node_modules` será criada, é nessa pasta que ficará guar
 Se você seguiu os passos do tutorial citado, instalou o emulador(ou as configurações caso queira outro tipo de execução), basta abrir o emulador e executar o comando:
 
 ```sh
-npm start
+react-native run-android
 ```
 
 E 'voilà' a aplicação será carregada em alguns instantes no seu emulador e você verá ela funcionando.
