@@ -3,10 +3,10 @@ import {StyleSheet} from 'react-native';
 // estilos para a Home Cliente
 const stylesHC = StyleSheet.create({
     mainContainer: {
-		flexGrow : 1, 
-		justifyContent : 'space-between',
-		backgroundColor: '#ffffff',
-		flexDirection: 'column',
+    flexGrow : 1, 
+    justifyContent : 'space-between',
+    backgroundColor: '#ffffff',
+    flexDirection: 'column',
 
     },
     containerCardapio:{
@@ -15,11 +15,11 @@ const stylesHC = StyleSheet.create({
 
     },
     buttonPedido: {
-		borderRadius: 50,
-		width: 180,
+    borderRadius: 50,
+    width: 180,
         height: 60,
-		backgroundColor: '#0f6124',
-		alignSelf: 'center'
+    backgroundColor: '#0f6124',
+    alignSelf: 'center'
         
     },
     textTitle: {
@@ -28,11 +28,11 @@ const stylesHC = StyleSheet.create({
         textAlign: 'center'
     },
     button: {
-		marginTop: 10,
+    marginTop: 10,
         backgroundColor: '#0f6124',
         width: 115,
         alignSelf: "center"
-	}
+    }
 
 });
 
