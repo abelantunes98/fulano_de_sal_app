@@ -3,7 +3,9 @@ import {
     View,
     Text,
     Image,
-    ToastAndroid
+    ToastAndroid,
+    TextInput,
+    Alert,
 } from 'react-native'
 
 import { styles } from '../../../styles/styles';
@@ -12,8 +14,9 @@ import IconMaterial from 'react-native-vector-icons/FontAwesome';
 import { find } from '../../../services/banco';
 import { USER_CURRENTY } from '../../../services/key';
 import { Button } from 'react-native-elements';
+import api from "../../../services/api";
 
-const ConfiguracoesAdmin = (props) => {
+const PerfilAdmin = (props) => {
     const [admin, setAdmin] = useState({});
 
     useEffect(() => {
@@ -26,7 +29,13 @@ const ConfiguracoesAdmin = (props) => {
     }
 
     alterarDados = () => {
-        ToastAndroid.show('Page de alterar dados', ToastAndroid.SHORT);
+        try {
+            // const admin_atualizado = await api.put('/administrador/', admin);
+            // setAdmin(admin_atualizado);
+            ToastAndroid.show("Dados atualizados com sucesso!", ToastAndroid.SHORT);
+        } catch (error) {
+            ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
+        }
     }
 
     return (
@@ -41,17 +50,34 @@ const ConfiguracoesAdmin = (props) => {
                     source={{uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/old_logo.png',}}
                     style={{ width: 150, height: 150, borderRadius: 150 / 2, alignContent: 'center', alignItems: 'center' }}
                 />
-                <Text style={{ textAlign: 'center' }}>{ admin.nome }</Text>
-                <Text style={{ textAlign: 'center' }}>{ admin.email }</Text>
+
+                <View>
+                    <Text style={{ textAlign: 'center' }}>Nome</Text>
+                    <TextInput  style={{ textAlign: 'center' }} 
+                                value={ admin.nome } 
+                                onChangeText={(nome) => {
+                                        const admin_alterado = { 
+                                            ...admin,
+                                            nome
+                                        };
+                                        setAdmin(admin_alterado);
+                                    }
+                                }
+                    />
+                    
+                    <Text style={{ textAlign: 'center' }}>E-mail</Text>
+                    <Text style={{ marginTop: 10 }} >{ admin.email }</Text>
+                </View>
+
                 <View style={styles.forgotContainer}>
-                    <Button title='Alterar dados' buttonStyle={styles.button} titleStyle={styles.titleStyle} onPress={alterarDados} />
+                    <Button title='Editar dados' buttonStyle={styles.button} titleStyle={styles.titleStyle} onPress={alterarDados} />
                 </View>
             </View>
         </View>
     )
 }
 
-ConfiguracoesAdmin.navigationOptions = {
+PerfilAdmin.navigationOptions = {
     drawerLabel: 'Configurações',
     drawerIcon:({focused, tintColor}) => (
         <IconMaterial
@@ -63,4 +89,4 @@ ConfiguracoesAdmin.navigationOptions = {
     )
 }
 
-export default ConfiguracoesAdmin;
+export default PerfilAdmin;

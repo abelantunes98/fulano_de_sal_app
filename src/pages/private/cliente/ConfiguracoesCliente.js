@@ -30,7 +30,7 @@ const ConfiguracoesCliente = (props) => {
                    source={require('../../../images/usernot.png')}
                 />   
                 
-            </View >
+            </View>
 
             <View style={ stylesCC.childContainerThree }>
                 <Input
