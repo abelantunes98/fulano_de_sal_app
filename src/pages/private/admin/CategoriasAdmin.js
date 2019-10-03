@@ -23,7 +23,7 @@ const CategoriasAdmin = (props) => {
 
     loadRepositories = async () => {
         let usuario = await find(USER_CURRENTY);
-        const response = await api.get('/protegido/categoria/lista',{ headers: {Authorization: usuario.token,}});
+        const response = await api.get('/protegido/categoria/listar',{ headers: {Authorization: usuario.token,}});
         setData(response.data);
     }
      

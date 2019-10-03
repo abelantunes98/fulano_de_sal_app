@@ -24,7 +24,7 @@ const MarmitaAdmin = (props) => {
 
     loadRepositories = async () => {
         let usuario = await find(USER_CURRENTY);
-        const response = await api.get('/protegido/marmita/lista',{ headers: {Authorization: usuario.token,}});
+        const response = await api.get('/protegido/marmita/listar',{ headers: {Authorization: usuario.token,}});
         setData(response.data);
     }
      
