@@ -101,4 +101,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default ConfiguracoesAdmin;
+export default PerfilAdmin;
