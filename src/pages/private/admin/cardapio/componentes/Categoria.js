@@ -2,42 +2,42 @@ import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
-    FlatList,
     StyleSheet,
 } from 'react-native';
 
-import { Card, CheckBox, Button } from 'react-native-elements';
+import { Card } from 'react-native-elements';
+import SelectMultiple from 'react-native-select-multiple';
 
-import SelectMultiple from 'react-native-select-multiple'
+import api from '../../../../../services/api';
+import { USER_CURRENTY } from '../../../../../services/key';
+import { find } from '../../../../../services/banco';
 
 const Categoria = (props) => {
     const [categoria, setCategoria] = useState( props.item );
-    const [produtos, setProdutos] = useState( [{nome: 'arroz branco', id: 1}, {nome: 'arroz refogado', id: 2}] );
     const [selectedProdutos, setSelectedProdutos] = useState([]);
+    const [produtos, setProdutos] = useState();
     const [produtos_, setProdutos_] = useState([]);
 
-    useEffect(() => {
-        if (categoria.descricao === 'Arroz') {
-            setProdutos_(['Arroz Branco', 'Arroz Refogado']);
-        } else if (categoria.descricao === 'Feijão') {
-            setProdutos_(['Carioca', 'Sempre Verde']);
-        } else if (categoria.descricao === 'Macarrão') {
-            setProdutos_(['Espaguete']);
-        } else if (categoria.descricao === 'Carne') {
-            setProdutos_(['Frango', 'Escondidinho de calabresa']);
-        }
+    useEffect(async () => {
+        let usuario = await find(USER_CURRENTY);
+        const response = await api.get('/protegido/produto/listarPorCategoria?idCategoria='+categoria.id, { headers: { Authorization: usuario.token } });
+        setProdutos(response.data);
+        loadProdutos();
     }, [])
 
     loadProdutos = () => {
         // Busca os produtos dessa categorias.
+        const novos_produtos = [];
+        produtos.forEach(produto => {
+            const p = { label: produto.nome, value: produto.idProduto };
+            novos_produtos.push(p);
+        });
+        setProdutos_(novos_produtos);
     }
 
-    onSelectionsChange = (data) => {
+    onSelectionsChange = (data, item_desmarcado) => {
         setSelectedProdutos(data);
-    }
-
-    concluir = () => {
-        console.log(selectedProdutos);
+        props.produtosSelecionados(data, item_desmarcado);
     }
 
     return (
@@ -45,7 +45,12 @@ const Categoria = (props) => {
             <Card style={styles.listItem}>
                 <Text style={{ textAlign: 'center' }}>{categoria.descricao}</Text>
 
-                {produtos_ && <SelectMultiple items={produtos_} selectedItems={selectedProdutos} onSelectionsChange={onSelectionsChange} />}
+                {produtos_ && <SelectMultiple 
+                                    items={produtos_} 
+                                    selectedItems={selectedProdutos} 
+                                    onSelectionsChange={onSelectionsChange} 
+                              />
+                }
             </Card>
         </View>
     )
