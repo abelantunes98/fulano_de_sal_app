@@ -71,4 +71,5 @@ MarmitaAdmin.navigationOptions = {
         />
     )
 }
+
 export default MarmitaAdmin;

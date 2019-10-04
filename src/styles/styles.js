@@ -51,8 +51,7 @@ const styles = StyleSheet.create({
 		marginTop: 100,
 		alignItems: "center",
 		justifyContent: "center"
-	   },
-
+	},
 	itemPedidos: {
 		padding: 5,
 		textAlign: "center",
@@ -65,9 +64,8 @@ const styles = StyleSheet.create({
 		width: 200,
 		borderRadius: 5,
 		marginHorizontal: 10
-	  },
-	
-	  text: {
+	},
+	text: {
 		fontFamily: 'Oswald-Regular',
 		fontSize: 16,
 		paddingTop: 10

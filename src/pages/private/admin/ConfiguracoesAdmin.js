@@ -3,10 +3,10 @@ import {
     View,
     Text,
     Image,
-    ToastAndroid
+    ToastAndroid,
+    StyleSheet,
 } from 'react-native'
 
-import { styles } from '../../../styles/styles';
 import MenuButton from '../MenuButton';
 import IconMaterial from 'react-native-vector-icons/FontAwesome';
 import { find } from '../../../services/banco';
@@ -30,7 +30,7 @@ const ConfiguracoesAdmin = (props) => {
     }
 
     return (
-        <View style={{ flexGrow : 1, backgroundColor: '#ffffff' }}>
+        <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation}/>
             <View style={{
                 flex: 1,
@@ -39,10 +39,10 @@ const ConfiguracoesAdmin = (props) => {
             }}>
                 <Image
                     source={{uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/old_logo.png',}}
-                    style={{ width: 150, height: 150, borderRadius: 150 / 2, alignContent: 'center', alignItems: 'center' }}
+                    style={styles.imagem}
                 />
-                <Text style={{ textAlign: 'center' }}>{ admin.nome }</Text>
-                <Text style={{ textAlign: 'center' }}>{ admin.email }</Text>
+                <Text style={styles.text} >{ admin.nome }</Text>
+                <Text style={styles.text} >{ admin.email }</Text>
                 <View style={styles.forgotContainer}>
                     <Button title='Alterar dados' buttonStyle={styles.button} titleStyle={styles.titleStyle} onPress={alterarDados} />
                 </View>
@@ -62,5 +62,36 @@ ConfiguracoesAdmin.navigationOptions = {
         />
     )
 }
+
+const styles = StyleSheet.create({
+    mainContainer: {
+		flexGrow : 1, 
+		justifyContent : 'center',
+		backgroundColor: '#ffffff'
+    },
+    imagem: {
+        width: 150,
+        height: 150,
+        borderRadius: 150 / 2,
+        alignContent: 'center',
+        alignItems: 'center', 
+    },
+	text: {
+		textAlign: 'center',
+    },
+    forgotContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginTop: 10,
+    },
+    button: {
+		marginTop: 10,
+        backgroundColor: '#0f6124',
+        width: 115,
+    },
+    titleStyle:{
+        fontFamily: 'Roboto-Thin'
+	},
+});
 
 export default ConfiguracoesAdmin;

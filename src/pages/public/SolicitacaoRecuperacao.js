@@ -1,40 +1,39 @@
-import React, {useState} from 'react';
-import { KeyboardAvoidingView,
+import React, { useState } from 'react';
+import {
+    KeyboardAvoidingView,
     Text,
     View,
     ScrollView,
-    ToastAndroid
+    ToastAndroid,
+    StyleSheet,
 } from 'react-native';
 
-import { Card, Button, Input} from 'react-native-elements';
+import { Card, Button, Input } from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import { saveString } from '../../services/banco';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
-import{styles} from '../../styles/styles';
 import api from '../../services/api';
 
-const SolicitacaoRecuperacao = (props)=>{
-    const [loadSolicitar,setLoadSolicitar] = useState(false);
+const SolicitacaoRecuperacao = (props) => {
+    const [loadSolicitar, setLoadSolicitar] = useState(false);
     const [email, setEmail]= useState('');
 
-    async function handler_entrar(){
+    handler_entrar = async () => {
         setLoadSolicitar(true);
         saveString('email', email);
-        
-        try{
-        const response = await api.get('/publico/usuario/solicitarRecuperacao',{
-            params:{
-                email:email
-            }
-        });
+        try {
+            const response = await api.get('/publico/usuario/solicitarRecuperacao',{
+                params:{
+                    email:email
+                }
+            });
 
-        props.navigation.navigate('EnviarCodigoPage');
-
-        }catch(error){
+            props.navigation.navigate('EnviarCodigoPage');
+        }catch(error) {
             ToastAndroid.show(error.response.data['message'],ToastAndroid.SHORT);
         }
-        setLoadSolicitar(false);
 
+        setLoadSolicitar(false);
     }
         
     return (
@@ -96,5 +95,45 @@ const SolicitacaoRecuperacao = (props)=>{
     );
 };
 
+const styles = StyleSheet.create({
+	mainContainer: {
+		flexGrow : 1, 
+		justifyContent : 'center',
+		backgroundColor: '#ffffff'
+	},
+	infoContainer: {
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	inforCard: {
+		width: '97%'
+	},
+	text: {
+		fontFamily: 'Oswald-Regular',
+		fontSize: 16,
+		paddingTop: 10
+	},
+	icons: {
+		paddingRight: 10
+	},
+	button: {
+		marginTop: 10,
+        backgroundColor: '#0f6124',
+        width: 115,
+	},
+	titleStyle:{
+        fontFamily: 'Roboto-Thin'
+	},
+	buttonCancel: {
+		marginTop: 10,
+        backgroundColor: '#82080a',
+        width: 115,
+    },
+    forgotContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginTop: 10,
+    },
+});
 
 export default SolicitacaoRecuperacao;

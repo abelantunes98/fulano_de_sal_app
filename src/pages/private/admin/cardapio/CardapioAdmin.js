@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import {
     View,
-    Text,
     FlatList,
     TouchableOpacity,
-    ScrollView
+    ScrollView,
+    StyleSheet,
 } from 'react-native'
 import { Card, CheckBox, Button} from 'react-native-elements';
 
-import { styles } from '../../../../styles/styles';
 import MenuButton from '../../MenuButton';
 import api from '../../../../services/api';
 import { find } from '../../../../services/banco';
@@ -91,5 +90,45 @@ CardapioAdmin.navigationOptions = {
         />
     )
 }
+
+const styles = StyleSheet.create({
+    mainContainer: {
+		flexGrow : 1, 
+		justifyContent : 'center',
+		backgroundColor: '#ffffff'
+    },
+    listItem: {
+		backgroundColor: '#EEE',
+		marginTop: 20,
+		padding: 30
+	},
+    list: {
+		paddingHorizontal: 20,
+    },
+    floatButton:{
+		borderWidth:1,
+        borderColor:'rgba(0,0,0,0.2)',
+        alignItems:'center',
+        justifyContent:'center',
+        width:70,
+        position: 'absolute',                                          
+        bottom: 25,                                                    
+        right: 25,
+        height:70,
+        backgroundColor:'#0f6124',
+        borderRadius:100,
+    },
+    iconsDrawer: {
+		paddingRight: 2
+    },
+    forgotContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginTop: 10,
+    },
+    titleStyle:{
+        fontFamily: 'Roboto-Thin'
+	},
+});
 
 export default CardapioAdmin;

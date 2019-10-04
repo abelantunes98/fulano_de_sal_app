@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
-    FlatList
+    FlatList,
+    StyleSheet,
 } from 'react-native';
 
 import { Card, CheckBox, Button } from 'react-native-elements';
-import { styles } from '../../../../../styles/styles';
 
 import SelectMultiple from 'react-native-select-multiple'
 
@@ -50,5 +50,16 @@ const Categoria = (props) => {
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    listItem: {
+		backgroundColor: '#EEE',
+		marginTop: 20,
+		padding: 30
+	},
+    list: {
+		paddingHorizontal: 20,
+    },
+});
 
 export default Categoria;

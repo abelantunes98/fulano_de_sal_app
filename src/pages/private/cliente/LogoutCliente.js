@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
     View,
     Text,
     Alert,
+    StyleSheet,
 } from 'react-native';
 
-import { styles } from '../../../styles/styles';
 import { logout } from '../../../services/banco'
 import { USER_CURRENTY } from '../../../services/key'
 import MenuButton from '../MenuButton';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const LogoutCliente = (props) => {
-    
     useEffect(() => {
         Alert.alert(
             'Sair',
@@ -25,14 +24,16 @@ const LogoutCliente = (props) => {
                     }
                 },
                 {
-                    text: 'Cancelar'
+                    text: 'Cancelar', onPress: () => {
+                        props.navigation.navigate('initNavigatorPage');
+                    }
                 },
             ],
             {
                 cancelable: false
             }
         )
-    })
+    }, [])
 
     return (
         <View style = { styles.mainContainer }>
@@ -53,5 +54,13 @@ LogoutCliente.navigationOptions = {
         />
     )
 }
+
+const styles = StyleSheet.create({
+    mainContainer: {
+		flexGrow : 1, 
+		justifyContent : 'center',
+		backgroundColor: '#ffffff'
+	},
+});
 
 export default LogoutCliente;

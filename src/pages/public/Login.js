@@ -6,31 +6,30 @@ import {
     ScrollView,
     ToastAndroid,
     Alert,
-    ProgressBarAndroid
+    ProgressBarAndroid,
+    StyleSheet,
 } from 'react-native';
 
 import { Card, Button, Input } from 'react-native-elements';
 import IconFont from 'react-native-vector-icons/FontAwesome';
-import { styles } from '../../styles/styles';
 import { criptografar } from '../../services/criptografia';
 import api from '../../services/api';
 import { save, find } from '../../services/banco';
 import { USER_CURRENTY } from '../../services/key';
 
 const Login = (props) => {
-    const [load,setLoad] = useState(false);
+    const [load, setLoad] = useState(false);
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-    const [loginSave,setLoginSave] = useState(true);
+    const [loginSave, setLoginSave] = useState(true);
 
     useEffect(()=>{
         loadUser();
-    });
+    }, []);
 
-    async function loadUser(){
+    loadUser = async () => {
         let usuario = await find(USER_CURRENTY);
-        if(usuario !== null){
-            
+        if(usuario !== null) {
             const response = await api.post('/publico/usuario/login/', {
                 'email':usuario.email, 
                 'senha':usuario.senha
@@ -38,18 +37,16 @@ const Login = (props) => {
 
             if (response.status == 200) {
                 let responseData = response.data
-                
                 await save(USER_CURRENTY, responseData);
-
                 let usuario = await find(USER_CURRENTY);
                 redireciona(usuario);
             }
-        }else{
+        } else {
             setLoginSave(false);
         }
     }
 
-    async function redireciona(usuario) {
+    redireciona = async (usuario) => {
         if (usuario.cadastroPendente) {
             Alert.alert(
                 'Confirmação pendente',
@@ -65,7 +62,7 @@ const Login = (props) => {
                 {
                     cancelable: false
                 },
-              );
+            );
         } else {          
             let paginaDestino = 'homeClienteNavigatorPage';
             if (usuario.tipo === 'ADMINISTRADOR') {
@@ -76,44 +73,38 @@ const Login = (props) => {
         }
     }
 
-    async function reenviarEmail(email){
+    reenviarEmail = async (email) => {
         try {
             const response = await api.get('/publico/usuario/reenviarEmail', {
                 params: {
                     emailSender:email
                  }
             });
-            ToastAndroid.show('Email enviado',ToastAndroid.SHORT);
+            ToastAndroid.show('Email enviado', ToastAndroid.SHORT);
         } catch(e) {
-            ToastAndroid.show('Erro ao tentar reenviar',ToastAndroid.SHORT);
+            ToastAndroid.show('Erro ao tentar reenviar', ToastAndroid.SHORT);
         }
     }
 
-    async function handler_entrar() {
+    handler_entrar = async () => {
         setLoad(true);
         try {
-
             let senhaCriptografada = await criptografar(senha);
             const response = await api.post('/publico/usuario/login/', {
-                'email':email, 
-                'senha':senhaCriptografada
+                'email': email, 
+                'senha': senhaCriptografada
             });
-            
             // O response ja eh retornado como um JSON com status, data, etc.
             if (response.status == 200) {
                 let responseData = response.data
-               
                 save(USER_CURRENTY, responseData);
-
                 let usuario = await find(USER_CURRENTY);
-                
                 redireciona(usuario);
             }
         } catch (error) {
             //Qualquer status diferente de 200 entra no catch e a api retorna a mensagem específica atraves das exceções lançadas
             setLoad(false);
             ToastAndroid.show(error.response.data['message'],ToastAndroid.SHORT);
-
         }
     }
         
@@ -126,8 +117,7 @@ const Login = (props) => {
                             fontFamily: 'Oswald-Bold', 
                             textAlign: 'center', 
                             fontSize: 28 }}>Entrar</Text>
-                        <Text style={
-                            styles.text} >Email</Text>
+                        <Text style={ styles.text } >Email</Text>
                         <Input
                             leftIcon={
                                 <IconFont
@@ -192,5 +182,54 @@ const Login = (props) => {
         </ScrollView>
     );
 };
+
+const styles = StyleSheet.create({
+	mainContainer: {
+		flexGrow : 1, 
+		justifyContent : 'center',
+		backgroundColor: '#ffffff'
+	},
+	infoContainer: {
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	inforCard: {
+		width: '97%'
+	},
+	text: {
+		fontFamily: 'Oswald-Regular',
+		fontSize: 16,
+		paddingTop: 10
+	},
+	icons: {
+		paddingRight: 10
+	},
+	buttonContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		marginTop: 10,
+	},
+	button: {
+		marginTop: 10,
+        backgroundColor: '#0f6124',
+        width: 115,
+	},
+	titleStyle:{
+        fontFamily: 'Roboto-Thin'
+	},
+	buttonCancel: {
+		marginTop: 10,
+        backgroundColor: '#82080a',
+        width: 115,
+    },
+    forgotContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginTop: 10,
+    },
+    btnEsqueceuSenha: {
+        marginTop: 10,
+	},
+});
 
 export default Login;

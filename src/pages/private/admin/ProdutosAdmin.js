@@ -3,19 +3,20 @@ import {
     View,
     Text,
     FlatList,
-    TouchableOpacity
+    TouchableOpacity,
+    StyleSheet,
 } from 'react-native';
 import { Card } from 'react-native-elements';
 
-import { styles } from '../../../styles/styles';
 import { USER_CURRENTY } from '../../../services/key';
 import { find } from '../../../services/banco';
 import api from '../../../services/api';
 import MenuButton from '../MenuButton';
 import IconMaterial from 'react-native-vector-icons/AntDesign';
+import IconButton from 'react-native-vector-icons/FontAwesome'
 
 const ProdutosAdmin = (props) => {
-    const[data,setData] = useState([]);
+    const[data, setData] = useState([]);
 
     useEffect(() => {
         loadRepositories();
@@ -28,12 +29,12 @@ const ProdutosAdmin = (props) => {
     }
      
     renderItem = ({ item }) => (
-         <View >
-          <Card style={styles.listItem}>
-            <Text>{item.descricao}</Text>
-            <Text style={{ textAlign: 'right',fontSize: 10}}>{item.categoria}</Text>
-          </Card>
-      </View>
+        <View >
+            <Card style={styles.listItem}>
+                <Text>{item.descricao}</Text>
+                <Text style={{ textAlign: 'right',fontSize: 10}}>{item.categoria}</Text>
+            </Card>
+        </View>
     );
 
     return (       
@@ -48,12 +49,12 @@ const ProdutosAdmin = (props) => {
                     keyExtractor={item => item.id.toString()}
                 />
                 <TouchableOpacity style={styles.floatButton}>
-                    <IconMaterial
+                    <IconButton
                         name='plus'
                         size={20}
                         color='#ffffff'
                         style={ styles.iconsDrawer }
-                        />
+                    />
                 </TouchableOpacity>
             </View>
         </View>
@@ -71,5 +72,37 @@ ProdutosAdmin.navigationOptions = {
         />
     )
 }
+
+const styles = StyleSheet.create({
+    mainContainer: {
+		flexGrow : 1, 
+		justifyContent : 'center',
+		backgroundColor: '#ffffff'
+    },
+    listItem: {
+		backgroundColor: '#EEE',
+		marginTop: 20,
+		padding: 30
+	},
+    list: {
+		paddingHorizontal: 20,
+    },
+    floatButton:{
+		borderWidth:1,
+        borderColor:'rgba(0,0,0,0.2)',
+        alignItems:'center',
+        justifyContent:'center',
+        width:70,
+        position: 'absolute',                                          
+        bottom: 25,                                                    
+        right: 25,
+        height:70,
+        backgroundColor:'#0f6124',
+        borderRadius:100,
+    },
+    iconsDrawer: {
+		paddingRight: 2
+	},
+});
 
 export default ProdutosAdmin;

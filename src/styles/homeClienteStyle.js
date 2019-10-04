@@ -3,11 +3,10 @@ import {StyleSheet} from 'react-native';
 // estilos para a Home Cliente
 const stylesHC = StyleSheet.create({
     mainContainer: {
-    flexGrow : 1, 
-    justifyContent : 'space-between',
-    backgroundColor: '#ffffff',
-    flexDirection: 'column',
-
+        flexGrow : 1, 
+        justifyContent : 'space-between',
+        backgroundColor: '#ffffff',
+        flexDirection: 'column',
     },
     containerCardapio:{
         height: 50,

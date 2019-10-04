@@ -13,15 +13,13 @@ const MenuButton = (props) => {
     );
 };
 
-const styles = StyleSheet.create(
-    {
-        menu: {
-            zIndex: 9,
-            position: 'absolute',
-            top: 20,
-            left: 20
-        }
+const styles = StyleSheet.create({
+    menu: {
+        zIndex: 9,
+        position: 'absolute',
+        top: 20,
+        left: 20
     }
-)
+});
 
 export default MenuButton;

@@ -3,9 +3,9 @@ import {
     View,
     Text,
     ScrollView,
+    StyleSheet,
 } from 'react-native'
 
-import { styles } from '../../../styles/styles';
 import MenuButton from '../MenuButton';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -30,5 +30,13 @@ PedidosAdmin.navigationOptions = {
         />
     )
 }
+
+const styles = StyleSheet.create({
+    mainContainer: {
+		flexGrow : 1, 
+		justifyContent : 'center',
+		backgroundColor: '#ffffff'
+    },
+});
 
 export default PedidosAdmin;
