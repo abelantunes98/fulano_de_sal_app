@@ -21,7 +21,7 @@ import CardapioAdmin from './pages/private/admin/cardapio/CardapioAdmin';
 import ProdutosAdmin from './pages/private/admin/ProdutosAdmin';
 import MarmitaAdmin from './pages/private/admin/MarmitaAdmin';
 import CategoriasAdmin from './pages/private/admin/CategoriasAdmin';
-import ConfiguracoesAdmin from './pages/private/admin/ConfiguracoesAdmin';
+import PerfilAdmin from './pages/private/admin/PerfilAdmin';
 import LogoutAdmin from './pages/private/admin/LogoutAdmin';
 
 // Navigator páginas admin
@@ -31,7 +31,7 @@ const homeAdminNavigator = createDrawerNavigator({
     Produtos: ProdutosAdmin,
     Marmitas: MarmitaAdmin,
     Categorias: CategoriasAdmin,
-    Configurações: ConfiguracoesAdmin,
+    Configurações: PerfilAdmin,
     Sair: LogoutAdmin,
 });
 

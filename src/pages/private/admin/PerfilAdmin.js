@@ -12,8 +12,9 @@ import IconMaterial from 'react-native-vector-icons/FontAwesome';
 import { find } from '../../../services/banco';
 import { USER_CURRENTY } from '../../../services/key';
 import { Button } from 'react-native-elements';
+import api from "../../../services/api";
 
-const ConfiguracoesAdmin = (props) => {
+const PerfilAdmin = (props) => {
     const [admin, setAdmin] = useState({});
 
     useEffect(() => {
@@ -26,7 +27,13 @@ const ConfiguracoesAdmin = (props) => {
     }
 
     alterarDados = () => {
-        ToastAndroid.show('Page de alterar dados', ToastAndroid.SHORT);
+        try {
+            // const admin_atualizado = await api.put('/administrador/', admin);
+            // setAdmin(admin_atualizado);
+            ToastAndroid.show("Dados atualizados com sucesso!", ToastAndroid.SHORT);
+        } catch (error) {
+            ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
+        }
     }
 
     return (
@@ -44,14 +51,14 @@ const ConfiguracoesAdmin = (props) => {
                 <Text style={styles.text} >{ admin.nome }</Text>
                 <Text style={styles.text} >{ admin.email }</Text>
                 <View style={styles.forgotContainer}>
-                    <Button title='Alterar dados' buttonStyle={styles.button} titleStyle={styles.titleStyle} onPress={alterarDados} />
+                    <Button title='Editar dados' buttonStyle={styles.button} titleStyle={styles.titleStyle} onPress={alterarDados} />
                 </View>
             </View>
         </View>
     )
 }
 
-ConfiguracoesAdmin.navigationOptions = {
+PerfilAdmin.navigationOptions = {
     drawerLabel: 'Configurações',
     drawerIcon:({focused, tintColor}) => (
         <IconMaterial
