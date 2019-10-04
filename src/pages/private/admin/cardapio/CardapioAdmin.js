@@ -6,7 +6,7 @@ import {
     ScrollView,
     StyleSheet,
 } from 'react-native'
-import { Card, CheckBox, Button} from 'react-native-elements';
+import { Button} from 'react-native-elements';
 
 import MenuButton from '../../MenuButton';
 import api from '../../../../services/api';
@@ -18,24 +18,47 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Categoria from './componentes/Categoria';
 
 const CardapioAdmin = (props) => {
-
     const [categorias, setCategorias] = useState([])
-
+    const [produtosSelecionados, setProdutosSelecionados] = useState([])
+    
     useEffect(() => {
         loadCategorias();
     }, [])
 
     loadCategorias = async () => {
-        // let usuario = await find(USER_CURRENTY);
-        // const response = await api.get('/protegido/categoria/lista',{ headers: {Authorization: usuario.token,}});
-        setCategorias([{descricao: 'Arroz', id: 1}, {descricao: 'Feijão', id: 2}, {descricao: 'Macarrão', id: 3}, {descricao: 'Carne', id: 4}]);
+        let usuario = await find(USER_CURRENTY);
+        const response = await api.get('/protegido/categoria/listar',{ headers: {Authorization: usuario.token,}});
+        setCategorias(response.data);
+    }
+
+    itemJaExiste = (item) => {
+        // console.log(item);
+        let saida = false;
+        produtosSelecionados.forEach(element => {
+            if (element.value === item.value) {
+                // console.log(element);
+                saida = true;
+            }
+        });
+        return saida;
+    }
+
+    onProdutosSelecionados = ( produtos, item ) => {
+        if (itemJaExiste(item)) {
+            const p = produtosSelecionados.filter((e) => { return e.value !== item.value });
+            setProdutosSelecionados(p);
+        } else {
+            const p = [...produtosSelecionados, item];
+            setProdutosSelecionados(p);
+        }
     }
 
     renderItem = ({ item }) => (
-        <Categoria item={item} />
+        <Categoria item={item} produtosSelecionados={onProdutosSelecionados} />
     )
 
     handlerSubmit = () => {
+        console.log(produtosSelecionados);
     }
 
     return (
@@ -62,7 +85,7 @@ const CardapioAdmin = (props) => {
                             }}
                             titleStyle={styles.titleStyle}
                             title='Cadastrar Cardápio'
-                            onPress={() => handlerSubmit}
+                            onPress={handlerSubmit}
                         />
                     </View>
                 </View>
