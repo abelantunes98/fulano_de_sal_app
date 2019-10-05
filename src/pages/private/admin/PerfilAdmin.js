@@ -9,13 +9,22 @@ import {
 
 import MenuButton from '../MenuButton';
 import IconMaterial from 'react-native-vector-icons/FontAwesome';
+import IconMaterial5 from 'react-native-vector-icons/Feather';
+import Icon from "react-native-vector-icons/AntDesign";
+import IconVerify from "react-native-vector-icons/MaterialIcons";
+import { Button, Input } from 'react-native-elements';
+
 import { find } from '../../../services/banco';
+import { criptografar } from '../../../services/criptografia';
 import { USER_CURRENTY } from '../../../services/key';
-import { Button } from 'react-native-elements';
 import api from "../../../services/api";
 
 const PerfilAdmin = (props) => {
     const [admin, setAdmin] = useState({});
+    const [nome, setNome] = useState('');
+    const [senhaAtual, setSenhaAtual] = useState('');
+    const [novaSenha, setNovaSenha] = useState('');
+    const [novaSenhaConf, setNovaSenhaConf] = useState('');
 
     useEffect(() => {
         loadAdmin();
@@ -23,13 +32,34 @@ const PerfilAdmin = (props) => {
 
     loadAdmin = async () => {
         let usuario = await find(USER_CURRENTY);
+
         setAdmin(usuario);
+        setNome(usuario.nome);
     }
 
-    alterarDados = () => {
+    verificacaoDeSenha = async () => {
+        let saida = false;
+        if (senhaAtual === '' && novaSenha === '' && novaSenhaConf === '') {
+            let senhaCriptografada = await criptografar(senhaAtual);
+            if (admin.senha === senhaCriptografada && novaSenha === novaSenhaConf) {
+                    saida = true;
+            } else {
+                ToastAndroid.show("Senha atual incorreta ou a nova senhas não confere!", ToastAndroid.SHORT);
+            }
+        }
+        return saida;
+    }
+
+    alterarDados = async () => {
         try {
-            // const admin_atualizado = await api.put('/administrador/', admin);
-            // setAdmin(admin_atualizado);
+            const admin_atualizado = {nome: nome, email: admin.email };
+            if (verificacaoDeSenha()) {
+                const nova_senha = await criptografar(novaSenha);
+                admin_atualizado.senha = nova_senha;
+            }
+            console.log(admin_atualizado);
+            // const response = await api.put('/administrador/', admin_atualizado);
+            // setAdmin(response.data);
             ToastAndroid.show("Dados atualizados com sucesso!", ToastAndroid.SHORT);
         } catch (error) {
             ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
@@ -44,14 +74,75 @@ const PerfilAdmin = (props) => {
                 justifyContent: 'center',
                 alignItems: 'center',
             }}>
-                <Image
-                    source={{uri: 'https://raw.githubusercontent.com/AboutReact/sampleresource/master/old_logo.png',}}
-                    style={styles.imagem}
+                <IconMaterial 
+                    name='user-circle-o'
+                    size={100}
+                    color='black'
+                    style={ styles.icon_user }
                 />
-                <Text style={styles.text} >{ admin.nome }</Text>
                 <Text style={styles.text} >{ admin.email }</Text>
+                <Input
+                    leftIcon={
+                        <Icon
+                            name='user'
+                            size={15}
+                            color='black'
+                            style={ styles.icons }
+                        />
+                    }
+                    containerStyle={styles.input}
+                    value={nome}
+                    onChangeText={setNome}
+                />
+                <Input
+                    leftIcon={
+                        <IconMaterial5
+                            name='user-check'
+                            size={15}
+                            color='black'
+                            style={ styles.icons }
+                        />
+                    }
+                    placeholder='Digite sua senha atual'
+                    secureTextEntry={true}
+                    containerStyle={styles.input}
+                    value={senhaAtual}
+                    onChangeText={setSenhaAtual}
+                />
+                <Input
+                    leftIcon={
+                        <IconMaterial
+                            name='user-secret'
+                            size={15}
+                            color='black'
+                            style={ styles.icons }
+                        />
+                    }
+                    placeholder='Digite sua nova senha'
+                    secureTextEntry={true}
+                    containerStyle={styles.input}
+                    secureTextEntry={true}
+                    value={novaSenha}
+                    onChangeText={setNovaSenha}
+                />
+                <Input
+                    leftIcon={
+                        <IconVerify
+                            name='verified-user'
+                            size={15}
+                            color='black'
+                            style={ styles.icons }
+                        />
+                    }
+                    placeholder='Repita sua nova senha'
+                    secureTextEntry={true}
+                    containerStyle={styles.input}
+                    secureTextEntry={true}
+                    value={novaSenhaConf}
+                    onChangeText={setNovaSenhaConf}
+                />
                 <View style={styles.forgotContainer}>
-                    <Button title='Editar dados' buttonStyle={styles.button} titleStyle={styles.titleStyle} onPress={alterarDados} />
+                    <Button title='Atualizar dados' buttonStyle={styles.button} titleStyle={styles.titleStyle} onPress={alterarDados} />
                 </View>
             </View>
         </View>
@@ -59,10 +150,10 @@ const PerfilAdmin = (props) => {
 }
 
 PerfilAdmin.navigationOptions = {
-    drawerLabel: 'Configurações',
+    drawerLabel: 'Perfil',
     drawerIcon:({focused, tintColor}) => (
-        <IconMaterial
-            name='cogs'
+        <IconVerify
+            name='person'
             size={20}
             color='black'
             style={ styles.iconsDrawer }
@@ -74,7 +165,7 @@ const styles = StyleSheet.create({
     mainContainer: {
 		flexGrow : 1, 
 		justifyContent : 'center',
-		backgroundColor: '#ffffff'
+		backgroundColor: '#ffffff',
     },
     imagem: {
         width: 150,
@@ -84,7 +175,8 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
     },
 	text: {
-		textAlign: 'center',
+        textAlign: 'center',
+        marginBottom: 10,
     },
     forgotContainer: {
         flexDirection: 'row',
@@ -94,11 +186,19 @@ const styles = StyleSheet.create({
     button: {
 		marginTop: 10,
         backgroundColor: '#0f6124',
-        width: 115,
     },
     titleStyle:{
-        fontFamily: 'Roboto-Thin'
-	},
+        fontFamily: 'Roboto-Thin',
+    },
+    icons: {
+		paddingRight: 10,
+    },
+    icon_user: {
+        paddingBottom: 20,
+    },
+    input: {
+        marginBottom: 10,
+    }
 });
 
 export default PerfilAdmin;
