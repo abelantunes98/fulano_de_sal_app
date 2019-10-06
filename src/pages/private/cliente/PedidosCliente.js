@@ -14,7 +14,7 @@ import IconButton from 'react-native-vector-icons/FontAwesome';
 const PedidosCliente = (props) => {
     return (
         <View style={styles.mainContainer}>
-            <MenuButton navigation={props.navigation}/>
+            <MenuButton navigation={props.navigation} title='Pedidos' />
             <View style={styles.containerPedidos}>
                 <FlatList
                     data={[
