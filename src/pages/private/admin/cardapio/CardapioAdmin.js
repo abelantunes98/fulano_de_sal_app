@@ -29,6 +29,7 @@ const CardapioAdmin = (props) => {
         let usuario = await find(USER_CURRENTY);
         const response = await api.get('/protegido/categoria/listar',{ headers: {Authorization: usuario.token,}});
         setCategorias(response.data);
+        console.log(categorias);
     }
 
     itemJaExiste = (item) => {

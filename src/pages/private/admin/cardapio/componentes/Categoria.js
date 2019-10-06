@@ -18,14 +18,15 @@ const Categoria = (props) => {
     const [produtos, setProdutos] = useState();
     const [produtos_, setProdutos_] = useState([]);
 
-    init = async () => {
-        let usuario = await find(USER_CURRENTY);
-        const response = await api.get('/protegido/produto/listarPorCategoria?idCategoria='+categoria.id, { headers: { Authorization: usuario.token } });
-        setProdutos(response.data);
-        loadProdutos();
-    }
-
     useEffect(() => {
+        init = async () => {
+            let usuario = await find(USER_CURRENTY);
+            const response = await api.get('/protegido/produto/listarPorCategoria?idCategoria='+categoria.id, { headers: { Authorization: usuario.token } });
+            setProdutos(response.data);
+            console.log(produtos);
+            loadProdutos();
+        }
+
         init();
     }, [])
 
