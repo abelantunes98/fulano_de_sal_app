@@ -12,7 +12,7 @@ import { Button, Input } from 'react-native-elements';
 const ConfiguracoesCliente = (props) => {
     return (
         <View style={styles.mainContainer}>
-            <MenuButton navigation={props.navigation}/>
+            <MenuButton navigation={props.navigation} title='Configurações' />
             <View style={ styles.childContainerOne }>
                 <Image 
                     style={ styles.imgHeader }

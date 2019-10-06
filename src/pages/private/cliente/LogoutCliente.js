@@ -37,7 +37,7 @@ const LogoutCliente = (props) => {
 
     return (
         <View style = { styles.mainContainer }>
-            <MenuButton navigation={props.navigation}/>
+            <MenuButton navigation={props.navigation} title='Sair' />
             <Text style={{alignSelf: 'center'}}>LogoutCliente</Text>
         </View>
     )

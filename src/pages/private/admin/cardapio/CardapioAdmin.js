@@ -65,7 +65,7 @@ const CardapioAdmin = (props) => {
         <View>
             <ScrollView>
                 <View style={ styles.mainContainer }>
-                    <MenuButton navigation={props.navigation}/>
+                    <MenuButton navigation={props.navigation} title='Cardápio'/>
                     <View style={ styles.mainContainer }>
                         <FlatList
                             style={{ marginTop: 50 }}
