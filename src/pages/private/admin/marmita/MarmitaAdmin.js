@@ -1,4 +1,4 @@
-import React, { useState,useEffect} from 'react';
+import React, { useState,useEffect,useRef} from 'react';
 import {
     View,
     Text,
@@ -15,10 +15,13 @@ import {find} from '../../../../services/banco';
 import {USER_CURRENTY} from '../../../../services/key'
 import IconMaterial from 'react-native-vector-icons/FontAwesome';
 import IconButton from 'react-native-vector-icons/FontAwesome';
+import ModalBox from '../../../../components/ModalBox';
 
 const MarmitaAdmin = (props) => {
 
-    const[data,setData] = useState([]);
+	const[data,setData] = useState([]);
+	const modalRef = useRef();
+
 
     useEffect(() => {
         loadRepositories();
@@ -49,6 +52,7 @@ const MarmitaAdmin = (props) => {
 									style={styles.iconsDrawer}
 								/>
 							}
+							onPress={() => openEditaPopUp(item.id, item.tipoMarmita)}
 						/>
 						<Button 
 							buttonStyle={styles.button}
@@ -60,15 +64,52 @@ const MarmitaAdmin = (props) => {
 									style={styles.iconsDrawer}
 								/>
 							}
+							onPress={() => deleteItem(item.id, item.tipoMarmita)}
 						/>
 					</View>
 					<View>
                         <Text>{item.tipoMarmita}</Text>
+						<Text>R$ {item.valor}</Text>
 					</View>
 				</View>
 			</Card>
       </View>
-    );
+	);
+	
+	function deleteItem(id, tipo) {
+        Alert.alert(
+            `Deletar '${tipo}'`,
+            'Tem certeza que deseja deletar essa marmita?',
+            [
+                { text: 'NO', onPress: () => Alert.alert('Cancel'), style: 'cancel' },
+                { text: 'YES', onPress: () => loadDeleteItem(id) },
+            ],
+        );
+    };
+
+    async function loadDeleteItem(id) {
+        try {
+            let usuario = await find(USER_CURRENTY);
+            await api.delete('/protegido/categoria/remover',
+                {
+                    headers: { Authorization: usuario.token },
+                    params: { 'id': parseInt(id) }
+                }
+            );
+            loadRepositories();
+        } catch (e) {
+            ToastAndroid.show(e.message)
+        }
+	};
+
+	function openEditaPopUp(id, tipo) {
+        modalRef.current.open('editarMarmita', tipo, id);
+    };
+
+    openCadastroPopUp = () => {
+        modalRef.current.open('cadastroMarmita');
+    };
+
 
     return (       
         <View style={styles.mainContainer}>
@@ -85,7 +126,7 @@ const MarmitaAdmin = (props) => {
                 renderItem={renderItem}
                 keyExtractor={item => item.idMarmita.toString()}
             />
-            <TouchableOpacity style={styles.floatButton} onPress={cadastrarMarmita}>
+            <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUp}>
                 <IconButton
                     name='plus'
                     size={20}
@@ -94,6 +135,10 @@ const MarmitaAdmin = (props) => {
                 />
             </TouchableOpacity>
         </View>
+		<ModalBox
+                ref={modalRef}
+                refresh={loadRepositories}
+            />
     </View>
     );
 }
