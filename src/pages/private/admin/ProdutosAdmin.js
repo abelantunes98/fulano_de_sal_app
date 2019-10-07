@@ -33,62 +33,64 @@ const ProdutosAdmin = props => {
 	};
 
 	renderItem = ({ item }) => (
-		<ScrollView>
-			<Card containerStyle={styles.listItem}>
-				<View>
-					<View style={styles.buttons}>
-						<Button 
-							buttonStyle={styles.button}
-							icon={
-								<IconButton
-									name='pencil'
-									size={15}
-									color='#EEE'
-									style={styles.iconsDrawer}
-								/>
-							}
-						/>
-						<Button 
-							buttonStyle={styles.button}
-							icon={
-								<IconButton
-									name='trash-o'
-									size={15}
-									color='#EEE'
-									style={styles.iconsDrawer}
-								/>
-							}
-						/>
-					</View>
-					<View>
-						<Text style={styles.nome}>{item.nome}</Text>
-						<Text style={styles.categoria}>{item.categoria.descricao}</Text>
-					</View>
+		<Card containerStyle={styles.listItem}>
+			<View>
+				<View style={styles.buttons}>
+					<Button 
+						buttonStyle={styles.button}
+						icon={
+							<IconButton
+								name='pencil'
+								size={15}
+								color='#EEE'
+								style={styles.iconsDrawer}
+							/>
+						}
+					/>
+					<Button 
+						buttonStyle={styles.button}
+						icon={
+							<IconButton
+								name='trash-o'
+								size={15}
+								color='#EEE'
+								style={styles.iconsDrawer}
+							/>
+						}
+					/>
 				</View>
-			</Card>
-		</ScrollView>
+				<View>
+					<Text style={styles.nome}>{item.nome}</Text>
+					<Text style={styles.categoria}>{item.categoria.descricao}</Text>
+				</View>
+			</View>
+		</Card>
 	);
 
 	return (
-		<View style={styles.mainContainer}>
-			<MenuButton navigation={props.navigation} />
-			<View style={styles.mainContainer}>
-				<FlatList
-					style={{ marginTop: 50 }}
-					contentContainerStyle={styles.list}
-					data={data}
-					renderItem={renderItem}
-					keyExtractor={item => item.idProduto.toString()}
+		<View>
+			<ScrollView>
+				<View style={styles.mainContainer}>
+					<MenuButton navigation={props.navigation} title='Produtos' />
+					<View style={styles.mainContainer}>
+						<FlatList
+							style={{ marginTop: 50 }}
+							contentContainerStyle={styles.list}
+							data={data}
+							renderItem={renderItem}
+							keyExtractor={item => item.idProduto.toString()}
+						/>
+					</View>
+				</View>
+			</ScrollView>
+			<TouchableOpacity style={styles.floatButton}>
+				<IconButton
+					name='plus'
+					size={20}
+					color='#ffffff'
+					style={styles.iconsDrawer}
 				/>
-				<TouchableOpacity style={styles.floatButton}>
-					<IconButton
-						name='plus'
-						size={20}
-						color='#ffffff'
-						style={styles.iconsDrawer}
-					/>
-				</TouchableOpacity>
-			</View>
+			</TouchableOpacity>
 		</View>
 	);
 };
@@ -107,9 +109,10 @@ ProdutosAdmin.navigationOptions = {
 
 const styles = StyleSheet.create({
 	mainContainer: {
-		flex: 1,
-		justifyContent: 'center',
-		backgroundColor: '#ffffff'
+		flexGrow : 1, 
+		justifyContent : 'center',
+		backgroundColor: '#ffffff',
+		paddingBottom: 5,
 	},
 	nome: {
 		color: '#000000',
@@ -150,17 +153,17 @@ const styles = StyleSheet.create({
 		paddingRight: 2
 	},
 	floatButton: {
-		borderWidth: 1,
-		borderColor: 'rgba(0,0,0,0.2)',
-		alignItems: 'center',
-		justifyContent: 'center',
-		width: 70,
-		position: 'absolute',
-		bottom: 25,
-		right: 25,
-		height: 70,
-		backgroundColor: '#0f6124',
-		borderRadius: 100
+		borderWidth:1,
+        borderColor:'rgba(0,0,0,0.2)',
+        alignItems:'center',
+        justifyContent:'center',
+        width:70,
+        position: 'absolute',                                          
+        bottom: 25,                                                    
+        right: 25,
+        height:70,
+        backgroundColor:'#0f6124',
+        borderRadius:100,
 	}
 });
 

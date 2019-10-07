@@ -29,6 +29,7 @@ const CardapioAdmin = (props) => {
         let usuario = await find(USER_CURRENTY);
         const response = await api.get('/protegido/categoria/listar',{ headers: {Authorization: usuario.token,}});
         setCategorias(response.data);
+        console.log(categorias);
     }
 
     itemJaExiste = (item) => {
@@ -65,7 +66,7 @@ const CardapioAdmin = (props) => {
         <View>
             <ScrollView>
                 <View style={ styles.mainContainer }>
-                    <MenuButton navigation={props.navigation}/>
+                    <MenuButton navigation={props.navigation} title='Cardápio'/>
                     <View style={ styles.mainContainer }>
                         <FlatList
                             style={{ marginTop: 50 }}

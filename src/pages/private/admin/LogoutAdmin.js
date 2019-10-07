@@ -11,6 +11,7 @@ import MenuButton from '../MenuButton';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const LogoutAdmin = (props) => {
+
     useEffect(() => {
         Alert.alert(
             'Sair',
@@ -23,20 +24,20 @@ const LogoutAdmin = (props) => {
                     }
                 },
                 {
-                    text: 'Cancelar', onPress: async () => {
-                        props.navigation.navigate("initNavigatorPage");
+                    text: 'Cancelar', onPress: () => {
+                        props.navigation.navigate('initNavigatorPage');
                     }
                 },
             ],
             {
                 cancelable: false
             }
-        );
-    })
+        )
+    }, []);
 
     return (
         <View style={ styles.mainContainer }>
-            <MenuButton navigation={props.navigation}/>
+            <MenuButton navigation={props.navigation} title='Sair'/>
         </View>
     )
 }

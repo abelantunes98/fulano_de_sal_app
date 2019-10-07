@@ -106,7 +106,7 @@ const CategoriasAdmin = (props) => {
 
     return (
         <View style={styles.mainContainer}>
-            <MenuButton navigation={props.navigation} />
+            <MenuButton navigation={props.navigation} title="Categorias"/>
             <View style={styles.mainContainer}>
                 <FlatList
                     style={{ marginTop: 50 }}
