@@ -11,9 +11,11 @@ import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const PedidosAdmin = (props) => {
     return (
-        <View style={ styles.mainContainer }> 
-            <MenuButton navigation={props.navigation}/>
-            <Text style={{alignSelf: 'center'}}>Pedidos</Text>
+        <View style={{ flexGrow: 1, backgroundColor: '#ffffff'}}>
+            <MenuButton navigation={props.navigation} title="Pedidos" />
+            <View style={ styles.mainContainer }> 
+                <Text style={{alignSelf: 'center'}}>Pedidos</Text>
+            </View>
         </View>
     )
 }

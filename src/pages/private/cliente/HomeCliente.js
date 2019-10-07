@@ -12,7 +12,7 @@ import { Button } from 'react-native-elements';
 const HomeCliente = (props) => {
     return (
         <View style = { styles.mainContainer }>
-            <MenuButton navigation={props.navigation}/>
+            <MenuButton navigation={props.navigation} title='Home' />
             <Text 
                 style={ { fontSize: 24,
                             marginTop: 30,

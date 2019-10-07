@@ -68,7 +68,7 @@ const PerfilAdmin = (props) => {
 
     return (
         <View style={styles.mainContainer}>
-            <MenuButton navigation={props.navigation}/>
+            <MenuButton navigation={props.navigation} title='Perfil'/>
             <View style={{
                 flex: 1,
                 justifyContent: 'center',
