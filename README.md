@@ -33,5 +33,14 @@ Existem dois tipos de usuário: Cliente e Administrador.
     * React Navigation
     * Entre outras bibliotecas.
 
+# Gerentes e Desenvolvedores:
+    - [Paulo Mendes da Silva Júnior](https://github.com/paulojuniore)
+    - [Rich Elton Carvalho Ramalho](https://github.com/rickecr)
+    - [Samuel Pereira de Vasconcelos](https://github.com/samuelcomputacao)
+    - [Matheus Alcântara de Santana](https://github.com/mathsantana)
+    - [Hércules Rodrigues Anselmo](https://github.com/herculesra)
+    - [Abel Antunes Lima Neto](https://github.com/abelantunes98)
+    - [Eduardo Pereira dos Santos](https://github.com/Eduardoccufcg)
+
 ## Executar o projeto:
 > Para conseguir executar o projeto siga os passos do [CONTRIBUTING.md](CONTRIBUTING.md).
