@@ -47,7 +47,7 @@ const CategoriasAdmin = (props) => {
                                     style={styles.iconsDrawer}
                                 />
                             }
-                            onPress={() => openEditaPopUp(item.id, item.descricao)}
+                            onPress={() => openEditaPopUp(item)}
                         />
                         <Button
                             buttonStyle={styles.button}
@@ -96,8 +96,8 @@ const CategoriasAdmin = (props) => {
         }
     };
 
-    function openEditaPopUp(id, nome) {
-        modalRef.current.open('editarCategoria', nome, id);
+    function openEditaPopUp(item) {
+        modalRef.current.open('editarCategoria', item);
     };
 
     openCadastroPopUp = () => {

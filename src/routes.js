@@ -19,10 +19,11 @@ import LogoutCliente from './pages/private/cliente/LogoutCliente'
 import PedidosAdmin from './pages/private/admin/PedidosAdmin';
 import CardapioAdmin from './pages/private/admin/cardapio/CardapioAdmin';
 import ProdutosAdmin from './pages/private/admin/ProdutosAdmin';
-import MarmitaAdmin from './pages/private/admin/MarmitaAdmin';
+import MarmitaAdmin from './pages/private/admin/marmita/MarmitaAdmin';
 import CategoriasAdmin from './pages/private/admin/CategoriasAdmin';
 import PerfilAdmin from './pages/private/admin/PerfilAdmin';
 import LogoutAdmin from './pages/private/admin/LogoutAdmin';
+import CadastroMarmita from './pages/private/admin/marmita/CadastroMarmita';
 
 // Navigator páginas admin
 const homeAdminNavigator = createDrawerNavigator({
