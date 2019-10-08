@@ -99,7 +99,7 @@ const EditaMarmita = (props) => {
                 'descricao': descricao,
                 'tipoMarmita': tipo,
                 'valor': valor
-              };
+              }
             await api.post('/protegido/marmita/atualizar',
                marmitaSave,
                 {
