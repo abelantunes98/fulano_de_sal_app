@@ -57,7 +57,6 @@ LogoutAdmin.navigationOptions = {
 const styles = StyleSheet.create({
     mainContainer: {
 		flexGrow : 1, 
-		justifyContent : 'center',
 		backgroundColor: '#ffffff'
     },
 });

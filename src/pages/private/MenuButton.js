@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { Header } from "react-native-elements";
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
@@ -24,12 +24,17 @@ const styles = StyleSheet.create({
     header:{
 		backgroundColor: '#0f6124',
 		justifyContent: 'space-around',
-    },
-    tileHeader:{
+		height:56
+	},
+	tileHeader:{
 		color: '#FFF',
 		fontFamily: 'Roboto-Thin',
-		fontSize: 20,
-	}
+		fontSize:20,
+		marginBottom:25
+    },
+    menu: {
+        marginBottom: 25,
+    }
 });
 
 export default MenuButton;
