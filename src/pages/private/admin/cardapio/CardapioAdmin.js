@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     ScrollView,
     StyleSheet,
+    ActivityIndicator,
 } from 'react-native'
 import { Button} from 'react-native-elements';
 
@@ -20,19 +21,20 @@ import Categoria from './componentes/Categoria';
 const CardapioAdmin = (props) => {
     const [categorias, setCategorias] = useState([])
     const [produtosSelecionados, setProdutosSelecionados] = useState([])
-    
+    const [loading, setLoading] = useState(true);
+
     useEffect(() => {
+        loadCategorias = async () => {
+            let usuario = await find(USER_CURRENTY);
+            const response = await api.get('/protegido/categoria/listar',{ headers: {Authorization: usuario.token,}});
+            setCategorias(response.data);  
+            setLoading(false);
+        }
+
         loadCategorias();
     }, [])
 
-    loadCategorias = async () => {
-        let usuario = await find(USER_CURRENTY);
-        const response = await api.get('/protegido/categoria/listar',{ headers: {Authorization: usuario.token,}});
-        setCategorias(response.data);
-        console.log(categorias);
-    }
-
-    itemJaExiste = (item) => {
+    itemJaExiste = ( item ) => {
         // console.log(item);
         let saida = false;
         produtosSelecionados.forEach(element => {
@@ -44,7 +46,7 @@ const CardapioAdmin = (props) => {
         return saida;
     }
 
-    onProdutosSelecionados = ( produtos, item ) => {
+    onProdutosSelecionados = ( item ) => {
         if (itemJaExiste(item)) {
             const p = produtosSelecionados.filter((e) => { return e.value !== item.value });
             setProdutosSelecionados(p);
@@ -62,8 +64,17 @@ const CardapioAdmin = (props) => {
         console.log(produtosSelecionados);
     }
 
+    if (loading) {
+        return (
+            <View style={styles.mainLoading}>
+                <MenuButton navigation={props.navigation} title='Cardápio'/>
+                <ActivityIndicator style={{ flex: 1, justifyContent: "center" }} size="large" color="#0000ff" />
+            </View>
+        );
+    }
+
     return (
-        <View>
+        <View style={ styles.mainContainer }>
             <ScrollView>
                 <View style={ styles.mainContainer }>
                     <MenuButton navigation={props.navigation} title='Cardápio'/>
@@ -152,7 +163,11 @@ const styles = StyleSheet.create({
     },
     titleStyle:{
         fontFamily: 'Roboto-Thin'
-	},
+    },
+    mainLoading: {
+        flexGrow : 1, 
+		backgroundColor: '#ffffff'
+    }
 });
 
 export default CardapioAdmin;
