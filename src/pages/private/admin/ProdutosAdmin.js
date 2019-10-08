@@ -5,7 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
-  ScrollView
+  ScrollView,Alert
 } from 'react-native';
 import { Card, Button } from 'react-native-elements';
 
@@ -57,6 +57,8 @@ const ProdutosAdmin = props => {
 								style={styles.iconsDrawer}
 							/>
 						}
+						onPress={() => deleteProduto(item.idProduto, item.nome)}
+
 					/>
 				</View>
 				<View>
@@ -66,6 +68,31 @@ const ProdutosAdmin = props => {
 			</View>
 		</Card>
 	);
+
+	function deleteProduto(id, nome) {
+        Alert.alert(
+            `Deletar '${nome}'`,
+            'Tem certeza que deseja deletar esse produto?',
+            [
+                { text: 'NO', onPress: () => Alert.alert('Cancel'), style: 'cancel' },
+                { text: 'YES', onPress: () => loadDeleteProduto(id) },
+            ],
+        );
+    };
+	async function loadDeleteProduto(id) {
+        try {
+            let usuario = await find(USER_CURRENTY);
+            await api.delete('/protegido/produto/remover',
+                {
+                    headers: { Authorization: usuario.token },
+                    params: { 'id': parseInt(id) }
+                }
+            );
+            loadRepositories();
+        } catch (e) {
+            ToastAndroid.show(e.message)
+        }
+    };					
 
 	return (
 		<View>

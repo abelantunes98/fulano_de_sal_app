@@ -40,9 +40,9 @@ const Categoria = (props) => {
         setProdutos_(novos_produtos);
     }
 
-    onSelectionsChange = (data, item_desmarcado) => {
+    onSelectionsChange = (data, item) => {
         setSelectedProdutos(data);
-        props.produtosSelecionados(data, item_desmarcado);
+        props.produtosSelecionados(item);
     }
 
     return (
@@ -51,7 +51,9 @@ const Categoria = (props) => {
                 <Text style={{ textAlign: 'center' }}>{categoria.descricao}</Text>
 
                 {produtos_ && <SelectMultiple 
-                                    items={produtos_} 
+                                    items={produtos_}
+                                    checkboxStyle={{ tintColor: 'green' }}
+                                    selectedCheckboxStyle={{ tintColor: 'green' }}
                                     selectedItems={selectedProdutos} 
                                     onSelectionsChange={onSelectionsChange} 
                               />
