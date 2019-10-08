@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -10,21 +10,92 @@ import {
 import MenuButton from '../MenuButton';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconButton from 'react-native-vector-icons/FontAwesome';
+import { Card, Button } from 'react-native-elements';
+import { node } from 'prop-types';
 
 const PedidosCliente = (props) => {
+
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+		loadRepositories();
+    }, []);
+    
+    loadRepositories = async () => {
+        let dat = [{data: '07/10/2019', idProduto: 'test', preco: 5.0, status: 'ok'}, 
+        {data: '08/10/2019', idProduto: 'test2', preco: 5.0, status: 'pendente'},
+        {data: '08/10/2019', idProduto: 'test3', preco: 5.0, status: 'erro'}];
+        setData(dat);
+	};
+
+    function defineIconeStatus(status) {
+        if(status == 'ok') {
+            return 'check-circle-o';
+        } else if(status == 'pendente'){
+            return 'question-circle';
+        } else {
+            return 'exclamation-circle';
+        }
+    }
+
+    function defineCorStatus(status) {
+        if(status == 'ok') {
+            return '#32CD32';
+        } else if(status == 'pendente'){
+            return '#FFFF00';
+        } else {
+            return '#8B0000';
+        }
+    }
+
+    renderItem = ({ item }) => (
+		<Card containerStyle={styles.listItem}>
+			<View>
+				<View style={styles.buttons}>
+					<Button 
+						buttonStyle={styles.button}
+						icon={
+							<IconButton
+								name='expand'
+								size={15}
+								color='#EEE'
+								style={styles.iconsDrawer}
+							/>
+						}
+					/>
+				</View>
+                <View style={styles.statusPosition}>
+                    <Button 
+						buttonStyle={styles.status}
+						icon={
+							<IconButton
+								name={defineIconeStatus(item.status)} 
+								size={70}
+								color={defineCorStatus(item.status)}
+								style={styles.iconsDrawer}
+							/>
+						}
+					/>
+                </View>
+				<View>
+					<Text  style={styles.dados}>{item.data}</Text>
+                    <Text  style={styles.dados}>Valor: R$ {item.preco}</Text>
+				</View>
+			</View>
+		</Card>
+	);
+
     return (
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title='Pedidos' />
-            <View style={styles.containerPedidos}>
+            <View style={styles.mainContainer}>
                 <FlatList
-                    data={[
-                        {key: 'PEDIDO 1'},
-                        {key: 'PEDIDO 2'},
-                        {key: 'PEDIDO 3'},
-                        {key: 'PEDIDO 4'}
-                    ]}
-                    renderItem={({ item }) => <Text style={styles.itemPedidos}>{item.key}</Text>}
-                    />
+               	    style={{ marginTop: 50 }}
+                    contentContainerStyle={styles.list}
+                    data={data}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.idProduto.toString()}
+                />
             </View>
             <View>
                 <TouchableOpacity style={styles.floatButton}>
@@ -53,29 +124,53 @@ PedidosCliente.navigationOptions = {
 }
 
 const styles = StyleSheet.create({
-    mainContainer: {
-		flexGrow : 1, 
-		justifyContent : 'center',
-		backgroundColor: '#ffffff'
+    list: {
+		paddingTop: 10,
+		paddingHorizontal: 16
     },
-    containerPedidos: {
-		flexGrow: 5,
-		marginTop: 100,
+    dados: {
+        textAlign: 'right',
+        fontWeight: 'bold',
+    },
+	button: {
+		backgroundColor: '#0f6124',
+		borderRadius: 100,
+		height: 30,
+		width: 30,
+		marginLeft: 18,
 		alignItems: 'center',
-		justifyContent: 'center'
+		justifyContent: 'center',
     },
-    itemPedidos: {
-		padding: 5,
-		textAlign: 'center',
-		backgroundColor: '#228B22',
-		alignSelf: 'center',
-		fontSize: 18,
-		color: '#F0F8FF',
-		height: 44,
-		marginVertical: 8,
-		width: 200,
-		borderRadius: 5,
-		marginHorizontal: 10
+	buttons: {
+		flexDirection: 'row',
+        justifyContent: 'flex-end',
+    },
+    status: {
+        flex: 1,
+		height: 70,
+		width: 80,
+        backgroundColor: '#EEE'
+    },
+    statusPosition: {
+        marginRight: 0,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+    },
+	listItem: {
+		marginTop: 20,
+		paddingTop: 10,
+		paddingBottom: 10,
+		paddingEnd: 10,
+		padding: 10,
+		borderRadius: 10,
+        backgroundColor: '#EEE',
+        flex: 0.8,
+        height: '20%' 
+	},
+    mainContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: '#ffffff'
     },
     floatButton:{
 		borderWidth:1,
@@ -92,7 +187,7 @@ const styles = StyleSheet.create({
     },
     iconsDrawer: {
 		paddingRight: 2
-	}
+    }
 });
 
 export default PedidosCliente;
