@@ -5,7 +5,9 @@ import {
     FlatList,
     TouchableOpacity,
     StyleSheet,
-	Alert
+	Alert,
+	ToastAndroid,
+	ProgressBarAndroid
 } from 'react-native'
 import {Card,Button,Header, Input} from 'react-native-elements';
 
@@ -16,21 +18,24 @@ import {USER_CURRENTY} from '../../../../services/key'
 import IconMaterial from 'react-native-vector-icons/FontAwesome';
 import IconButton from 'react-native-vector-icons/FontAwesome';
 import ModalBox from '../../../../components/ModalBox';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const MarmitaAdmin = (props) => {
 
 	const[data,setData] = useState([]);
 	const modalRef = useRef();
-
+	const [load,setLoad] = useState(false);
 
     useEffect(() => {
         loadRepositories();
       }, []);
 
     loadRepositories = async () => {
+		setLoad(true);
         let usuario = await find(USER_CURRENTY);
         const response = await api.get('/protegido/marmita/listar',{ headers: {Authorization: usuario.token,}});
-        setData(response.data);
+		setData(response.data);
+		setLoad(false);
 	}
 	
 	cadastrarMarmita = async () => {
@@ -39,7 +44,7 @@ const MarmitaAdmin = (props) => {
      
     renderItem = ({ item }) => (
          <View >
-            <Card containerStyle={styles.listItem}>
+            <Card style={styles.listItem}>
 				<View>
 					<View style={styles.buttons}>
 						<Button 
@@ -48,11 +53,11 @@ const MarmitaAdmin = (props) => {
 								<IconButton
 									name='pencil'
 									size={15}
-									color='#EEE'
+									color='#000000'
 									style={styles.iconsDrawer}
 								/>
 							}
-							onPress={() => openEditaPopUp(item.id, item.tipoMarmita)}
+							onPress={() => openEditaPopUp(item)}
 						/>
 						<Button 
 							buttonStyle={styles.button}
@@ -60,29 +65,30 @@ const MarmitaAdmin = (props) => {
 								<IconButton
 									name='trash-o'
 									size={15}
-									color='#EEE'
+									color='#000000'
 									style={styles.iconsDrawer}
 								/>
 							}
-							onPress={() => deleteItem(item.id, item.tipoMarmita)}
+							onPress={() => deleteItem(item.idMarmita, item.tipoMarmita, item.valor)}
 						/>
 					</View>
 					<View>
-                        <Text>{item.tipoMarmita}</Text>
-						<Text>R$ {item.valor}</Text>
+                        <Text style={{fontWeight:'bold',fontSize:16}}>{item.tipoMarmita}</Text>
+						<View></View>
+						<Text style={{fontWeight:'bold',fontSize:16}}> R$ {item.valor}</Text>
 					</View>
 				</View>
 			</Card>
       </View>
 	);
 	
-	function deleteItem(id, tipo) {
+	function deleteItem(id, tipo, valor) {
         Alert.alert(
-            `Deletar '${tipo}'`,
-            'Tem certeza que deseja deletar essa marmita?',
+            'Deletar marmita',
+            `Tem certeza que deseja deletar a marmita tipo ${tipo} e valor R$ ${valor}?`,
             [
-                { text: 'NO', onPress: () => Alert.alert('Cancel'), style: 'cancel' },
-                { text: 'YES', onPress: () => loadDeleteItem(id) },
+                { text: 'Não'},
+                { text: 'Sim', onPress: () => loadDeleteItem(id) },
             ],
         );
     };
@@ -90,20 +96,21 @@ const MarmitaAdmin = (props) => {
     async function loadDeleteItem(id) {
         try {
             let usuario = await find(USER_CURRENTY);
-            await api.delete('/protegido/categoria/remover',
+            await api.delete('/protegido/marmita/remover',
                 {
                     headers: { Authorization: usuario.token },
                     params: { 'id': parseInt(id) }
                 }
-            );
+			);
+			ToastAndroid.show('Deletado com Sucesso!',ToastAndroid.show);
             loadRepositories();
         } catch (e) {
             ToastAndroid.show(e.message)
         }
 	};
 
-	function openEditaPopUp(id, tipo) {
-        modalRef.current.open('editarMarmita', tipo, id);
+	function openEditaPopUp(item) {
+        modalRef.current.open('editarMarmita', item);
     };
 
     openCadastroPopUp = () => {
@@ -113,19 +120,19 @@ const MarmitaAdmin = (props) => {
 
     return (       
         <View style={styles.mainContainer}>
-        <MenuButton navigation={props.navigation} />
+        <MenuButton navigation={props.navigation} title='Marmitas'/>
         <View style={styles.mainContainer}>
-		<Header
-			centerComponent={{ text: 'Marmitas', style: styles.tileHeader }}
-			containerStyle={styles.header}
-			/>
-            <FlatList
-                style={{ marginTop: 50 }}
-                contentContainerStyle={styles.list}
-                data={data}
-                renderItem={renderItem}
-                keyExtractor={item => item.idMarmita.toString()}
-            />
+			{!load && 
+			<ScrollView style={{marginBottom:40}}>
+				<FlatList
+					style={{ marginTop: 50 }}
+					contentContainerStyle={styles.list}
+					data={data}
+					renderItem={renderItem}
+					keyExtractor={item => item.idMarmita.toString()}
+				/>
+			</ScrollView>
+			}{load &&<ProgressBarAndroid />}
             <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUp}>
                 <IconButton
                     name='plus'
@@ -175,7 +182,7 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 16
 	},
 	button: {
-		backgroundColor: '#0f6124',
+		backgroundColor: '#FFF',
 		borderRadius: 100,
 		height: 30,
 		width: 30,
@@ -194,7 +201,7 @@ const styles = StyleSheet.create({
 		paddingEnd: 10,
 		padding: 30,
 		borderRadius: 10,
-		backgroundColor: '#EEE'
+		backgroundColor: '#EEE',
 	},
 	iconsDrawer: {
 		paddingRight: 2

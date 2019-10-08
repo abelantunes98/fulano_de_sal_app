@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, createRef, useImperativeHandle, useRef } from 'react';
+import React, { forwardRef, useState, createRef, useImperativeHandle, useRef, useEffect } from 'react';
 import {
     Text,
     View,
@@ -12,7 +12,8 @@ import Modal from 'react-native-modalbox';
 import api from '../services/api';
 import { USER_CURRENTY } from '../services/key';
 import { find } from '../services/banco';
-
+import RadioForm from 'react-native-simple-radio-button';
+import MarmitaAdmin from '../pages/private/admin/marmita/MarmitaAdmin';
 
 const ModalBox = forwardRef((props, ref) => {
 
@@ -30,7 +31,7 @@ const ModalBox = forwardRef((props, ref) => {
         modalRef.current.close();
     };
 
-    function contentModal(event, nomeCategoria='', idCategoria='') {
+    function contentModal(event, item='') {
         let r;
         switch (event) {
             case 'cadastroCategoria':
@@ -40,9 +41,15 @@ const ModalBox = forwardRef((props, ref) => {
                 r = (
                 <EditaCategoria
                     close={closeModal}
-                    nome={nomeCategoria}
-                    id={idCategoria}
+                    nome={item.descricao}
+                    id={item.id}
                 />);
+                break;
+            case 'cadastroMarmita':
+                r = (<CadastroMarmitas close={closeModal}/>);
+                break;
+            case 'editarMarmita':
+                r = (<EditaMarmita item={item}  close={closeModal}/>);
                 break;
             default:
                 r = <Text>None</Text>;
@@ -61,6 +68,185 @@ const ModalBox = forwardRef((props, ref) => {
         </Modal>
     );
 });
+const EditaMarmita = (props) => {
+
+    const[marmita,setMarmita] = useState(props.item);
+    const [load,setLoad] = useState(false);
+    const [descricao, setDescricao] = useState(marmita.descricao);
+    const [tipo,setTipo] = useState(marmita.tipoMarmita);
+    const [valor,setValor] = useState(marmita.valor.toString()); 
+    const [tipos,setTipos] = useState([]);
+    const [tradicional,setTradicional] = useState(false);
+
+    useEffect(() => {
+        setTipos([{label:'Tradicional',value:'TRADICIONAL'},{label:'Com divisórias', value:'DIVISORIA'}]);
+        if(tipo=='TRADICIONAL'){
+            setTradicional(true);
+        }
+      }, []);
+
+    onSelectionsChange = (data) => {
+        setSelectedTipo(data);
+    }
+
+    handle_editar = async () => {
+        setLoad(true);
+        try {
+            let usuario = await find(USER_CURRENTY);
+            
+            let marmitaSave = {
+                'idMarmita':marmita.idMarmita,
+                'descricao': descricao,
+                'tipoMarmita': tipo,
+                'valor': valor
+              };
+            await api.post('/protegido/marmita/atualizar',
+               marmitaSave,
+                {
+                    headers: { Authorization: usuario.token }
+                });
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'],ToastAndroid.LONG);
+        } finally {
+            props.close();
+        }
+
+    }
+
+    return (
+        <ScrollView contentContainerStyle={styles.content}>
+            <Text style={styles.title}>Editar Marmita</Text>
+            <Text style={styles.inputTitle}>Tipo</Text>
+                {tradicional &&
+                <RadioForm
+                buttonColor={'#0f6124'}
+                radio_props={tipos}
+                initial={0}
+                onPress={(value) => {setTipo(value)}}
+                />
+                }{!tradicional &&
+                    <RadioForm
+                    buttonColor={'#0f6124'}
+                    radio_props={tipos}
+                    initial={1}
+                    onPress={(value) => {setTipo(value)}}
+                    />
+                }
+
+            <Text style={styles.inputTitle}>Descrição</Text>
+            <Input
+                placeholder='Descricao'
+                value={descricao}
+                onChangeText={setDescricao}
+            />
+
+            <Text style={styles.inputTitle}>Valor</Text>
+            <Input
+                placeholder='Valor'
+                value={valor}
+                onChangeText={setValor}
+               
+            />
+
+            <View style={styles.buttonContainer}>
+                <Button
+                    title='Cancelar'
+                    buttonStyle={styles.button}
+                    onPress={props.close}
+                />
+                <Button
+                    title='Editar'
+                    buttonStyle={styles.button}
+                    onPress={handle_editar}
+                    loading = {load}
+                />
+            </View>
+        </ScrollView>
+    );
+
+}
+
+const CadastroMarmitas  = ({close}) => {
+    
+    const [load,setLoad] = useState(false);
+    const [descricao, setDescricao] = useState('');
+    const [tipo,setTipo] = useState('TRADICIONAL');
+    const [valor,setValor] = useState(''); 
+    const [tipos,setTipos] = useState([]);
+
+    useEffect(() => {
+        setTipos([{label:'Tradicional',value:'TRADICIONAL'},{label:'Com divisórias', value:'DIVISORIA'}]);
+      }, []);
+
+    onSelectionsChange = (data) => {
+        setSelectedTipo(data);
+    }
+
+    handle_cadastro = async () => {
+        setLoad(true);
+        try {
+            let usuario = await find(USER_CURRENTY);
+            let marmita = {
+                'descricao': descricao,
+                'tipo': tipo,
+                'valor': valor
+              }
+            await api.post('/protegido/marmita/',
+               marmita,
+                {
+                    headers: { Authorization: usuario.token }
+                });
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'],ToastAndroid.LONG);
+        } finally {
+            close();
+        }
+
+    }
+    
+
+    return (
+        <ScrollView contentContainerStyle={styles.content}>
+            <Text style={styles.title}>Cadastrar Marmita</Text>
+            <Text style={styles.inputTitle}>Tipo</Text>
+                <RadioForm
+                buttonColor={'#0f6124'}
+                radio_props={tipos}
+                initial={0}
+                onPress={(value) => {setTipo(value)}}
+                />
+
+            <Text style={styles.inputTitle}>Descrição</Text>
+            <Input
+                placeholder='Descricao'
+                value={descricao}
+                onChangeText={setDescricao}
+            />
+
+            <Text style={styles.inputTitle}>Valor</Text>
+            <Input
+                placeholder='Valor'
+                value={valor}
+                onChangeText={setValor}
+               
+            />
+
+            <View style={styles.buttonContainer}>
+                <Button
+                    title='Cancelar'
+                    buttonStyle={styles.button}
+                    onPress={close}
+                />
+                <Button
+                    title='Cadastrar'
+                    buttonStyle={styles.button}
+                    onPress={handle_cadastro}
+                    loading = {load}
+                />
+            </View>
+        </ScrollView>
+    );
+};
 
 const CadastroCategorias = ({ close }) => {
 
