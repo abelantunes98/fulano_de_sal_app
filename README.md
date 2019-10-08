@@ -33,7 +33,7 @@ Existem dois tipos de usuário: Cliente e Administrador.
     * React Navigation
     * Entre outras bibliotecas.
 
-# Gerente e Desenvolvedores:
+## Gerente e Desenvolvedores:
    - [Paulo Mendes da Silva Júnior](https://github.com/paulojuniore)
    - [Rich Elton Carvalho Ramalho](https://github.com/rickecr)
    - [Samuel Pereira de Vasconcelos](https://github.com/samuelcomputacao)
