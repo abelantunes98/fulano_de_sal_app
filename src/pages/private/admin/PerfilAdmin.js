@@ -37,14 +37,13 @@ const PerfilAdmin = (props) => {
         setNome(usuario.nome);
     }
 
-    verificacaoDeSenha = async () => {
+    verificacaoDeSenha = (senhaCript) => {
         let saida = false;
-        if (senhaAtual === '' && novaSenha === '' && novaSenhaConf === '') {
-            let senhaCriptografada = await criptografar(senhaAtual);
-            if (admin.senha === senhaCriptografada && novaSenha === novaSenhaConf) {
-                    saida = true;
+        if (senhaAtual !== '' && novaSenha !== '' && novaSenhaConf !== '') {
+            if (admin.senha === senhaCript && novaSenha === novaSenhaConf) { 
+                saida = true;
             } else {
-                ToastAndroid.show("Senha atual incorreta ou a nova senhas não confere!", ToastAndroid.SHORT);
+                ToastAndroid.show("Senha atual incorreta ou a nova senha não confere!", ToastAndroid.SHORT);
             }
         }
         return saida;
@@ -52,14 +51,24 @@ const PerfilAdmin = (props) => {
 
     alterarDados = async () => {
         try {
-            const admin_atualizado = {nome: nome, email: admin.email };
-            if (verificacaoDeSenha()) {
+            const admin_atualizado = {
+                nome: nome,
+                email: admin.email,
+                senha: admin.senha
+            };
+            const senhaCript = await criptografar(senhaAtual);
+            if (verificacaoDeSenha(senhaCript)) {
                 const nova_senha = await criptografar(novaSenha);
                 admin_atualizado.senha = nova_senha;
             }
-            console.log(admin_atualizado);
-            // const response = await api.put('/administrador/', admin_atualizado);
-            // setAdmin(response.data);
+            const response = await 
+                            api.post('/protegido/administrador/atualizar', 
+                                    admin_atualizado,
+                                    { headers: {
+                                            Authorization: admin.token
+                                        }
+                                    });
+            setAdmin(response.data);
             ToastAndroid.show("Dados atualizados com sucesso!", ToastAndroid.SHORT);
         } catch (error) {
             ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
