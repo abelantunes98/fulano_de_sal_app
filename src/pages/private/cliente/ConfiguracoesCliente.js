@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     View,
     Image,
@@ -7,9 +7,22 @@ import {
 
 import MenuButton from '../MenuButton';
 import IconFont from 'react-native-vector-icons/FontAwesome';
+import { save, find } from '../../../services/banco';
+import { USER_CURRENTY } from '../../../services/key';
 import { Button, Input } from 'react-native-elements';
 
 const ConfiguracoesCliente = (props) => {
+
+    const [userDados, setUserDados] = useState([]);
+
+    useEffect(async ()=>{
+        carregarDados();
+    }, []);
+
+    carregarDados = async () =>{
+        let userDadosRet = await find(USER_CURRENTY);
+        setUserDados(userDadosRet);
+    }
     return (
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title='Configurações' />
@@ -37,7 +50,7 @@ const ConfiguracoesCliente = (props) => {
                             style={ styles.icons }
                         />
                     }
-                    placeholder='Fulano de Tal'
+                    placeholder={userDados.nome}
                     autoCapitalize='words'
                     style={styles.input}
                 />
@@ -50,9 +63,10 @@ const ConfiguracoesCliente = (props) => {
                             style={ styles.icons }
                         />
                     }
-                    placeholder='fulanodetal@fulanin.com'
+                    placeholder={userDados.email}
                     autoCapitalize='none'
-                    keyboardType='email-address'
+                    placeholderTextColor='#000000'
+                    editable={false}
                     style={styles.input}
                 />
                 <Input
@@ -77,7 +91,7 @@ const ConfiguracoesCliente = (props) => {
                             style={ styles.icons }
                         />
                     }
-                    placeholder='Rua dos Alfeneiros - 4'
+                    placeholder={userDados.endereco}
                     autoCapitalize='words'
                     style={styles.input}
                 />
