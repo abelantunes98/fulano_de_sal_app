@@ -51,6 +51,12 @@ const ModalBox = forwardRef((props, ref) => {
             case 'editarMarmita':
                 r = (<EditaMarmita item={item}  close={closeModal}/>);
                 break;
+            case 'cadastroProduto':
+                r = (<CadastroProdutos close={closeModal}/>);
+                break;
+            case 'editarProduto':
+                r = (<EditaProduto close={closeModal}/>);
+                 break;
             default:
                 r = <Text>None</Text>;
             break;
@@ -341,6 +347,124 @@ const EditaCategoria = (props) => {
     );
 };
 
+
+const CadastroProdutos = ({ close }) => {
+    /* Necessário mostrar as categorias para o admin escolher*/
+    const [nome, setNome] = useState('');
+    const [descricao, setDescricao] = useState('');
+    const [id, setId] = useState('');
+    //const categorias = await api.get('/protegido/categoria/listar', { headers: { Authorization: usuario.token } });
+
+
+    handle_cadastro = async () => {
+        try {
+            let usuario = await find(USER_CURRENTY);
+            await api.post('/protegido/produto/',
+                { 'categoria':{'descricao': descricao,'id':id},'nome': nome },
+                {
+                    headers: { Authorization: usuario.token }
+                });
+        } catch (e) {
+            ToastAndroid.show('Produto não foi cadastrado')
+        } finally {
+            close();
+        }
+
+    }
+
+    return (
+        <ScrollView contentContainerStyle={styles.content}>
+            <Text style={styles.title}>Cadastrar produto</Text>
+            <Text style={styles.inputTitle}>Nome</Text>
+            <Input
+                placeholder='Nome do produto'
+                value={nome}
+                onChangeText={setNome}
+            />
+             <Text style={styles.inputTitle}>Categoria</Text>
+            <Input
+                placeholder='Nome da categoria'
+                value={descricao}
+                onChangeText={setDescricao}
+            />
+             <Text style={styles.inputTitle}>idCategoria</Text>
+            <Input
+                placeholder='id da categoria'
+                value={id}
+                onChangeText={setId}
+            />
+            <View style={styles.buttonContainer}>
+                <Button
+                    title='Cancelar'
+                    buttonStyle={styles.button}
+                    onPress={close}
+                />
+                <Button
+                    title='Cadastrar'
+                    buttonStyle={styles.button}
+                    onPress={handle_cadastro}
+                />
+            </View>
+        </ScrollView>
+    );
+};
+
+const EditaProduto = (props) => {
+    /* Necessário mostrar as categorias para o admin escolher*/
+    const [nome, setNome] = useState(props.nome);
+    const idProduto = props.idProduto;
+
+    handle_edicao = async () => {
+            try {
+                let usuario = await find(USER_CURRENTY);
+                await api.post('/protegido/produto/atualizar',
+                    { 
+                        'categoria':{
+                            'descricao':descricao,
+                            'id':id
+                        },
+                        'nome': nome, 
+                        'idProduto': idProduto
+                    },
+                    {
+                        headers: { Authorization: usuario.token }
+                    });
+            } catch (e) {
+                ToastAndroid.show('Produto não foi editado')
+            } finally {
+                props.close();
+            }    
+    };
+    
+    return (
+        <ScrollView contentContainerStyle={styles.content}>
+        <Text style={styles.title}>Editar produto</Text>
+        <Text style={styles.inputTitle}>Nome</Text>
+        <Input
+            placeholder='Nome do produto'
+            value={nome}
+            onChangeText={setNome}
+        />
+        <Input
+            placeholder='Categoria do produto'
+            value={nome}
+            onChangeText={setNome}
+        />
+        <View style={styles.buttonContainer}>
+            <Button
+                title='Cancelar'
+                buttonStyle={styles.button}
+                onPress={props.close}
+            />
+            <Button
+                title='Editar'
+                buttonStyle={styles.button}
+                onPress={handle_edicao}
+            />
+        </View>
+    </ScrollView>
+    );
+};
 
 const styles = StyleSheet.create({
     title: {

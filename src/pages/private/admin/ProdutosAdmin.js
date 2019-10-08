@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import {
   View,
   Text,
@@ -15,9 +15,11 @@ import api from '../../../services/api';
 import MenuButton from '../MenuButton';
 import IconMaterial from 'react-native-vector-icons/AntDesign';
 import IconButton from 'react-native-vector-icons/FontAwesome';
+import ModalBox from '../../../components/ModalBox';
 
 const ProdutosAdmin = props => {
 	const [data, setData] = useState([]);
+	const modalRef = useRef();
 
 	useEffect(() => {
 		loadRepositories();
@@ -46,6 +48,8 @@ const ProdutosAdmin = props => {
 								style={styles.iconsDrawer}
 							/>
 						}
+						onPress={() => openEditaPopUp(item)}
+
 					/>
 					<Button 
 						buttonStyle={styles.button}
@@ -94,32 +98,39 @@ const ProdutosAdmin = props => {
         }
     };					
 
+	openCadastroPopUp = () => {
+        modalRef.current.open('cadastroProduto');
+	};
+	function openEditaPopUp(item) {
+        modalRef.current.open('editarProduto', item);
+    };
+
 	return (
-		<View>
-			<ScrollView>
-				<View style={styles.mainContainer}>
-					<MenuButton navigation={props.navigation} title='Produtos' />
-					<View style={styles.mainContainer}>
-						<FlatList
-							style={{ marginTop: 50 }}
-							contentContainerStyle={styles.list}
-							data={data}
-							renderItem={renderItem}
-							keyExtractor={item => item.idProduto.toString()}
-						/>
-					</View>
-				</View>
-			</ScrollView>
-			<TouchableOpacity style={styles.floatButton}>
-				<IconButton
-					name='plus'
-					size={20}
-					color='#ffffff'
-					style={styles.iconsDrawer}
-				/>
-			</TouchableOpacity>
-		</View>
-	);
+		 <View style={styles.mainContainer}>
+            <MenuButton navigation={props.navigation} title="Produtos"/>
+            <View style={styles.mainContainer}>
+                <FlatList
+                    style={{ marginTop: 50 }}
+                    contentContainerStyle={styles.list}
+                    data={data}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.idProduto.toString()}
+                />
+                <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUp}>
+                    <IconButton
+                        name='plus'
+                        size={20}
+                        color='#ffffff'
+                        style={styles.iconsDrawer}
+                    />
+                </TouchableOpacity>
+            </View>
+            <ModalBox
+                ref={modalRef}
+                refresh={loadRepositories}
+            />
+        </View>
+    )
 };
 
 ProdutosAdmin.navigationOptions = {
