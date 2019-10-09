@@ -15,6 +15,7 @@ import HomeCliente from './pages/private/cliente/HomeCliente';
 import PedidosCliente from './pages/private/cliente/PedidosCliente';
 import ConfiguracoesCliente from './pages/private/cliente/ConfiguracoesCliente'
 import LogoutCliente from './pages/private/cliente/LogoutCliente'
+import AlterarSenha from './pages/private/cliente/AlterarSenha'
 
 import PedidosAdmin from './pages/private/admin/PedidosAdmin';
 import CardapioAdmin from './pages/private/admin/cardapio/CardapioAdmin';
@@ -41,6 +42,7 @@ const homeClienteNavigator = createDrawerNavigator({
     Home: HomeCliente,
     PedidosCliente: PedidosCliente,
     Configuracoes: ConfiguracoesCliente,
+    AlterarSenha: AlterarSenha,
     Sair: LogoutCliente,
 },{
     contentOptions:{
