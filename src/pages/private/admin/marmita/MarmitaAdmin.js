@@ -44,7 +44,7 @@ const MarmitaAdmin = (props) => {
      
     renderItem = ({ item }) => (
          <View >
-            <Card style={styles.listItem}>
+            <Card containerStyle={styles.listItem}>
 				<View>
 					<View style={styles.buttons}>
 						<Button 
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
 		paddingEnd: 10,
 		padding: 30,
 		borderRadius: 10,
-		backgroundColor: '#EEE',
+		backgroundColor: '#FFF',
 	},
 	iconsDrawer: {
 		paddingRight: 2

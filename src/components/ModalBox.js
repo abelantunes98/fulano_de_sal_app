@@ -111,6 +111,7 @@ const EditaMarmita = (props) => {
                 {
                     headers: { Authorization: usuario.token }
                 });
+            ToastAndroid.show("Editada com sucesso",ToastAndroid.SHORT);
         } catch (error) {
             ToastAndroid.show(error.response.data['message'],ToastAndroid.LONG);
         } finally {
@@ -151,7 +152,7 @@ const EditaMarmita = (props) => {
                 placeholder='Valor'
                 value={valor}
                 onChangeText={setValor}
-               
+                keyboardType={'numeric'}               
             />
 
             <View style={styles.buttonContainer}>
@@ -202,6 +203,7 @@ const CadastroMarmitas  = ({close}) => {
                 {
                     headers: { Authorization: usuario.token }
                 });
+            ToastAndroid.show("Cadastrado com sucesso",ToastAndroid.SHORT);
         } catch (error) {
             ToastAndroid.show(error.response.data['message'],ToastAndroid.LONG);
         } finally {
@@ -234,6 +236,7 @@ const CadastroMarmitas  = ({close}) => {
                 placeholder='Valor'
                 value={valor}
                 onChangeText={setValor}
+                keyboardType={'numeric'}
                
             />
 
@@ -493,6 +496,7 @@ const styles = StyleSheet.create({
     content: {
         justifyContent: 'flex-start',
         alignItems: 'center',
+        paddingBottom:'10%'
     },
     buttonContainer: {
         marginTop: 25,
