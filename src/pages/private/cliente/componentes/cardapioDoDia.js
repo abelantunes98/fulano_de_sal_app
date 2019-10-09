@@ -124,7 +124,8 @@ const CardapioDoDia = props => {
                     renderItem={({ item }) => (
                         <Text style={styles.produtos}>{item.nome}</Text>
                     )}
-                    keyExtractor={item => item.id}
+                    // As chaves precisam ser Strings.
+                    keyExtractor={(item) => item.id.toString()}
                 />
             </LinearGradient>
         );
@@ -141,7 +142,8 @@ const CardapioDoDia = props => {
                         produtos={item.produtos}
                     />
                 )}
-                keyExtractor={item => item.id}
+                // As chaves precisam ser Strings.
+                keyExtractor={(item) => item.id.toString()}
             />
         </SafeAreaView>
     );
