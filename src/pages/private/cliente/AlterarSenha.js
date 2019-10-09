@@ -41,6 +41,10 @@ const AlterarSenhaCliente = (props) => {
         let emailEnviar = userDados.email;
         let senhaEnviar = userDados.senha;
 
+        /*
+         Verificando se a senha digitada está correta e se as novas senhas digitadas são iguais, caso tudo
+         ocorra bem, efetua a troca.
+        */
         let senhaCriptografada = await criptografar(senhaAtual);
         if (senhaAtual == '' && novaSenha == '' && novaSenha2 == '') {
             ToastAndroid.show('Informe os dados!', ToastAndroid.SHORT);
@@ -51,6 +55,7 @@ const AlterarSenhaCliente = (props) => {
             ToastAndroid.show('As senhas informadas não conferem!', ToastAndroid.SHORT);
         } else {
 
+            // Trocando a senha.
             senhaEnviar = await criptografar(novaSenha);
             try {
                 const response = await api.post('/protegido/cliente/atualizar',
@@ -71,6 +76,7 @@ const AlterarSenhaCliente = (props) => {
                     userDados.telefone = data.telefone;
 
                     save(USER_CURRENTY, userDados);
+                    // Limpando os campos.
                     setNovaSenha2('');
                     setNovaSenha('');
                     setSenhaAtual('');
@@ -78,6 +84,7 @@ const AlterarSenhaCliente = (props) => {
                     ToastAndroid.show('Senha atualizada com sucesso!', ToastAndroid.SHORT);
                 }
             } catch (error) {
+                // Erro no servidor.
                 ToastAndroid.show('Erro, tente novamente mais tarde!', ToastAndroid.SHORT);
             }
         }
@@ -181,6 +188,8 @@ const AlterarSenhaCliente = (props) => {
 
 
 AlterarSenhaCliente.navigationOptions = {
+    // Linha mágica que removeu a rota do Drawer navigation.
+    drawerLabel: () => null
 }
 const styles = StyleSheet.create({
     mainContainer: {
