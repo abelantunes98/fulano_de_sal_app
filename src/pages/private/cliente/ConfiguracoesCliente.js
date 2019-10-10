@@ -96,17 +96,11 @@ const ConfiguracoesCliente = (props) => {
     return (
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title='Configurações' />
-            <View style={ styles.childContainerOne }>
-                <Image 
-                    style={ styles.imgHeader }
-                    source={require('../../../images/LOGO1.png')}
-                />
-            </View>
-
+            
             <View style={ styles.childContainerTwo }>
                 <Image
                    style={ styles.imgMain }
-                   source={require('../../../images/usernot.png')}
+                   source={require('../../../images/user.jpg')}
                 />
             </View>
 
@@ -208,25 +202,18 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#ffffff'
     },
-    // logo
-    childContainerOne:{
-        flexDirection: "row",
-        borderBottomWidth: 3,
-        borderBottomColor: '#000000',
-        height: '10%',
-    },
     // imagem
     childContainerTwo:{
         height: '25%', 
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "center",    
     },
     // informações
     childContainerThree:{
         height: '50%',
         width: '100%',
         justifyContent: 'center',
-        alignItems: "center"
+        alignItems: "center",
     },
     // botão
     childContainerFour:{
@@ -250,9 +237,9 @@ const styles = StyleSheet.create({
         height: 50,
     },
     imgMain:{
-        width: 100,
-        height: 100,
-        borderRadius: 50,
+        flex: 1,
+        resizeMode: "contain",
+        borderRadius: 100,
     },
     iconsDrawer: {
 		paddingRight: 2
