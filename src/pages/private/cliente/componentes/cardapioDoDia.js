@@ -6,7 +6,7 @@ import {
     StyleSheet,
 } from 'react-native'
 
-import LinearGradient from 'react-native-linear-gradient';
+import { Card } from 'react-native-elements';
 
 const DATA = [
     {
@@ -116,7 +116,7 @@ const CardapioDoDia = props => {
 
     function Item({ title, produtos }) {
         return (
-            <LinearGradient colors={['#00FF00', '#006400']} style={styles.subcontainer}>
+            <Card containerStyle={ styles.subcontainer }>
                 <Text style={styles.title}>{title}</Text>
                 <FlatList
                     style={styles.options}
@@ -127,25 +127,22 @@ const CardapioDoDia = props => {
                     // As chaves precisam ser Strings.
                     keyExtractor={(item) => item.id.toString()}
                 />
-            </LinearGradient>
+            </Card>
         );
     }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <FlatList
-                data={DATA}
-
-                renderItem={({ item }) => (
-                    <Item
-                        title={item.nome}
-                        produtos={item.produtos}
-                    />
-                )}
-                // As chaves precisam ser Strings.
-                keyExtractor={(item) => item.id.toString()}
-            />
-        </SafeAreaView>
+        <FlatList
+            data={DATA}
+            renderItem={({ item }) => (
+                <Item
+                    title={item.nome}
+                    produtos={item.produtos}
+                />
+            )}
+            // As chaves precisam ser Strings.
+            keyExtractor={(item) => item.id.toString()}
+        />
     );
 }
 
@@ -173,19 +170,24 @@ const styles = StyleSheet.create({
     options: {
         flex: 1,
         justifyContent: 'space-around',
-        flexDirection: 'row',
-        flexWrap: 'wrap',
+        flexDirection: 'column',
+        
     },
     produtos: {
         padding: 3,
         margin: 8,
-        color: '#ffffff',
+        color: '#aaaaaa',
         fontWeight: '700',
         fontSize: 16,
     },
     subcontainer: {
-        margin: 20,
-        borderRadius: 24,
+        marginTop: 20,
+		paddingTop: 15,
+		paddingBottom: 10,
+        paddingHorizontal: 20,
+        borderWidth: 1,
+		borderRadius: 10,
+		backgroundColor: '#FFF',
     },
 });
 

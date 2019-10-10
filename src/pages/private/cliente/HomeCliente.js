@@ -38,7 +38,7 @@ const HomeCliente = (props) => {
                 <CardapioDoDia></CardapioDoDia>
             </ScrollView>
 
-            <View style={{ height: 100 }}>
+            <View style={{ height: 100,}}>
                 <Button
                     title='Novo Pedido'
                     titleStyle={{ fontSize: 18 }}
@@ -104,14 +104,12 @@ const styles = StyleSheet.create({
         paddingRight: 2
     },
     containerPedidos: {
-        flexGrow: 5,
         marginTop: 10,
         alignItems: 'center',
         justifyContent: 'space-around',
         alignSelf: "center",
-        width: '80%',
-        maxHeight: 400,
-        marginBottom: 30,
+        marginBottom: 20,
+        height: 400,
     },
 });
 
