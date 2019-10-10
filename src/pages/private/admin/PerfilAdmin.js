@@ -6,6 +6,7 @@ import {
     ToastAndroid,
     StyleSheet,
     ProgressBarAndroid,
+    KeyboardAvoidingView,
 } from 'react-native'
 
 import MenuButton from '../MenuButton';
@@ -40,19 +41,49 @@ const PerfilAdmin = (props) => {
         setLoadind(false);
     }
 
-    verificacaoDeSenha = (senhaCript) => {
+    limparCampos = () => {
+        setSenhaAtual('');
+        setNovaSenha('');
+        setNovaSenhaConf('');
+    }
+
+    function SenhaIncorreta(message) {
+        this.message = message;
+        this.name = "UserException";
+     }
+
+    validarSenha = (senhaCript) => {
         let saida = false;
         if (senhaAtual !== '') {
             if (novaSenha !== '' && novaSenhaConf !== '') {
                 if (admin.senha === senhaCript && novaSenha === novaSenhaConf) { 
                     saida = true;
                 } else {
-                    ToastAndroid.show("Senha atual incorreta ou a nova senha não confere!", ToastAndroid.SHORT);
+                    throw new SenhaIncorreta("Senha atual incorreta ou a nova senha não confere!");
                 }
             }
         }
 
         return saida;
+    }
+
+    atualizarAdmin = async ( admin_atualizado ) => {
+        const response = await api.post(
+            '/protegido/administrador/atualizar', 
+            admin_atualizado,
+            { 
+                headers: {
+                    Authorization: admin.token
+                }
+            }
+        );
+        setAdmin(response.data);
+        const response_login = await api.post('/publico/usuario/login/', {
+            'email': response.data.email, 
+            'senha': response.data.senha
+        });
+        await save(USER_CURRENTY, response_login.data);
+        setAdmin(response_login.data);
     }
 
     alterarDados = async () => {
@@ -63,27 +94,20 @@ const PerfilAdmin = (props) => {
                 senha: admin.senha
             };
             const senhaCript = await criptografar(senhaAtual);
-            if (verificacaoDeSenha(senhaCript)) {
+            if (validarSenha(senhaCript)) {
                 const nova_senha = await criptografar(novaSenha);
                 admin_atualizado.senha = nova_senha;
             }
-            const response = await api.post('/protegido/administrador/atualizar', admin_atualizado,
-                { 
-                    headers: {
-                        Authorization: admin.token
-                    }
-                }
-            );
-            setAdmin(response.data);
-            const response_login = await api.post('/publico/usuario/login/', {
-                'email': admin.email, 
-                'senha': admin.senha
-            });
-            await save(USER_CURRENTY, response_login.data);
-            setAdmin(response_login.data);
+            await atualizarAdmin(admin_atualizado);
             ToastAndroid.show("Dados atualizados com sucesso!", ToastAndroid.SHORT);
+
+            limparCampos();
         } catch (error) {
-            ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
+            if (error instanceof SenhaIncorreta) {
+                ToastAndroid.show(error.message, ToastAndroid.SHORT);
+            } else {
+                ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
+            }
         }
     }
 
@@ -91,6 +115,7 @@ const PerfilAdmin = (props) => {
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title='Perfil'/>
             <View style={ styles.mainContainer }>
+            <KeyboardAvoidingView>
                 {!loading &&
                 <View style={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <IconMaterial 
@@ -165,6 +190,7 @@ const PerfilAdmin = (props) => {
                     </View>
                 </View>
                 }{loading && <ProgressBarAndroid />}
+                </KeyboardAvoidingView>
             </View>
         </View>
     )
