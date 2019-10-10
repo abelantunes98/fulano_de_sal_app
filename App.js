@@ -14,6 +14,8 @@ import { Alert, BackHandler, YellowBox} from 'react-native';
 export default function App() {
 	YellowBox.ignoreWarnings([
 		'Warning: componentWillMount is deprecated',
+		'Warning: Failed child context type: Invalid',
+		'Warning: componentWillReceiveProps is deprecated',
 	])
 	
 	const[connected,setIsConnected] = useState(false);

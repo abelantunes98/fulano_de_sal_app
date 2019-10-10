@@ -5,7 +5,7 @@ import {
     TouchableOpacity,
     ScrollView,
     StyleSheet,
-    ActivityIndicator,
+    ProgressBarAndroid,
 } from 'react-native'
 import { Button} from 'react-native-elements';
 
@@ -64,29 +64,19 @@ const CardapioAdmin = (props) => {
         console.log(produtosSelecionados);
     }
 
-    if (loading) {
-        return (
-            <View style={styles.mainLoading}>
-                <MenuButton navigation={props.navigation} title='Cardápio'/>
-                <ActivityIndicator style={{ flex: 1, justifyContent: "center" }} size="large" color="#0000ff" />
-            </View>
-        );
-    }
-
     return (
         <View style={ styles.mainContainer }>
-            <ScrollView>
-                <View style={ styles.mainContainer }>
-                    <MenuButton navigation={props.navigation} title='Cardápio'/>
-                    <View style={ styles.mainContainer }>
-                        <FlatList
-                            style={{ marginTop: 50 }}
-                            contentContainerStyle={styles.list}
-                            data={categorias}
-                            renderItem={renderItem}
-                            keyExtractor={categoria => categoria.id.toString()}
-                        />
-                    </View>
+            <MenuButton navigation={props.navigation} title='Cardápio'/>
+            <View style={ styles.mainContainer }>
+                {!loading && 
+                <ScrollView style={{marginBottom:40}}>
+                    <FlatList
+                        style={{ marginTop: 50 }}
+                        contentContainerStyle={styles.list}
+                        data={categorias}
+                        renderItem={renderItem}
+                        keyExtractor={categoria => categoria.id.toString()}
+                    />
                     <View style={styles.forgotContainer}>
                         <Button 
                             buttonStyle={{
@@ -100,8 +90,9 @@ const CardapioAdmin = (props) => {
                             onPress={handlerSubmit}
                         />
                     </View>
-                </View>
-            </ScrollView>
+                </ScrollView>
+                }{loading && <ProgressBarAndroid />}
+            </View>
             <TouchableOpacity style={styles.floatButton}>
                 <IconMaterial
                     name='plus'
@@ -128,7 +119,7 @@ CardapioAdmin.navigationOptions = {
 
 const styles = StyleSheet.create({
     mainContainer: {
-		flexGrow : 1, 
+		flex : 1, 
 		justifyContent : 'center',
 		backgroundColor: '#ffffff'
     },
@@ -165,7 +156,8 @@ const styles = StyleSheet.create({
         fontFamily: 'Roboto-Thin'
     },
     mainLoading: {
-        flexGrow : 1, 
+        flex : 1, 
+        justifyContent: 'center',
 		backgroundColor: '#ffffff'
     }
 });
