@@ -5,6 +5,7 @@ import {
     Image,
     ToastAndroid,
     StyleSheet,
+    ProgressBarAndroid,
 } from 'react-native'
 
 import MenuButton from '../MenuButton';
@@ -14,7 +15,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import IconVerify from "react-native-vector-icons/MaterialIcons";
 import { Button, Input } from 'react-native-elements';
 
-import { find } from '../../../services/banco';
+import { find, save } from '../../../services/banco';
 import { criptografar } from '../../../services/criptografia';
 import { USER_CURRENTY } from '../../../services/key';
 import api from "../../../services/api";
@@ -25,6 +26,7 @@ const PerfilAdmin = (props) => {
     const [senhaAtual, setSenhaAtual] = useState('');
     const [novaSenha, setNovaSenha] = useState('');
     const [novaSenhaConf, setNovaSenhaConf] = useState('');
+    const [loading, setLoadind] = useState(true);
 
     useEffect(() => {
         loadAdmin();
@@ -35,17 +37,21 @@ const PerfilAdmin = (props) => {
 
         setAdmin(usuario);
         setNome(usuario.nome);
+        setLoadind(false);
     }
 
     verificacaoDeSenha = (senhaCript) => {
         let saida = false;
-        if (senhaAtual !== '' && novaSenha !== '' && novaSenhaConf !== '') {
-            if (admin.senha === senhaCript && novaSenha === novaSenhaConf) { 
-                saida = true;
-            } else {
-                ToastAndroid.show("Senha atual incorreta ou a nova senha não confere!", ToastAndroid.SHORT);
+        if (senhaAtual !== '') {
+            if (novaSenha !== '' && novaSenhaConf !== '') {
+                if (admin.senha === senhaCript && novaSenha === novaSenhaConf) { 
+                    saida = true;
+                } else {
+                    ToastAndroid.show("Senha atual incorreta ou a nova senha não confere!", ToastAndroid.SHORT);
+                }
             }
         }
+
         return saida;
     }
 
@@ -61,14 +67,20 @@ const PerfilAdmin = (props) => {
                 const nova_senha = await criptografar(novaSenha);
                 admin_atualizado.senha = nova_senha;
             }
-            const response = await 
-                            api.post('/protegido/administrador/atualizar', 
-                                    admin_atualizado,
-                                    { headers: {
-                                            Authorization: admin.token
-                                        }
-                                    });
+            const response = await api.post('/protegido/administrador/atualizar', admin_atualizado,
+                { 
+                    headers: {
+                        Authorization: admin.token
+                    }
+                }
+            );
             setAdmin(response.data);
+            const response_login = await api.post('/publico/usuario/login/', {
+                'email': admin.email, 
+                'senha': admin.senha
+            });
+            await save(USER_CURRENTY, response_login.data);
+            setAdmin(response_login.data);
             ToastAndroid.show("Dados atualizados com sucesso!", ToastAndroid.SHORT);
         } catch (error) {
             ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
@@ -78,81 +90,81 @@ const PerfilAdmin = (props) => {
     return (
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title='Perfil'/>
-            <View style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-            }}>
-                <IconMaterial 
-                    name='user-circle-o'
-                    size={100}
-                    color='black'
-                    style={ styles.icon_user }
-                />
-                <Text style={styles.text} >{ admin.email }</Text>
-                <Input
-                    leftIcon={
-                        <Icon
-                            name='user'
-                            size={15}
-                            color='black'
-                            style={ styles.icons }
-                        />
-                    }
-                    containerStyle={styles.input}
-                    value={nome}
-                    onChangeText={setNome}
-                />
-                <Input
-                    leftIcon={
-                        <IconMaterial5
-                            name='user-check'
-                            size={15}
-                            color='black'
-                            style={ styles.icons }
-                        />
-                    }
-                    placeholder='Digite sua senha atual'
-                    secureTextEntry={true}
-                    containerStyle={styles.input}
-                    value={senhaAtual}
-                    onChangeText={setSenhaAtual}
-                />
-                <Input
-                    leftIcon={
-                        <IconMaterial
-                            name='user-secret'
-                            size={15}
-                            color='black'
-                            style={ styles.icons }
-                        />
-                    }
-                    placeholder='Digite sua nova senha'
-                    secureTextEntry={true}
-                    containerStyle={styles.input}
-                    secureTextEntry={true}
-                    value={novaSenha}
-                    onChangeText={setNovaSenha}
-                />
-                <Input
-                    leftIcon={
-                        <IconVerify
-                            name='verified-user'
-                            size={15}
-                            color='black'
-                            style={ styles.icons }
-                        />
-                    }
-                    placeholder='Repita sua nova senha'
-                    secureTextEntry={true}
-                    containerStyle={styles.input}
-                    secureTextEntry={true}
-                    value={novaSenhaConf}
-                    onChangeText={setNovaSenhaConf}
-                />
-                <View style={styles.forgotContainer}>
-                    <Button title='Atualizar dados' buttonStyle={styles.button} titleStyle={styles.titleStyle} onPress={alterarDados} />
+            <View style={ styles.mainContainer }>
+                {!loading &&
+                <View style={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <IconMaterial 
+                        name='user-circle-o'
+                        size={100}
+                        color='black'
+                        style={ styles.icon_user }
+                    />
+                    <Text style={styles.text} >{ admin.email }</Text>
+                    <Input
+                        leftIcon={
+                            <Icon
+                                name='user'
+                                size={15}
+                                color='black'
+                                style={ styles.icons }
+                            />
+                        }
+                        containerStyle={styles.input}
+                        value={nome}
+                        onChangeText={setNome}
+                    />
+                    <Input
+                        leftIcon={
+                            <IconMaterial5
+                                name='user-check'
+                                size={15}
+                                color='black'
+                                style={ styles.icons }
+                            />
+                        }
+                        placeholder='Digite sua senha atual'
+                        secureTextEntry={true}
+                        containerStyle={styles.input}
+                        value={senhaAtual}
+                        onChangeText={setSenhaAtual}
+                    />
+                    <Input
+                        leftIcon={
+                            <IconMaterial
+                                name='user-secret'
+                                size={15}
+                                color='black'
+                                style={ styles.icons }
+                            />
+                        }
+                        placeholder='Digite sua nova senha'
+                        secureTextEntry={true}
+                        containerStyle={styles.input}
+                        secureTextEntry={true}
+                        value={novaSenha}
+                        onChangeText={setNovaSenha}
+                    />
+                    <Input
+                        leftIcon={
+                            <IconVerify
+                                name='verified-user'
+                                size={15}
+                                color='black'
+                                style={ styles.icons }
+                            />
+                        }
+                        placeholder='Repita sua nova senha'
+                        secureTextEntry={true}
+                        containerStyle={styles.input}
+                        secureTextEntry={true}
+                        value={novaSenhaConf}
+                        onChangeText={setNovaSenhaConf}
+                    />
+                    <View style={styles.forgotContainer}>
+                        <Button title='Atualizar dados' buttonStyle={styles.button} titleStyle={styles.titleStyle} onPress={alterarDados} />
+                    </View>
                 </View>
+                }{loading && <ProgressBarAndroid />}
             </View>
         </View>
     )
