@@ -1,11 +1,11 @@
-import React, { forwardRef, useState, createRef, useImperativeHandle, useRef, useEffect } from 'react';
+import React, { forwardRef, useState, useImperativeHandle, useRef, useEffect } from 'react';
 import {
     Text,
     View,
     StyleSheet,
     ToastAndroid,
     ScrollView,
-    Alert,
+    TextInput,
 } from 'react-native';
 import { Input, Button } from 'react-native-elements';
 import Modal from 'react-native-modalbox';
@@ -13,7 +13,6 @@ import api from '../services/api';
 import { USER_CURRENTY } from '../services/key';
 import { find } from '../services/banco';
 import RadioForm from 'react-native-simple-radio-button';
-import MarmitaAdmin from '../pages/private/admin/marmita/MarmitaAdmin';
 
 const ModalBox = forwardRef((props, ref) => {
 
@@ -76,7 +75,7 @@ const ModalBox = forwardRef((props, ref) => {
 });
 const EditaMarmita = (props) => {
 
-    const[marmita,setMarmita] = useState(props.item);
+    const [marmita] = useState(props.item);
     const [load,setLoad] = useState(false);
     const [descricao, setDescricao] = useState(marmita.descricao);
     const [tipo,setTipo] = useState(marmita.tipoMarmita);
@@ -145,6 +144,8 @@ const EditaMarmita = (props) => {
                 placeholder='Descricao'
                 value={descricao}
                 onChangeText={setDescricao}
+                multiline={true}
+            
             />
 
             <Text style={styles.inputTitle}>Valor</Text>
@@ -229,6 +230,7 @@ const CadastroMarmitas  = ({close}) => {
                 placeholder='Descricao'
                 value={descricao}
                 onChangeText={setDescricao}
+                multiline={true}
             />
 
             <Text style={styles.inputTitle}>Valor</Text>
