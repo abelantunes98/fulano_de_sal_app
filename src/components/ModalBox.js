@@ -32,7 +32,7 @@ const ModalBox = forwardRef((props, ref) => {
         modalRef.current.close();
     };
 
-    function contentModal(event, item={}) {
+    function contentModal(event, item = {}) {
         let r;
         switch (event) {
             case 'cadastroCategoria':
@@ -40,29 +40,33 @@ const ModalBox = forwardRef((props, ref) => {
                 break;
             case 'editarCategoria':
                 r = (
-                <EditaCategoria
-                    close={closeModal}
-                    nome={item.descricao}
-                    id={item.id}
-                />);
+                    <EditaCategoria
+                        close={closeModal}
+                        nome={item.descricao}
+                        id={item.id}
+                    />);
                 break;
             case 'cadastroMarmita':
-                r = (<CadastroMarmitas close={closeModal}/>);
+                r = (<CadastroMarmitas close={closeModal} />);
                 break;
             case 'editarMarmita':
-                r = (<EditaMarmita item={item}  close={closeModal}/>);
+                r = (<EditaMarmita item={item} close={closeModal} />);
                 break;
             case 'cadastroProduto':
                 r = (<CadastroProdutos
-                    item = {item}
-                    close={closeModal}/>);
+                    item={item}
+                    close={closeModal} />);
                 break;
             case 'editarProduto':
-                r = (<EditaProduto close={closeModal}/>);
-                 break;
+                r = (<EditaProduto
+                    close={closeModal}
+                    item={item.item}
+                    categorias={item.categorias}
+                />);
+                break;
             default:
                 r = <Text>None</Text>;
-            break;
+                break;
         }
         setContent(r);
     };
@@ -80,19 +84,19 @@ const ModalBox = forwardRef((props, ref) => {
 const EditaMarmita = (props) => {
 
     const [marmita] = useState(props.item);
-    const [load,setLoad] = useState(false);
+    const [load, setLoad] = useState(false);
     const [descricao, setDescricao] = useState(marmita.descricao);
-    const [tipo,setTipo] = useState(marmita.tipoMarmita);
-    const [valor,setValor] = useState(marmita.valor.toString()); 
-    const [tipos,setTipos] = useState([]);
-    const [tradicional,setTradicional] = useState(false);
+    const [tipo, setTipo] = useState(marmita.tipoMarmita);
+    const [valor, setValor] = useState(marmita.valor.toString());
+    const [tipos, setTipos] = useState([]);
+    const [tradicional, setTradicional] = useState(false);
 
     useEffect(() => {
-        setTipos([{label:'Tradicional',value:'TRADICIONAL'},{label:'Com divisórias', value:'DIVISORIA'}]);
-        if(tipo=='TRADICIONAL'){
+        setTipos([{ label: 'Tradicional', value: 'TRADICIONAL' }, { label: 'Com divisórias', value: 'DIVISORIA' }]);
+        if (tipo == 'TRADICIONAL') {
             setTradicional(true);
         }
-      }, []);
+    }, []);
 
     onSelectionsChange = (data) => {
         setSelectedTipo(data);
@@ -102,21 +106,21 @@ const EditaMarmita = (props) => {
         setLoad(true);
         try {
             let usuario = await find(USER_CURRENTY);
-            
+
             let marmitaSave = {
-                'idMarmita':marmita.idMarmita,
+                'idMarmita': marmita.idMarmita,
                 'descricao': descricao,
                 'tipoMarmita': tipo,
                 'valor': valor
-              }
+            }
             await api.post('/protegido/marmita/atualizar',
-               marmitaSave,
+                marmitaSave,
                 {
                     headers: { Authorization: usuario.token }
                 });
-            ToastAndroid.show("Editada com sucesso",ToastAndroid.SHORT);
+            ToastAndroid.show("Editada com sucesso", ToastAndroid.SHORT);
         } catch (error) {
-            ToastAndroid.show(error.response.data['message'],ToastAndroid.LONG);
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.LONG);
         } finally {
             props.close();
         }
@@ -127,21 +131,21 @@ const EditaMarmita = (props) => {
         <ScrollView contentContainerStyle={styles.content}>
             <Text style={styles.title}>Editar Marmita</Text>
             <Text style={styles.inputTitle}>Tipo</Text>
-                {tradicional &&
+            {tradicional &&
                 <RadioForm
-                buttonColor={'#0f6124'}
-                radio_props={tipos}
-                initial={0}
-                onPress={(value) => {setTipo(value)}}
+                    buttonColor={'#0f6124'}
+                    radio_props={tipos}
+                    initial={0}
+                    onPress={(value) => { setTipo(value) }}
                 />
-                }{!tradicional &&
-                    <RadioForm
+            }{!tradicional &&
+                <RadioForm
                     buttonColor={'#0f6124'}
                     radio_props={tipos}
                     initial={1}
-                    onPress={(value) => {setTipo(value)}}
-                    />
-                }
+                    onPress={(value) => { setTipo(value) }}
+                />
+            }
 
             <Text style={styles.inputTitle}>Descrição</Text>
             <Input
@@ -149,7 +153,7 @@ const EditaMarmita = (props) => {
                 value={descricao}
                 onChangeText={setDescricao}
                 multiline={true}
-            
+
             />
 
             <Text style={styles.inputTitle}>Valor</Text>
@@ -157,7 +161,7 @@ const EditaMarmita = (props) => {
                 placeholder='Valor'
                 value={valor}
                 onChangeText={setValor}
-                keyboardType={'numeric'}               
+                keyboardType={'numeric'}
             />
 
             <View style={styles.buttonContainer}>
@@ -170,7 +174,7 @@ const EditaMarmita = (props) => {
                     title='Editar'
                     buttonStyle={styles.button}
                     onPress={handle_editar}
-                    loading = {load}
+                    loading={load}
                 />
             </View>
         </ScrollView>
@@ -178,17 +182,17 @@ const EditaMarmita = (props) => {
 
 }
 
-const CadastroMarmitas  = ({close}) => {
-    
-    const [load,setLoad] = useState(false);
+const CadastroMarmitas = ({ close }) => {
+
+    const [load, setLoad] = useState(false);
     const [descricao, setDescricao] = useState('');
-    const [tipo,setTipo] = useState('TRADICIONAL');
-    const [valor,setValor] = useState(''); 
-    const [tipos,setTipos] = useState([]);
+    const [tipo, setTipo] = useState('TRADICIONAL');
+    const [valor, setValor] = useState('');
+    const [tipos, setTipos] = useState([]);
 
     useEffect(() => {
-        setTipos([{label:'Tradicional',value:'TRADICIONAL'},{label:'Com divisórias', value:'DIVISORIA'}]);
-      }, []);
+        setTipos([{ label: 'Tradicional', value: 'TRADICIONAL' }, { label: 'Com divisórias', value: 'DIVISORIA' }]);
+    }, []);
 
     onSelectionsChange = (data) => {
         setSelectedTipo(data);
@@ -202,32 +206,32 @@ const CadastroMarmitas  = ({close}) => {
                 'descricao': descricao,
                 'tipo': tipo,
                 'valor': valor
-              }
+            }
             await api.post('/protegido/marmita/',
-               marmita,
+                marmita,
                 {
                     headers: { Authorization: usuario.token }
                 });
-            ToastAndroid.show("Cadastrado com sucesso",ToastAndroid.SHORT);
+            ToastAndroid.show("Cadastrado com sucesso", ToastAndroid.SHORT);
         } catch (error) {
-            ToastAndroid.show(error.response.data['message'],ToastAndroid.LONG);
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.LONG);
         } finally {
             close();
         }
 
     }
-    
+
 
     return (
         <ScrollView contentContainerStyle={styles.content}>
             <Text style={styles.title}>Cadastrar Marmita</Text>
             <Text style={styles.inputTitle}>Tipo</Text>
-                <RadioForm
+            <RadioForm
                 buttonColor={'#0f6124'}
                 radio_props={tipos}
                 initial={0}
-                onPress={(value) => {setTipo(value)}}
-                />
+                onPress={(value) => { setTipo(value) }}
+            />
 
             <Text style={styles.inputTitle}>Descrição</Text>
             <Input
@@ -243,7 +247,7 @@ const CadastroMarmitas  = ({close}) => {
                 value={valor}
                 onChangeText={setValor}
                 keyboardType={'numeric'}
-               
+
             />
 
             <View style={styles.buttonContainer}>
@@ -256,7 +260,7 @@ const CadastroMarmitas  = ({close}) => {
                     title='Cadastrar'
                     buttonStyle={styles.button}
                     onPress={handle_cadastro}
-                    loading = {load}
+                    loading={load}
                 />
             </View>
         </ScrollView>
@@ -314,58 +318,55 @@ const EditaCategoria = (props) => {
     const id = props.id;
 
     handle_edicao = async () => {
-            try {
-                let usuario = await find(USER_CURRENTY);
-                await api.post('/protegido/categoria/atualizar',
-                    { 
-                        'descricao': descricao, 
-                        'id': id
-                    },
-                    {
-                        headers: { Authorization: usuario.token }
-                    });
-            } catch (e) {
-                ToastAndroid.show('Categoria não foi editada')
-            } finally {
-                props.close();
-            }    
+        try {
+            let usuario = await find(USER_CURRENTY);
+            await api.post('/protegido/categoria/atualizar',
+                {
+                    'descricao': descricao,
+                    'id': id
+                },
+                {
+                    headers: { Authorization: usuario.token }
+                });
+        } catch (e) {
+            ToastAndroid.show('Categoria não foi editada')
+        } finally {
+            props.close();
+        }
     };
 
     return (
         <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Editar categoria</Text>
-        <Text style={styles.inputTitle}>Descrição</Text>
-        <Input
-            placeholder='Nome da categoria'
-            value={descricao}
-            onChangeText={setDescricao}
-        />
-        <View style={styles.buttonContainer}>
-            <Button
-                title='Cancelar'
-                buttonStyle={styles.button}
-                onPress={props.close}
+            <Text style={styles.title}>Editar categoria</Text>
+            <Text style={styles.inputTitle}>Descrição</Text>
+            <Input
+                placeholder='Nome da categoria'
+                value={descricao}
+                onChangeText={setDescricao}
             />
-            <Button
-                title='Editar'
-                buttonStyle={styles.button}
-                onPress={handle_edicao}
-            />
-        </View>
-    </ScrollView>
+            <View style={styles.buttonContainer}>
+                <Button
+                    title='Cancelar'
+                    buttonStyle={styles.button}
+                    onPress={props.close}
+                />
+                <Button
+                    title='Editar'
+                    buttonStyle={styles.button}
+                    onPress={handle_edicao}
+                />
+            </View>
+        </ScrollView>
     );
 };
 
 
 const CadastroProdutos = (props) => {
-    /* Necessário mostrar as categorias para o admin escolher*/
+
     const [nome, setNome] = useState('');
     const [categorias, setCategorias] = useState(props.item);
     const [categoriaSelecionada, setCategoriaSelecionada] = useState(categorias[0]);
-    //const categorias = await api.get('/protegido/categoria/listar', { headers: { Authorization: usuario.token } });
 
-   
- 
     handle_cadastro = async () => {
         try {
             let usuario = await find(USER_CURRENTY);
@@ -383,9 +384,9 @@ const CadastroProdutos = (props) => {
     }
 
     function pickerChange(index) {
-        categorias.map((v, i) =>{
+        categorias.map((v, i) => {
             if (index === i) {
-                setCategoriaSelecionada({id: v.id, descricao: v.descricao});
+                setCategoriaSelecionada({ id: v.id, descricao: v.descricao });
             }
         })
     };
@@ -399,20 +400,19 @@ const CadastroProdutos = (props) => {
                 value={nome}
                 onChangeText={setNome}
             />
-            
+
             <Text style={styles.inputTitle}>Categoria</Text>
-            <Picker 
-                selectedValue={categoriaSelecionada.descricao} 
-                style={{height: 50, width: 300}}
+            <Picker
+                selectedValue={categoriaSelecionada.descricao}
+                style={{ height: 50, width: 300 }}
                 onValueChange={(itemValue, itemIndex) => {
                     pickerChange(itemIndex);
-                    console.log(itemIndex);
-                }}> 
+                }}>
                 {categorias.map(v => {
                     return (<Picker.Item key={v.id} label={v.descricao} value={v.descricao} />);
                 })}
             </Picker>
-            
+
             <View style={styles.buttonContainer}>
                 <Button
                     title='Cancelar'
@@ -430,59 +430,78 @@ const CadastroProdutos = (props) => {
 };
 
 const EditaProduto = (props) => {
-    /* Necessário mostrar as categorias para o admin escolher*/
+
     const [nome, setNome] = useState(props.nome);
-    const idProduto = props.idProduto;
+    const idProduto = props.item.idProduto;
+    const [categorias, setCategorias] = useState(props.categorias);
+    const [categoriaSelecionada, setCategoriaSelecionada] = useState(categorias[0]);
 
     handle_edicao = async () => {
-            try {
-                let usuario = await find(USER_CURRENTY);
-                await api.post('/protegido/produto/atualizar',
-                    { 
-                        'categoria':{
-                            'descricao':descricao,
-                            'id':id
-                        },
-                        'nome': nome, 
-                        'idProduto': idProduto
+        try {
+            let usuario = await find(USER_CURRENTY);
+            await api.post('/protegido/produto/atualizar',
+                {
+                    'categoria': {
+                        'descricao': categoriaSelecionada.descricao,
+                        'id': categoriaSelecionada.id
                     },
-                    {
-                        headers: { Authorization: usuario.token }
-                    });
-            } catch (e) {
-                ToastAndroid.show('Produto não foi editado')
-            } finally {
-                props.close();
-            }    
+                    'nome': nome,
+                    'idProduto': idProduto
+                },
+                {
+                    headers: { Authorization: usuario.token }
+                });
+        } catch (e) {
+            ToastAndroid.show('Produto não foi editado')
+        } finally {
+            props.close();
+        }
     };
-    
+
+    function pickerChange(index) {
+        categorias.map((v, i) => {
+            if (index === i) {
+                setCategoriaSelecionada({ id: v.id, descricao: v.descricao });
+            }
+        })
+    };
+
     return (
         <ScrollView contentContainerStyle={styles.content}>
-        <Text style={styles.title}>Editar produto</Text>
-        <Text style={styles.inputTitle}>Nome</Text>
-        <Input
-            placeholder='Nome do produto'
-            value={nome}
-            onChangeText={setNome}
-        />
-        <Input
-            placeholder='Categoria do produto'
-            value={nome}
-            onChangeText={setNome}
-        />
-        <View style={styles.buttonContainer}>
-            <Button
-                title='Cancelar'
-                buttonStyle={styles.button}
-                onPress={props.close}
+            <Text style={styles.title}>Editar produto</Text>
+            <Text style={styles.inputTitle}>Nome</Text>
+            <Input
+                placeholder='Nome do produto'
+                value={nome}
+                onChangeText={setNome}
             />
-            <Button
-                title='Editar'
-                buttonStyle={styles.button}
-                onPress={handle_edicao}
-            />
-        </View>
-    </ScrollView>
+
+            <Text style={styles.inputTitle}>Categoria</Text>
+            <Picker
+                selectedValue={categoriaSelecionada.descricao}
+                style={{ height: 50, width: 300 }}
+                onValueChange={(itemValue, itemIndex) => {
+                    pickerChange(itemIndex);
+                    console.log(itemIndex);
+                }}>
+                {categorias.map(v => {
+                    return (<Picker.Item key={v.id} label={v.descricao} value={v.descricao} />);
+                })}
+            </Picker>
+
+            <View style={styles.buttonContainer}>
+                <Button
+                    title='Cancelar'
+                    buttonStyle={styles.button}
+                    onPress={props.close}
+                />
+                <Button
+                    title='Editar'
+                    buttonStyle={styles.button}
+                    onPress={handle_edicao}
+                />
+            </View>
+        </ScrollView>
     );
 };
 
@@ -513,7 +532,7 @@ const styles = StyleSheet.create({
     content: {
         justifyContent: 'flex-start',
         alignItems: 'center',
-        paddingBottom:'10%'
+        paddingBottom: '10%'
     },
     buttonContainer: {
         marginTop: 25,

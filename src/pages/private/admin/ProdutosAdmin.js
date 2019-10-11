@@ -60,7 +60,7 @@ const ProdutosAdmin = (props) => {
 									style={styles.iconsDrawer}
 								/>
 							}
-							onPress={() => openEditaPopUp(item)}
+							onPress={() => openEditaPopUp(item, categorias)}
 
 						/>
 						<Button
@@ -114,9 +114,9 @@ const ProdutosAdmin = (props) => {
 	openCadastroPopUp = (item) => {
 		modalRef.current.open('cadastroProduto', item);
 	};
-	function openEditaPopUp(item) {
+	function openEditaPopUp(item, categorias) {
 
-		modalRef.current.open('editarProduto', item);
+		modalRef.current.open('editarProduto', { item, categorias });
 	};
 
 	return (
