@@ -34,7 +34,7 @@ const CategoriasAdmin = (props) => {
 
     renderItem = ({ item }) => (
         <View>
-            <Card style={styles.listItem}>
+            <Card containerStyle={styles.listItem}>
                 <View>
                     <View style={styles.buttons}>
                         <Button
@@ -106,7 +106,7 @@ const CategoriasAdmin = (props) => {
 
     return (
         <View style={styles.mainContainer}>
-            <MenuButton navigation={props.navigation} title="Categorias"/>
+            <MenuButton navigation={props.navigation} title="Categorias" />
             <View style={styles.mainContainer}>
                 <FlatList
                     style={{ marginTop: 50 }}
@@ -155,22 +155,19 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginBottom: 15
     },
-    categoria: {
-        color: '#000000',
-        fontSize: 9
-    },
+
     list: {
         paddingTop: 10,
         paddingHorizontal: 16
     },
     button: {
         backgroundColor: '#FFF',
-		borderRadius: 100,
-		height: 30,
-		width: 30,
-		marginLeft: 18,
-		alignItems: 'center',
-		justifyContent: 'center',
+        borderRadius: 100,
+        height: 30,
+        width: 30,
+        marginLeft: 18,
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     buttons: {
         flexDirection: 'row',
@@ -183,7 +180,7 @@ const styles = StyleSheet.create({
         paddingEnd: 10,
         padding: 30,
         borderRadius: 10,
-        backgroundColor: '#EEE'
+        backgroundColor: '#FFF'
     },
     iconsDrawer: {
         paddingRight: 2
