@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
 		justifyContent: 'center',
-		backgroundColor: '#ffffff',
+		backgroundColor: '#ffffff'
 	},
 	nome: {
 		color: '#000000',
@@ -173,6 +173,10 @@ const styles = StyleSheet.create({
 	categoria: {
 		color: '#000000',
 		fontSize: 9
+	},
+	list: {
+		paddingTop: 10,
+		paddingHorizontal: 16
 	},
 	button: {
 		backgroundColor: '#FFF',
@@ -194,7 +198,7 @@ const styles = StyleSheet.create({
 		paddingEnd: 10,
 		padding: 30,
 		borderRadius: 10,
-		backgroundColor: '#EEE'
+		backgroundColor: '#FFF',
 	},
 	iconsDrawer: {
 		paddingRight: 2
@@ -210,7 +214,7 @@ const styles = StyleSheet.create({
 		right: 25,
 		height: 70,
 		backgroundColor: '#0f6124',
-		borderRadius: 100,
+		borderRadius: 100
 	}
 });
 
