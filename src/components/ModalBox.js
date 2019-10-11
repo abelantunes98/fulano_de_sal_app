@@ -5,6 +5,8 @@ import {
     StyleSheet,
     ToastAndroid,
     ScrollView,
+    Alert,
+    Picker,
     TextInput,
 } from 'react-native';
 import { Input, Button } from 'react-native-elements';
@@ -20,8 +22,8 @@ const ModalBox = forwardRef((props, ref) => {
     const [content, setContent] = useState(<Text>None</Text>);
 
     useImperativeHandle(ref, () => ({
-        open: (event, nomeCategoria='', idCategoria='') => {
-            contentModal(event, nomeCategoria, idCategoria);
+        open: (event, item = {}) => {
+            contentModal(event, item);
             modalRef.current.open();
         },
     }));
@@ -30,7 +32,7 @@ const ModalBox = forwardRef((props, ref) => {
         modalRef.current.close();
     };
 
-    function contentModal(event, item='') {
+    function contentModal(event, item={}) {
         let r;
         switch (event) {
             case 'cadastroCategoria':
@@ -51,7 +53,9 @@ const ModalBox = forwardRef((props, ref) => {
                 r = (<EditaMarmita item={item}  close={closeModal}/>);
                 break;
             case 'cadastroProduto':
-                r = (<CadastroProdutos close={closeModal}/>);
+                r = (<CadastroProdutos
+                    item = {item}
+                    close={closeModal}/>);
                 break;
             case 'editarProduto':
                 r = (<EditaProduto close={closeModal}/>);
@@ -353,29 +357,38 @@ const EditaCategoria = (props) => {
 };
 
 
-const CadastroProdutos = ({ close }) => {
+const CadastroProdutos = (props) => {
     /* Necessário mostrar as categorias para o admin escolher*/
     const [nome, setNome] = useState('');
-    const [descricao, setDescricao] = useState('');
-    const [id, setId] = useState('');
+    const [categorias, setCategorias] = useState(props.item);
+    const [categoriaSelecionada, setCategoriaSelecionada] = useState(categorias[0]);
     //const categorias = await api.get('/protegido/categoria/listar', { headers: { Authorization: usuario.token } });
 
-
+   
+ 
     handle_cadastro = async () => {
         try {
             let usuario = await find(USER_CURRENTY);
             await api.post('/protegido/produto/',
-                { 'categoria':{'descricao': descricao,'id':id},'nome': nome },
+                { 'idCategoria': categoriaSelecionada.id, 'nome': nome },
                 {
                     headers: { Authorization: usuario.token }
                 });
         } catch (e) {
             ToastAndroid.show('Produto não foi cadastrado')
         } finally {
-            close();
+            props.close();
         }
 
     }
+
+    function pickerChange(index) {
+        categorias.map((v, i) =>{
+            if (index === i) {
+                setCategoriaSelecionada({id: v.id, descricao: v.descricao});
+            }
+        })
+    };
 
     return (
         <ScrollView contentContainerStyle={styles.content}>
@@ -386,23 +399,25 @@ const CadastroProdutos = ({ close }) => {
                 value={nome}
                 onChangeText={setNome}
             />
-             <Text style={styles.inputTitle}>Categoria</Text>
-            <Input
-                placeholder='Nome da categoria'
-                value={descricao}
-                onChangeText={setDescricao}
-            />
-             <Text style={styles.inputTitle}>idCategoria</Text>
-            <Input
-                placeholder='id da categoria'
-                value={id}
-                onChangeText={setId}
-            />
+            
+            <Text style={styles.inputTitle}>Categoria</Text>
+            <Picker 
+                selectedValue={categoriaSelecionada.descricao} 
+                style={{height: 50, width: 300}}
+                onValueChange={(itemValue, itemIndex) => {
+                    pickerChange(itemIndex);
+                    console.log(itemIndex);
+                }}> 
+                {categorias.map(v => {
+                    return (<Picker.Item key={v.id} label={v.descricao} value={v.descricao} />);
+                })}
+            </Picker>
+            
             <View style={styles.buttonContainer}>
                 <Button
                     title='Cancelar'
                     buttonStyle={styles.button}
-                    onPress={close}
+                    onPress={props.close}
                 />
                 <Button
                     title='Cadastrar'

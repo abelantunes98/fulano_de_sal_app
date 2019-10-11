@@ -1,11 +1,11 @@
-import React, { useState, useEffect,useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,Alert
+	View,
+	Text,
+	FlatList,
+	TouchableOpacity,
+	StyleSheet,
+	ScrollView, Alert
 } from 'react-native';
 import { Card, Button } from 'react-native-elements';
 
@@ -17,13 +17,16 @@ import IconMaterial from 'react-native-vector-icons/AntDesign';
 import IconButton from 'react-native-vector-icons/FontAwesome';
 import ModalBox from '../../../components/ModalBox';
 
-const ProdutosAdmin = props => {
+const ProdutosAdmin = (props) => {
 	const [data, setData] = useState([]);
+	const [categorias, setCategorias] = useState([]);
 	const modalRef = useRef();
 
 	useEffect(() => {
 		loadRepositories();
+		loadCategorias();
 	}, []);
+
 
 	loadRepositories = async () => {
 		let usuario = await find(USER_CURRENTY);
@@ -31,106 +34,117 @@ const ProdutosAdmin = props => {
 			headers: { Authorization: usuario.token }
 		});
 		setData(response.data);
-		console.log(response.data);
 	};
 
+	loadCategorias = async () => {
+		let usuario = await find(USER_CURRENTY);
+		const response = await api.get('/protegido/categoria/listar', {
+			headers: { Authorization: usuario.token }
+		});
+		setCategorias(response.data);
+	};
+
+
 	renderItem = ({ item }) => (
-		<Card containerStyle={styles.listItem}>
-			<View>
-				<View style={styles.buttons}>
-					<Button 
-						buttonStyle={styles.button}
-						icon={
-							<IconButton
-								name='pencil'
-								size={15}
-								color='#EEE'
-								style={styles.iconsDrawer}
-							/>
-						}
-						onPress={() => openEditaPopUp(item)}
-
-					/>
-					<Button 
-						buttonStyle={styles.button}
-						icon={
-							<IconButton
-								name='trash-o'
-								size={15}
-								color='#EEE'
-								style={styles.iconsDrawer}
-							/>
-						}
-						onPress={() => deleteProduto(item.idProduto, item.nome)}
-
-					/>
-				</View>
+		<View>
+			<Card containerStyle={styles.listItem}>
 				<View>
-					<Text style={styles.nome}>{item.nome}</Text>
-					<Text style={styles.categoria}>{item.categoria.descricao}</Text>
+					<View style={styles.buttons}>
+						<Button
+							buttonStyle={styles.button}
+							icon={
+								<IconButton
+									name='pencil'
+									size={15}
+									color='#000000'
+									style={styles.iconsDrawer}
+								/>
+							}
+							onPress={() => openEditaPopUp(item)}
+
+						/>
+						<Button
+							buttonStyle={styles.button}
+							icon={
+								<IconButton
+									name='trash-o'
+									size={15}
+									color='#000000'
+									style={styles.iconsDrawer}
+								/>
+							}
+							onPress={() => deleteProduto(item.idProduto, item.nome)}
+
+						/>
+					</View>
+					<View>
+						<Text style={styles.nome}>{item.nome}</Text>
+						<Text style={styles.categoria}>{item.categoria.descricao}</Text>
+					</View>
 				</View>
-			</View>
-		</Card>
+			</Card>
+		</View>
 	);
 
 	function deleteProduto(id, nome) {
-        Alert.alert(
-            `Deletar '${nome}'`,
-            'Tem certeza que deseja deletar esse produto?',
-            [
-                { text: 'NO', onPress: () => Alert.alert('Cancel'), style: 'cancel' },
-                { text: 'YES', onPress: () => loadDeleteProduto(id) },
-            ],
-        );
-    };
+		Alert.alert(
+			`Deletar '${nome}'`,
+			'Tem certeza que deseja deletar esse produto?',
+			[
+				{ text: 'NO', onPress: () => Alert.alert('Cancel'), style: 'cancel' },
+				{ text: 'YES', onPress: () => loadDeleteProduto(id) },
+			],
+		);
+	};
 	async function loadDeleteProduto(id) {
-        try {
-            let usuario = await find(USER_CURRENTY);
-            await api.delete('/protegido/produto/remover',
-                {
-                    headers: { Authorization: usuario.token },
-                    params: { 'id': parseInt(id) }
-                }
-            );
-            loadRepositories();
-        } catch (e) {
-            ToastAndroid.show(e.message)
-        }
-    };					
+		try {
+			let usuario = await find(USER_CURRENTY);
+			await api.delete('/protegido/produto/remover',
+				{
+					headers: { Authorization: usuario.token },
+					params: { 'id': parseInt(id) }
+				}
+			);
+			loadRepositories();
+		} catch (e) {
+			ToastAndroid.show(e.message)
+		}
+	};
 
-	openCadastroPopUp = () => {
-        modalRef.current.open('cadastroProduto');
+	openCadastroPopUp = (item) => {
+		modalRef.current.open('cadastroProduto', item);
 	};
 	function openEditaPopUp(item) {
-        modalRef.current.open('editarProduto', item);
-    };
+
+		modalRef.current.open('editarProduto', item);
+	};
 
 	return (
-		 <View style={styles.mainContainer}>
-            <MenuButton navigation={props.navigation} title="Produtos"/>
-            <View style={styles.mainContainer}>
-                <FlatList
-                    style={{ marginTop: 50 }}
-                    contentContainerStyle={styles.list}
-                    data={data}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.idProduto.toString()}
-                />
-                <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUp}>
-                    <IconButton
-                        name='plus'
-                        size={20}
-                        color='#ffffff'
-                        style={styles.iconsDrawer}
-                    />
-                </TouchableOpacity>
-            </View>
-            <ModalBox
-                ref={modalRef}
-                refresh={loadRepositories}
-            />
-        </View>
-    )
+		<View style={styles.mainContainer}>
+			<MenuButton navigation={props.navigation} title="Produtos" />
+			<View style={styles.mainContainer}>
+				<FlatList
+					style={{ marginTop: 50 }}
+					contentContainerStyle={styles.list}
+					data={data}
+					renderItem={renderItem}
+					keyExtractor={item => item.idProduto.toString()}
+				/>
+				<TouchableOpacity style={styles.floatButton} onPress={() => openCadastroPopUp(categorias)}>
+					<IconButton
+						name='plus'
+						size={20}
+						color='#ffffff'
+						style={styles.iconsDrawer}
+					/>
+				</TouchableOpacity>
+			</View>
+			<ModalBox
+				ref={modalRef}
+				refresh={loadRepositories}
+			/>
+		</View>
+	)
 };
 
 ProdutosAdmin.navigationOptions = {
@@ -147,10 +161,9 @@ ProdutosAdmin.navigationOptions = {
 
 const styles = StyleSheet.create({
 	mainContainer: {
-		flexGrow : 1, 
-		justifyContent : 'center',
+		flex: 1,
+		justifyContent: 'center',
 		backgroundColor: '#ffffff',
-		paddingBottom: 5,
 	},
 	nome: {
 		color: '#000000',
@@ -161,12 +174,8 @@ const styles = StyleSheet.create({
 		color: '#000000',
 		fontSize: 9
 	},
-	list: {
-		paddingTop: 10,
-		paddingHorizontal: 16
-	},
 	button: {
-		backgroundColor: '#0f6124',
+		backgroundColor: '#FFF',
 		borderRadius: 100,
 		height: 30,
 		width: 30,
@@ -191,17 +200,17 @@ const styles = StyleSheet.create({
 		paddingRight: 2
 	},
 	floatButton: {
-		borderWidth:1,
-        borderColor:'rgba(0,0,0,0.2)',
-        alignItems:'center',
-        justifyContent:'center',
-        width:70,
-        position: 'absolute',                                          
-        bottom: 25,                                                    
-        right: 25,
-        height:70,
-        backgroundColor:'#0f6124',
-        borderRadius:100,
+		borderWidth: 1,
+		borderColor: 'rgba(0,0,0,0.2)',
+		alignItems: 'center',
+		justifyContent: 'center',
+		width: 70,
+		position: 'absolute',
+		bottom: 25,
+		right: 25,
+		height: 70,
+		backgroundColor: '#0f6124',
+		borderRadius: 100,
 	}
 });
 

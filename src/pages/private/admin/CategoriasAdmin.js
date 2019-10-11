@@ -43,7 +43,7 @@ const CategoriasAdmin = (props) => {
                                 <IconButton
                                     name='pencil'
                                     size={15}
-                                    color='#EEE'
+                                    color='#000000'
                                     style={styles.iconsDrawer}
                                 />
                             }
@@ -55,7 +55,7 @@ const CategoriasAdmin = (props) => {
                                 <IconButton
                                     name='trash-o'
                                     size={15}
-                                    color='#EEE'
+                                    color='#000000'
                                     style={styles.iconsDrawer}
                                 />
                             }
@@ -164,13 +164,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 16
     },
     button: {
-        backgroundColor: '#0f6124',
-        borderRadius: 100,
-        height: 30,
-        width: 30,
-        marginLeft: 18,
-        alignItems: 'center',
-        justifyContent: 'center',
+        backgroundColor: '#FFF',
+		borderRadius: 100,
+		height: 30,
+		width: 30,
+		marginLeft: 18,
+		alignItems: 'center',
+		justifyContent: 'center',
     },
     buttons: {
         flexDirection: 'row',
