@@ -5,7 +5,7 @@ import {
 	FlatList,
 	TouchableOpacity,
 	StyleSheet,
-	ScrollView, Alert
+	ScrollView, Alert, ProgressBarAndroid
 } from 'react-native';
 import { Card, Button } from 'react-native-elements';
 
@@ -18,15 +18,22 @@ import IconButton from 'react-native-vector-icons/FontAwesome';
 import ModalBox from '../../../components/ModalBox';
 
 const ProdutosAdmin = (props) => {
+
+	const [load,setLoad] = useState(false);
 	const [data, setData] = useState([]);
 	const [categorias, setCategorias] = useState([]);
 	const modalRef = useRef();
 
 	useEffect(() => {
-		loadRepositories();
-		loadCategorias();
+		preLoad();
 	}, []);
 
+	preLoad = async () =>{
+		setLoad(true);
+		await loadRepositories();
+		await loadCategorias();
+		setLoad(false);
+	}
 
 	loadRepositories = async () => {
 		let usuario = await find(USER_CURRENTY);
@@ -91,8 +98,8 @@ const ProdutosAdmin = (props) => {
 			`Deletar '${nome}'`,
 			'Tem certeza que deseja deletar esse produto?',
 			[
-				{ text: 'NO', onPress: () => Alert.alert('Cancel'), style: 'cancel' },
-				{ text: 'YES', onPress: () => loadDeleteProduto(id) },
+				{ text: 'Não'},
+				{ text: 'Sim', onPress: () => loadDeleteProduto(id) },
 			],
 		);
 	};
@@ -105,7 +112,7 @@ const ProdutosAdmin = (props) => {
 					params: { 'id': parseInt(id) }
 				}
 			);
-			loadRepositories();
+			preLoad();
 		} catch (e) {
 			ToastAndroid.show(e.message)
 		}
@@ -114,8 +121,8 @@ const ProdutosAdmin = (props) => {
 	openCadastroPopUp = (item) => {
 		modalRef.current.open('cadastroProduto', item);
 	};
-	function openEditaPopUp(item, categorias) {
 
+	function openEditaPopUp(item, categorias) {
 		modalRef.current.open('editarProduto', { item, categorias });
 	};
 
@@ -123,13 +130,14 @@ const ProdutosAdmin = (props) => {
 		<View style={styles.mainContainer}>
 			<MenuButton navigation={props.navigation} title="Produtos" />
 			<View style={styles.mainContainer}>
-				<FlatList
+				{!load && <FlatList
 					style={{ marginTop: 50 }}
 					contentContainerStyle={styles.list}
 					data={data}
 					renderItem={renderItem}
 					keyExtractor={item => item.idProduto.toString()}
 				/>
+				}{load && <ProgressBarAndroid/>}
 				<TouchableOpacity style={styles.floatButton} onPress={() => openCadastroPopUp(categorias)}>
 					<IconButton
 						name='plus'
@@ -141,7 +149,7 @@ const ProdutosAdmin = (props) => {
 			</View>
 			<ModalBox
 				ref={modalRef}
-				refresh={loadRepositories}
+				refresh={preLoad}
 			/>
 		</View>
 	)

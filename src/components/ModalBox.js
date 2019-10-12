@@ -362,24 +362,28 @@ const EditaCategoria = (props) => {
 
 
 const CadastroProdutos = (props) => {
-
+    const [load,setLoad] = useState(false);
     const [nome, setNome] = useState('');
     const [categorias, setCategorias] = useState(props.item);
     const [categoriaSelecionada, setCategoriaSelecionada] = useState(categorias[0]);
 
     handle_cadastro = async () => {
+        
         try {
+            setLoad(true);
             let usuario = await find(USER_CURRENTY);
             await api.post('/protegido/produto/',
                 { 'idCategoria': categoriaSelecionada.id, 'nome': nome },
                 {
                     headers: { Authorization: usuario.token }
                 });
+            setLoad(false);
         } catch (e) {
             ToastAndroid.show('Produto não foi cadastrado')
         } finally {
             props.close();
         }
+       
 
     }
 
@@ -423,6 +427,7 @@ const CadastroProdutos = (props) => {
                     title='Cadastrar'
                     buttonStyle={styles.button}
                     onPress={handle_cadastro}
+                    loading={load}
                 />
             </View>
         </ScrollView>
@@ -431,13 +436,15 @@ const CadastroProdutos = (props) => {
 
 const EditaProduto = (props) => {
 
-    const [nome, setNome] = useState(props.nome);
+    const [nome, setNome] = useState(props.item.nome);
     const idProduto = props.item.idProduto;
     const [categorias, setCategorias] = useState(props.categorias);
     const [categoriaSelecionada, setCategoriaSelecionada] = useState(categorias[0]);
+    const [load,setLoad] = useState(false);
 
     handle_edicao = async () => {
         try {
+            setLoad(true);
             let usuario = await find(USER_CURRENTY);
             await api.post('/protegido/produto/atualizar',
                 {
@@ -451,6 +458,7 @@ const EditaProduto = (props) => {
                 {
                     headers: { Authorization: usuario.token }
                 });
+            setLoad(false);
         } catch (e) {
             ToastAndroid.show('Produto não foi editado')
         } finally {
@@ -499,6 +507,7 @@ const EditaProduto = (props) => {
                     title='Editar'
                     buttonStyle={styles.button}
                     onPress={handle_edicao}
+                    loading={load}
                 />
             </View>
         </ScrollView>

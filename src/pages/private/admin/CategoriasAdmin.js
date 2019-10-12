@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     StyleSheet,
     Alert,
+    ProgressBarAndroid,
 } from 'react-native';
 import { Card, Button } from 'react-native-elements';
 
@@ -20,15 +21,18 @@ import ModalBox from '../../../components/ModalBox';
 const CategoriasAdmin = (props) => {
     const [data, setData] = useState([]);
     const modalRef = useRef();
+    const [load,setLoad] = useState(false);
 
     useEffect(() => {
         loadRepositories();
     }, []);
 
     loadRepositories = async () => {
+        setLoad(true);
         let usuario = await find(USER_CURRENTY);
         const response = await api.get('/protegido/categoria/listar', { headers: { Authorization: usuario.token } });
         setData(response.data);
+        setLoad(false);
     }
 
 
@@ -75,8 +79,8 @@ const CategoriasAdmin = (props) => {
             `Deletar '${name}'`,
             'Tem certeza que deseja deletar essa categoria?',
             [
-                { text: 'NO', onPress: () => Alert.alert('Cancel'), style: 'cancel' },
-                { text: 'YES', onPress: () => loadDeleteItem(id) },
+                { text: 'Não'},
+                { text: 'Sim', onPress: () => loadDeleteItem(id) },
             ],
         );
     };
@@ -108,13 +112,14 @@ const CategoriasAdmin = (props) => {
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title="Categorias" />
             <View style={styles.mainContainer}>
+                {!load && 
                 <FlatList
                     style={{ marginTop: 50 }}
                     contentContainerStyle={styles.list}
                     data={data}
                     renderItem={renderItem}
                     keyExtractor={item => item.id.toString()}
-                />
+                />}{load && <ProgressBarAndroid/>}
                 <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUp}>
                     <IconButton
                         name='plus'

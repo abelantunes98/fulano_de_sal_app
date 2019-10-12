@@ -227,7 +227,8 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	inforCard: {
-		width: '97%'
+		width: '93%',
+        borderRadius: 10
 	},
 	text: {
 		fontFamily: 'Oswald-Regular',
