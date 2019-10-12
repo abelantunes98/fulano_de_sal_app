@@ -4,7 +4,7 @@ import {
 	Text,
 	FlatList,
 	TouchableOpacity,
-	StyleSheet,
+	StyleSheet,ToastAndroid,
 	ScrollView, Alert, ProgressBarAndroid
 } from 'react-native';
 import { Card, Button } from 'react-native-elements';
@@ -19,7 +19,7 @@ import ModalBox from '../../../components/ModalBox';
 
 const ProdutosAdmin = (props) => {
 
-	const [load,setLoad] = useState(false);
+	const [load, setLoad] = useState(false);
 	const [data, setData] = useState([]);
 	const [categorias, setCategorias] = useState([]);
 	const modalRef = useRef();
@@ -28,7 +28,7 @@ const ProdutosAdmin = (props) => {
 		preLoad();
 	}, []);
 
-	preLoad = async () =>{
+	preLoad = async () => {
 		setLoad(true);
 		await loadRepositories();
 		await loadCategorias();
@@ -98,7 +98,7 @@ const ProdutosAdmin = (props) => {
 			`Deletar '${nome}'`,
 			'Tem certeza que deseja deletar esse produto?',
 			[
-				{ text: 'Não'},
+				{ text: 'Não' },
 				{ text: 'Sim', onPress: () => loadDeleteProduto(id) },
 			],
 		);
@@ -112,6 +112,7 @@ const ProdutosAdmin = (props) => {
 					params: { 'id': parseInt(id) }
 				}
 			);
+			ToastAndroid.show("Deletado com sucesso", ToastAndroid.show);
 			preLoad();
 		} catch (e) {
 			ToastAndroid.show(e.message)
@@ -130,14 +131,16 @@ const ProdutosAdmin = (props) => {
 		<View style={styles.mainContainer}>
 			<MenuButton navigation={props.navigation} title="Produtos" />
 			<View style={styles.mainContainer}>
-				{!load && <FlatList
-					style={{ marginTop: 50 }}
-					contentContainerStyle={styles.list}
-					data={data}
-					renderItem={renderItem}
-					keyExtractor={item => item.idProduto.toString()}
-				/>
-				}{load && <ProgressBarAndroid/>}
+				{!load && <ScrollView style={{marginBottom:40}}
+				><FlatList
+						style={{ marginTop: 50 }}
+						contentContainerStyle={styles.list}
+						data={data}
+						renderItem={renderItem}
+						keyExtractor={item => item.idProduto.toString()}
+					/>
+				</ScrollView>
+				}{load && <ProgressBarAndroid />}
 				<TouchableOpacity style={styles.floatButton} onPress={() => openCadastroPopUp(categorias)}>
 					<IconButton
 						name='plus'

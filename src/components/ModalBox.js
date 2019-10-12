@@ -377,9 +377,10 @@ const CadastroProdutos = (props) => {
                 {
                     headers: { Authorization: usuario.token }
                 });
+                ToastAndroid.show("Cadastrado com sucesso", ToastAndroid.SHORT);
             setLoad(false);
-        } catch (e) {
-            ToastAndroid.show('Produto não foi cadastrado')
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.LONG);
         } finally {
             props.close();
         }
@@ -439,7 +440,7 @@ const EditaProduto = (props) => {
     const [nome, setNome] = useState(props.item.nome);
     const idProduto = props.item.idProduto;
     const [categorias, setCategorias] = useState(props.categorias);
-    const [categoriaSelecionada, setCategoriaSelecionada] = useState(categorias[0]);
+    const [categoriaSelecionada, setCategoriaSelecionada] = useState(props.item.categoria);
     const [load,setLoad] = useState(false);
 
     handle_edicao = async () => {
