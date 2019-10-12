@@ -21,18 +21,24 @@ import Categoria from './componentes/Categoria';
 const CardapioAdmin = (props) => {
     const [categorias, setCategorias] = useState([])
     const [produtosSelecionados, setProdutosSelecionados] = useState([])
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        loadCategorias = async () => {
-            let usuario = await find(USER_CURRENTY);
-            const response = await api.get('/protegido/categoria/listar',{ headers: {Authorization: usuario.token,}});
-            setCategorias(response.data);  
-            setLoading(false);
-        }
-
-        loadCategorias();
+        preLoad();
     }, [])
+
+    preLoad = async () =>{
+        setLoading(true);
+        await loadCategorias();
+        setLoading(false);
+    }
+
+    loadCategorias = async () => {
+        let usuario = await find(USER_CURRENTY);
+        const response = await api.get('/protegido/categoria/listar',{ headers: {Authorization: usuario.token,}});
+        setCategorias(response.data);  
+        setLoading(false);
+    }
 
     itemJaExiste = ( item ) => {
         // console.log(item);

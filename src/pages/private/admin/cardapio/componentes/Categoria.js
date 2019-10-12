@@ -17,8 +17,10 @@ const Categoria = (props) => {
     const [selectedProdutos, setSelectedProdutos] = useState([]);
     const [produtos, setProdutos] = useState();
     const [produtos_, setProdutos_] = useState([]);
+    const [load,setLoad] = useState(false);
 
     useEffect(() => {
+       
         init = async () => {
             let usuario = await find(USER_CURRENTY);
             const response = await api.get('/protegido/produto/listarPorCategoria?idCategoria='+categoria.id, { headers: { Authorization: usuario.token } });
