@@ -15,17 +15,25 @@ import { find } from '../../../../../services/banco';
 const Categoria = (props) => {
     const [categoria, setCategoria] = useState( props.item );
     const [selectedProdutos, setSelectedProdutos] = useState([]);
-    const [produtos, setProdutos] = useState();
+    const [produtos, setProdutos] = useState([]);
     const [produtos_, setProdutos_] = useState([]);
-    const [load,setLoad] = useState(false);
 
     useEffect(() => {
        
         init = async () => {
             let usuario = await find(USER_CURRENTY);
-            const response = await api.get('/protegido/produto/listarPorCategoria?idCategoria='+categoria.id, { headers: { Authorization: usuario.token } });
+            const response = await api.get('/protegido/produto/listarPorCategoria',
+                {
+                    headers: {
+                        Authorization: usuario.token
+                    },
+                    params: {
+                        idCategoria: categoria.id
+                    }
+                }
+            );
             setProdutos(response.data);
-            console.log(produtos);
+
             loadProdutos();
         }
 

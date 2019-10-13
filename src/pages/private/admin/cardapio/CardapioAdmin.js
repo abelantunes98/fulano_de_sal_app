@@ -6,6 +6,7 @@ import {
     ScrollView,
     StyleSheet,
     ProgressBarAndroid,
+    Alert,
 } from 'react-native'
 import { Button} from 'react-native-elements';
 
@@ -17,10 +18,13 @@ import IconMaterial from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Categoria from './componentes/Categoria';
+import Marmita from './componentes/Marmita';
 
 const CardapioAdmin = (props) => {
     const [categorias, setCategorias] = useState([])
     const [produtosSelecionados, setProdutosSelecionados] = useState([])
+    const [marmitaSelecionada, setMarmitaSelecionada] = useState(null);
+    const [user, setUser] = useState({});
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -36,7 +40,8 @@ const CardapioAdmin = (props) => {
     loadCategorias = async () => {
         let usuario = await find(USER_CURRENTY);
         const response = await api.get('/protegido/categoria/listar',{ headers: {Authorization: usuario.token,}});
-        setCategorias(response.data);  
+        setCategorias(response.data);
+        setUser(usuario);
         setLoading(false);
     }
 
@@ -45,7 +50,6 @@ const CardapioAdmin = (props) => {
         let saida = false;
         produtosSelecionados.forEach(element => {
             if (element.value === item.value) {
-                // console.log(element);
                 saida = true;
             }
         });
@@ -67,7 +71,45 @@ const CardapioAdmin = (props) => {
     )
 
     handlerSubmit = () => {
-        console.log(produtosSelecionados);
+        const ids_produtos = []
+        produtosSelecionados.map((produto) => ids_produtos.push(produto.value));
+        cadastrarCardapio(ids_produtos);
+    }
+
+    cadastrarCardapio = async (ids) => {
+        try {
+            const response = await api.post('/protegido/cardapio/',
+                {
+                    idProdutos: ids
+                },
+                {
+                    headers: {
+                        Authorization: user.token
+                    }
+                }
+            );
+            
+            Alert.alert(
+                'Cardápio',
+                'Cardápio cadastrado com sucesso',
+                [
+                    {
+                        text:'Ok', onPress: () => { 
+                            props.navigation.navigate('initNavigatorPage'); 
+                        }
+                    }
+                ],
+                {
+                    cancelable: false
+                },
+            );
+        } catch(error) {
+            ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
+        }
+    }
+
+    onMarmitaSelecionada = (marmita) => {
+        setMarmitaSelecionada(marmita.value);
     }
 
     return (
@@ -76,6 +118,7 @@ const CardapioAdmin = (props) => {
             <View style={ styles.mainContainer }>
                 {!loading && 
                 <ScrollView style={{marginBottom:40}}>
+                    <Marmita marmitaSelecionada={onMarmitaSelecionada} />
                     <FlatList
                         style={{ marginTop: 50 }}
                         contentContainerStyle={styles.list}
