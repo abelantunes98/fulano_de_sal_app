@@ -18,7 +18,6 @@ import {USER_CURRENTY} from '../../../../services/key'
 import IconMaterial from 'react-native-vector-icons/FontAwesome';
 import IconButton from 'react-native-vector-icons/FontAwesome';
 import ModalBox from '../../../../components/ModalBox';
-import { ScrollView } from 'react-native-gesture-handler';
 
 const MarmitaAdmin = (props) => {
 
