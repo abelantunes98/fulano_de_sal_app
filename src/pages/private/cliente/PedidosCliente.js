@@ -58,7 +58,7 @@ const PedidosCliente = (props) => {
 							<IconButton
 								name='expand'
 								size={15}
-								color='#EEE'
+								color='#000'
 								style={styles.iconsDrawer}
 							/>
 						}
@@ -88,9 +88,9 @@ const PedidosCliente = (props) => {
     return (
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title='Pedidos' />
-            <View style={styles.mainContainer}>
+            <View style={{paddingBottom:70}}>
                 <FlatList
-               	    style={{ marginTop: 50 }}
+               	   	style={{ marginTop: 10 }}
                     contentContainerStyle={styles.list}
                     data={data}
                     renderItem={renderItem}
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
 	button: {
-		backgroundColor: '#0f6124',
+		backgroundColor: '#FFF',
 		borderRadius: 100,
 		height: 30,
 		width: 30,
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
         flex: 1,
 		height: 70,
 		width: 80,
-        backgroundColor: '#EEE'
+        backgroundColor: '#FFF'
     },
     statusPosition: {
         marginRight: 0,
@@ -157,33 +157,26 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
 	listItem: {
-		marginTop: 20,
-		paddingTop: 10,
-		paddingBottom: 10,
-		paddingEnd: 10,
-		padding: 10,
 		borderRadius: 10,
-        backgroundColor: '#EEE',
-        flex: 0.8,
-        height: '20%' 
+		backgroundColor: '#FFF',
+		borderColor:'#000'
 	},
     mainContainer: {
         flex: 1,
-        justifyContent: 'center',
-        backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff',
     },
     floatButton:{
-		borderWidth:1,
-        borderColor:'rgba(0,0,0,0.2)',
-        alignItems:'center',
-        justifyContent:'center',
-        width:70,
-        position: 'absolute',                                          
-        bottom: 25,                                                    
-        right: 25,
-        height:70,
-        backgroundColor:'#0f6124',
-        borderRadius:100,
+		borderWidth: 1,
+		borderColor: 'rgba(0,0,0,0.2)',
+		alignItems: 'center',
+		justifyContent: 'center',
+		width: 70,
+		position: 'absolute',
+		bottom: 10,
+		right: 25,
+		height: 70,
+		backgroundColor: '#0f6124',
+		borderRadius: 100
     },
     iconsDrawer: {
 		paddingRight: 2

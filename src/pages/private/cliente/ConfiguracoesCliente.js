@@ -196,8 +196,8 @@ const styles = StyleSheet.create({
     card: {
         width: '93%',
         borderRadius: 10,
-        backgroundColor: '#FFF',
-
+		backgroundColor: '#FFF',
+		borderColor:'#000'
     },
     mainContainer: {
         flexGrow: 1,

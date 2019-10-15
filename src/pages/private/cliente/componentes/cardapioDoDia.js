@@ -163,7 +163,6 @@ const styles = StyleSheet.create({
         padding: 10,
         marginBottom: 5,
         color: 'black',
-        textDecorationLine: "underline",
         fontWeight: '700',
         fontSize: 22,
     },
@@ -186,8 +185,9 @@ const styles = StyleSheet.create({
 		paddingBottom: 10,
         paddingHorizontal: 20,
         borderWidth: 1,
-		borderRadius: 10,
+        borderRadius: 10,
 		backgroundColor: '#FFF',
+		borderColor:'#000'
     },
 });
 

@@ -31,6 +31,7 @@ const ModalBox = forwardRef((props, ref) => {
 
     function contentModal(event, item = {}) {
         let r;
+        
         switch (event) {
             case 'cadastroCategoria':
                 r = (<CadastroCategorias close={closeModal} />);
