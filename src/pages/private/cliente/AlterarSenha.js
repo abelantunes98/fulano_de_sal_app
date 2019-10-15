@@ -93,17 +93,10 @@ const AlterarSenhaCliente = (props) => {
     return (
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title='Alterar Senha' />
-            <View style={styles.childContainerOne}>
-                <Image
-                    style={styles.imgHeader}
-                    source={require('../../../images/LOGO1.png')}
-                />
-            </View>
-
             <View style={styles.childContainerTwo}>
                 <Image
                     style={styles.imgMain}
-                    source={require('../../../images/usernot.png')}
+                    source={require('../../../assets/usernot.png')}
                 />
             </View>
 
@@ -197,13 +190,6 @@ const styles = StyleSheet.create({
         justifyContent: "space-around",
         alignItems: 'center',
         backgroundColor: '#ffffff'
-    },
-    // logo
-    childContainerOne: {
-        flexDirection: "row",
-        borderBottomWidth: 3,
-        borderBottomColor: '#000000',
-        height: '10%',
     },
     // imagem
     childContainerTwo: {

@@ -19,10 +19,10 @@ const HomeCliente = (props) => {
     const saudacao = `Bem vindo ${nome}`;
 
     useEffect(() => {
-        loadCliente();
+        loadInfo();
     }, [])
 
-    loadCliente = async () => {
+    loadInfo = async () => {
         let usuario = await find(USER_CURRENTY);
         setCliente(usuario);
         setNome(usuario.nome);

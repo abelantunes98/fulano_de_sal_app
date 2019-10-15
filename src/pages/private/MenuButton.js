@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
 		color: '#FFF',
 		fontFamily: 'Roboto-Thin',
 		fontSize:20,
-		marginBottom:25
+        marginBottom:25
     },
     menu: {
         marginBottom: 25,
