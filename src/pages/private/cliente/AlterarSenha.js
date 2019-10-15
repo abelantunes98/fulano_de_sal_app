@@ -93,13 +93,6 @@ const AlterarSenhaCliente = (props) => {
     return (
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title='Alterar Senha' />
-            <View style={styles.childContainerTwo}>
-                <Image
-                    style={styles.imgMain}
-                    source={require('../../../assets/usernot.png')}
-                />
-            </View>
-
             <View style={styles.childContainerThree}>
                 <Input
                     leftIcon={

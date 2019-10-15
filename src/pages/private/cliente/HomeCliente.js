@@ -12,10 +12,12 @@ import { Button } from 'react-native-elements';
 import { find } from '../../../services/banco';
 import { USER_CURRENTY } from '../../../services/key';
 import CardapioDoDia from './componentes/cardapioDoDia';
+import api from '../../../services/api';
 
 const HomeCliente = (props) => {
     const [cliente, setCliente] = useState({});
     const [nome, setNome] = useState('');
+    const [cardapioDoDia, setCardapioDoDia] = useState({});
     const saudacao = `Bem vindo ${nome}`;
 
     useEffect(() => {
@@ -26,6 +28,12 @@ const HomeCliente = (props) => {
         let usuario = await find(USER_CURRENTY);
         setCliente(usuario);
         setNome(usuario.nome);
+
+        const response = await api.get('/protegido/categoria/listar', {
+			headers: { Authorization: usuario.token }
+        });
+        
+        console.log(response.data);
     }
 
     return (
@@ -33,7 +41,7 @@ const HomeCliente = (props) => {
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title={saudacao} />
             <Text style={styles.textTitle}>Cardápio do dia</Text>
-            
+
             <ScrollView contentContainerStyle={styles.containerPedidos}>
                 <CardapioDoDia></CardapioDoDia>
             </ScrollView>
