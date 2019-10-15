@@ -195,7 +195,9 @@ const styles = StyleSheet.create({
 	},
 	inforCard: {
         width: '93%',
-        borderRadius: 10
+        borderRadius: 10,
+		backgroundColor: '#FFF',
+		borderColor:'#000'
 	},
 	text: {
 		fontFamily: 'Oswald-Regular',

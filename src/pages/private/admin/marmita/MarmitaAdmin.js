@@ -75,7 +75,7 @@ const MarmitaAdmin = (props) => {
 					<View>
                         <Text style={{fontWeight:'bold',fontSize:16}}>{item.tipoMarmita}</Text>
 						<View></View>
-						<Text style={{fontWeight:'bold',fontSize:16}}> R$ {item.valor}</Text>
+						<Text style={{fontWeight:'bold',fontSize:10}}> R$ {item.valor},00</Text>
 					</View>
 				</View>
 			</Card>
@@ -123,15 +123,15 @@ const MarmitaAdmin = (props) => {
         <MenuButton navigation={props.navigation} title='Marmitas'/>
         <View style={styles.mainContainer}>
 			{!load && 
-			<ScrollView style={{marginBottom:40}}>
+			  <View style={{paddingBottom:70}}>
 				<FlatList
-					style={{ marginTop: 50 }}
+					style={{ marginTop: 10 }}
 					contentContainerStyle={styles.list}
 					data={data}
 					renderItem={renderItem}
 					keyExtractor={item => item.idMarmita.toString()}
 				/>
-			</ScrollView>
+			</View>
 			}{load &&<ProgressBarAndroid />}
             <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUp}>
                 <IconButton
@@ -177,10 +177,6 @@ const styles = StyleSheet.create({
 		color: '#000000',
 		fontSize: 9
 	},
-	list: {
-		paddingTop: 10,
-		paddingHorizontal: 16
-	},
 	button: {
 		backgroundColor: '#FFF',
 		borderRadius: 100,
@@ -194,14 +190,14 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'flex-end'
 	},
-	listItem: {
-		marginTop: 20,
+	list: {
 		paddingTop: 10,
-		paddingBottom: 50,
-		paddingEnd: 10,
-		padding: 30,
+		paddingHorizontal: 16
+	},
+	listItem: {
 		borderRadius: 10,
 		backgroundColor: '#FFF',
+		borderColor:'#000'
 	},
 	iconsDrawer: {
 		paddingRight: 2

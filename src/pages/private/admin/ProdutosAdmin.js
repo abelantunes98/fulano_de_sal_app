@@ -131,15 +131,16 @@ const ProdutosAdmin = (props) => {
 		<View style={styles.mainContainer}>
 			<MenuButton navigation={props.navigation} title="Produtos" />
 			<View style={styles.mainContainer}>
-				{!load && <ScrollView style={{marginBottom:40}}
-				><FlatList
-						style={{ marginTop: 50 }}
-						contentContainerStyle={styles.list}
-						data={data}
-						renderItem={renderItem}
-						keyExtractor={item => item.idProduto.toString()}
-					/>
-				</ScrollView>
+				{!load &&   
+					<View style={{paddingBottom:70}}>
+						<FlatList
+								style={{ marginTop: 10 }}
+								contentContainerStyle={styles.list}
+								data={data}
+								renderItem={renderItem}
+								keyExtractor={item => item.idProduto.toString()}
+							/>
+					</View>
 				}{load && <ProgressBarAndroid />}
 				<TouchableOpacity style={styles.floatButton} onPress={() => openCadastroPopUp(categorias)}>
 					<IconButton
@@ -177,13 +178,12 @@ const styles = StyleSheet.create({
 		backgroundColor: '#ffffff'
 	},
 	nome: {
-		color: '#000000',
-		fontSize: 18,
-		marginBottom: 15
+		fontWeight:'bold',
+		fontSize:16
 	},
 	categoria: {
-		color: '#000000',
-		fontSize: 9
+		fontWeight:'bold',
+		fontSize:10
 	},
 	list: {
 		paddingTop: 10,
@@ -203,13 +203,9 @@ const styles = StyleSheet.create({
 		justifyContent: 'flex-end'
 	},
 	listItem: {
-		marginTop: 20,
-		paddingTop: 10,
-		paddingBottom: 50,
-		paddingEnd: 10,
-		padding: 30,
 		borderRadius: 10,
 		backgroundColor: '#FFF',
+		borderColor:'#000'
 	},
 	iconsDrawer: {
 		paddingRight: 2

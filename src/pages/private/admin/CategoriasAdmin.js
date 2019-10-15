@@ -112,14 +112,17 @@ const CategoriasAdmin = (props) => {
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title="Categorias" />
             <View style={styles.mainContainer}>
-                {!load && 
-                <FlatList
-                    style={{ marginTop: 50 }}
-                    contentContainerStyle={styles.list}
-                    data={data}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id.toString()}
-                />}{load && <ProgressBarAndroid/>}
+                <View style={{paddingBottom:70}}>
+                    {!load &&      
+                        <FlatList
+                            style={{ marginTop: 10,marginBottom:10 }}
+                            contentContainerStyle={styles.list}
+                            data={data}
+                            renderItem={renderItem}
+                            keyExtractor={item => item.id.toString()}
+                        />}{load && <ProgressBarAndroid/>
+                    }
+                </View>
                 <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUp}>
                     <IconButton
                         name='plus'
@@ -156,9 +159,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff'
     },
     nome: {
-        color: '#000000',
-        fontSize: 18,
-        marginBottom: 15
+        fontWeight:'bold',
+		fontSize:16
     },
 
     list: {
@@ -179,14 +181,10 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end'
     },
     listItem: {
-        marginTop: 20,
-        paddingTop: 10,
-        paddingBottom: 50,
-        paddingEnd: 10,
-        padding: 30,
-        borderRadius: 10,
-        backgroundColor: '#FFF'
-    },
+		borderRadius: 10,
+		backgroundColor: '#FFF',
+		borderColor:'#000'
+	},
     iconsDrawer: {
         paddingRight: 2
     },

@@ -5,16 +5,13 @@ import {
     StyleSheet,
     ToastAndroid,
     ScrollView,
-    Alert,
     Picker,
-    TextInput,
 } from 'react-native';
-import { Input, Button } from 'react-native-elements';
+import { Input, Button, Card } from 'react-native-elements';
 import Modal from 'react-native-modalbox';
 import api from '../services/api';
 import { USER_CURRENTY } from '../services/key';
 import { find } from '../services/banco';
-import RadioForm from 'react-native-simple-radio-button';
 
 const ModalBox = forwardRef((props, ref) => {
 
@@ -76,7 +73,10 @@ const ModalBox = forwardRef((props, ref) => {
         <Modal
             style={styles.modal}
             ref={modalRef}
-            onClosed={props.refresh}>
+            onClosed={props.refresh}
+            hardwareAccelerated={true}
+            transparent={true}
+            >
             {content}
         </Modal>
     );
@@ -89,22 +89,16 @@ const EditaMarmita = (props) => {
     const [tipo, setTipo] = useState(marmita.tipoMarmita);
     const [valor, setValor] = useState(marmita.valor.toString());
     const [tipos, setTipos] = useState([]);
-    const [tradicional, setTradicional] = useState(false);
+
 
     useEffect(() => {
         setTipos([{ label: 'Tradicional', value: 'TRADICIONAL' }, { label: 'Com divisórias', value: 'DIVISORIA' }]);
-        if (tipo == 'TRADICIONAL') {
-            setTradicional(true);
-        }
     }, []);
 
-    onSelectionsChange = (data) => {
-        setSelectedTipo(data);
-    }
-
     handle_editar = async () => {
-        setLoad(true);
+      
         try {
+            setLoad(true);
             let usuario = await find(USER_CURRENTY);
 
             let marmitaSave = {
@@ -118,66 +112,65 @@ const EditaMarmita = (props) => {
                 {
                     headers: { Authorization: usuario.token }
                 });
-            ToastAndroid.show("Editada com sucesso", ToastAndroid.SHORT);
+            ToastAndroid.show("Marmita editada com sucesso", ToastAndroid.SHORT);
+            setLoad(false);
         } catch (error) {
-            ToastAndroid.show(error.response.data['message'], ToastAndroid.LONG);
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
         } finally {
             props.close();
         }
 
     }
-
     return (
         <ScrollView contentContainerStyle={styles.content}>
-            <Text style={styles.title}>Editar Marmita</Text>
-            <Text style={styles.inputTitle}>Tipo</Text>
-            {tradicional &&
-                <RadioForm
-                    buttonColor={'#0f6124'}
-                    radio_props={tipos}
-                    initial={0}
-                    onPress={(value) => { setTipo(value) }}
-                />
-            }{!tradicional &&
-                <RadioForm
-                    buttonColor={'#0f6124'}
-                    radio_props={tipos}
-                    initial={1}
-                    onPress={(value) => { setTipo(value) }}
-                />
-            }
+            <Card containerStyle={styles.card}>
+                <View style ={styles.content}>
+                <Text style={styles.title}>Editar Marmita</Text>
+                <Text style={styles.inputTitle}>Tipo</Text>
+                <Picker
+                    selectedValue={tipo}
+                    style={{ height: 50, width: 300 }}
+                    onValueChange={(itemValue) => {
+                        setTipo(itemValue);
+                    }}>
+                    
+                    {tipos.map(v => {
+                        return (<Picker.Item key={v} label={v.label} value={v.value} />);
+                    })}
+                </Picker>
+                <Text style={styles.inputTitle}>Descrição</Text>
+                <Input
+                    placeholder='Descricao'
+                    value={descricao}
+                    onChangeText={setDescricao}
+                    multiline={true}
 
-            <Text style={styles.inputTitle}>Descrição</Text>
-            <Input
-                placeholder='Descricao'
-                value={descricao}
-                onChangeText={setDescricao}
-                multiline={true}
-
-            />
-
-            <Text style={styles.inputTitle}>Valor</Text>
-            <Input
-                placeholder='Valor'
-                value={valor}
-                onChangeText={setValor}
-                keyboardType={'numeric'}
-            />
-
-            <View style={styles.buttonContainer}>
-                <Button
-                    title='Cancelar'
-                    buttonStyle={styles.button}
-                    onPress={props.close}
                 />
-                <Button
-                    title='Editar'
-                    buttonStyle={styles.button}
-                    onPress={handle_editar}
-                    loading={load}
+
+                <Text style={styles.inputTitle}>Valor</Text>
+                <Input
+                    placeholder='Valor'
+                    value={valor}
+                    onChangeText={setValor}
+                    keyboardType={'numeric'}
                 />
+
+                <View style={styles.buttonContainer}>
+                    <Button
+                        title='Cancelar'
+                        buttonStyle={styles.button}
+                        onPress={props.close}
+                    />
+                    <Button
+                        title='Editar'
+                        buttonStyle={styles.button}
+                        onPress={handle_editar}
+                        loading={load}
+                    />
+                </View>
             </View>
-        </ScrollView>
+        </Card>
+    </ScrollView>
     );
 
 }
@@ -194,13 +187,9 @@ const CadastroMarmitas = ({ close }) => {
         setTipos([{ label: 'Tradicional', value: 'TRADICIONAL' }, { label: 'Com divisórias', value: 'DIVISORIA' }]);
     }, []);
 
-    onSelectionsChange = (data) => {
-        setSelectedTipo(data);
-    }
-
     handle_cadastro = async () => {
-        setLoad(true);
         try {
+            setLoad(true);
             let usuario = await find(USER_CURRENTY);
             let marmita = {
                 'descricao': descricao,
@@ -212,9 +201,10 @@ const CadastroMarmitas = ({ close }) => {
                 {
                     headers: { Authorization: usuario.token }
                 });
-            ToastAndroid.show("Cadastrado com sucesso", ToastAndroid.SHORT);
+            ToastAndroid.show("Marmita cadastrada com sucesso", ToastAndroid.SHORT);
+            setLoad(false);
         } catch (error) {
-            ToastAndroid.show(error.response.data['message'], ToastAndroid.LONG);
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
         } finally {
             close();
         }
@@ -224,63 +214,73 @@ const CadastroMarmitas = ({ close }) => {
 
     return (
         <ScrollView contentContainerStyle={styles.content}>
-            <Text style={styles.title}>Cadastrar Marmita</Text>
-            <Text style={styles.inputTitle}>Tipo</Text>
-            <RadioForm
-                buttonColor={'#0f6124'}
-                radio_props={tipos}
-                initial={0}
-                onPress={(value) => { setTipo(value) }}
-            />
+            <Card containerStyle={styles.card}>
+                <View style ={styles.content}>
+                <Text style={styles.title}>Cadastrar Marmita</Text>
+                <Text style={styles.inputTitle}>Tipo</Text>
+                <Picker
+                    selectedValue={tipo}
+                    style={{ height: 50, width: 300 }}
+                    onValueChange={(tipo)=>{setTipo(tipo)}}>
+                    {tipos.map(v => {
+                        return (<Picker.Item key={v} label={v.label} value={v.value} />);
+                    })}
+                </Picker>
 
-            <Text style={styles.inputTitle}>Descrição</Text>
-            <Input
-                placeholder='Descricao'
-                value={descricao}
-                onChangeText={setDescricao}
-                multiline={true}
-            />
-
-            <Text style={styles.inputTitle}>Valor</Text>
-            <Input
-                placeholder='Valor'
-                value={valor}
-                onChangeText={setValor}
-                keyboardType={'numeric'}
-
-            />
-
-            <View style={styles.buttonContainer}>
-                <Button
-                    title='Cancelar'
-                    buttonStyle={styles.button}
-                    onPress={close}
+                <Text style={styles.inputTitle}>Descrição</Text>
+                <Input
+                    placeholder='Descricao'
+                    value={descricao}
+                    onChangeText={setDescricao}
+                    multiline={true}
                 />
-                <Button
-                    title='Cadastrar'
-                    buttonStyle={styles.button}
-                    onPress={handle_cadastro}
-                    loading={load}
+
+                <Text style={styles.inputTitle}>Valor</Text>
+                <Input
+                    placeholder='Valor'
+                    value={valor}
+                    onChangeText={setValor}
+                    keyboardType={'numeric'}
+
                 />
-            </View>
-        </ScrollView>
+
+                <View style={styles.buttonContainer}>
+                    <Button
+                        title='Cancelar'
+                        buttonStyle={styles.button}
+                        onPress={close}
+                    />
+                    <Button
+                        title='Cadastrar'
+                        buttonStyle={styles.button}
+                        onPress={handle_cadastro}
+                        loading={load}
+                    />
+                </View>
+                </View>
+            </Card>
+        </ScrollView> 
     );
 };
 
 const CadastroCategorias = ({ close }) => {
 
     const [descricao, setDescricao] = useState('');
+    const [load, setLoad] = useState(false);
 
     handle_cadastro = async () => {
         try {
+            setLoad(true);
             let usuario = await find(USER_CURRENTY);
             await api.post('/protegido/categoria/',
                 { 'descricao': descricao },
                 {
                     headers: { Authorization: usuario.token }
                 });
-        } catch (e) {
-            ToastAndroid.show('Categoria não foi cadastrada')
+            setLoad(false);
+            ToastAndroid.show('Categoria cadastrada com sucesso',ToastAndroid.SHORT);
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
         } finally {
             close();
         }
@@ -289,36 +289,48 @@ const CadastroCategorias = ({ close }) => {
 
     return (
         <ScrollView contentContainerStyle={styles.content}>
-            <Text style={styles.title}>Cadastrar categoria</Text>
-            <Text style={styles.inputTitle}>Descrição</Text>
-            <Input
-                placeholder='Nome da categoria'
-                value={descricao}
-                onChangeText={setDescricao}
-            />
-            <View style={styles.buttonContainer}>
-                <Button
-                    title='Cancelar'
-                    buttonStyle={styles.button}
-                    onPress={close}
+            <Card containerStyle={styles.card}>
+                <View style ={styles.content}>
+                <Text style={styles.title}>Cadastrar categoria</Text>
+                <Text style={styles.inputTitle}>Descrição</Text>
+                <Input
+                    placeholder='Nome da categoria'
+                    value={descricao}
+                    onChangeText={setDescricao}
                 />
-                <Button
-                    title='Cadastrar'
-                    buttonStyle={styles.button}
-                    onPress={handle_cadastro}
-                />
-            </View>
+                <View style={styles.buttonContainer}>
+                    <Button
+                        title='Cancelar'
+                        buttonStyle={styles.button}
+                        onPress={close}
+                    />
+                    <Button
+                        title='Cadastrar'
+                        buttonStyle={styles.button}
+                        onPress={handle_cadastro}
+                        loading={load}
+                    />
+                </View>
+                </View>
+            </Card>
         </ScrollView>
     );
 };
 
 const EditaCategoria = (props) => {
 
-    const [descricao, setDescricao] = useState(props.nome);
-    const id = props.id;
+    const [descricao, setDescricao] = useState('');
+    const [id,setId] = useState('');
+    const [load, setLoad] = useState(false);
+
+    useEffect(() => {
+       setDescricao(props.nome);
+       setId(props.id);
+    }, []);
 
     handle_edicao = async () => {
         try {
+            setLoad(true);
             let usuario = await find(USER_CURRENTY);
             await api.post('/protegido/categoria/atualizar',
                 {
@@ -328,8 +340,10 @@ const EditaCategoria = (props) => {
                 {
                     headers: { Authorization: usuario.token }
                 });
-        } catch (e) {
-            ToastAndroid.show('Categoria não foi editada')
+                setLoad(false);
+                ToastAndroid.show("Categoria editada com sucesso",ToastAndroid.SHORT);
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
         } finally {
             props.close();
         }
@@ -337,25 +351,30 @@ const EditaCategoria = (props) => {
 
     return (
         <ScrollView contentContainerStyle={styles.content}>
-            <Text style={styles.title}>Editar categoria</Text>
-            <Text style={styles.inputTitle}>Descrição</Text>
-            <Input
-                placeholder='Nome da categoria'
-                value={descricao}
-                onChangeText={setDescricao}
-            />
-            <View style={styles.buttonContainer}>
-                <Button
-                    title='Cancelar'
-                    buttonStyle={styles.button}
-                    onPress={props.close}
+            <Card containerStyle={styles.card}>
+                <View style ={styles.content}>
+                <Text style={styles.title}>Editar categoria</Text>
+                <Text style={styles.inputTitle}>Descrição</Text>
+                <Input
+                    placeholder='Nome da categoria'
+                    value={descricao}
+                    onChangeText={setDescricao}
                 />
-                <Button
-                    title='Editar'
-                    buttonStyle={styles.button}
-                    onPress={handle_edicao}
-                />
-            </View>
+                <View style={styles.buttonContainer}>
+                    <Button
+                        title='Cancelar'
+                        buttonStyle={styles.button}
+                        onPress={props.close}
+                    />
+                    <Button
+                        title='Editar'
+                        buttonStyle={styles.button}
+                        onPress={handle_edicao}
+                        loading={load}
+                    />
+                </View>
+                </View>
+            </Card>
         </ScrollView>
     );
 };
@@ -365,7 +384,11 @@ const CadastroProdutos = (props) => {
     const [load,setLoad] = useState(false);
     const [nome, setNome] = useState('');
     const [categorias, setCategorias] = useState(props.item);
-    const [categoriaSelecionada, setCategoriaSelecionada] = useState(categorias[0]);
+    const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
+
+    useEffect(() => {
+        setCategoriaSelecionada(categorias[0]);
+     }, []);
 
     handle_cadastro = async () => {
         
@@ -377,10 +400,10 @@ const CadastroProdutos = (props) => {
                 {
                     headers: { Authorization: usuario.token }
                 });
-                ToastAndroid.show("Cadastrado com sucesso", ToastAndroid.SHORT);
+                ToastAndroid.show("Produto cadastrado com sucesso", ToastAndroid.SHORT);
             setLoad(false);
         } catch (error) {
-            ToastAndroid.show(error.response.data['message'], ToastAndroid.LONG);
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
         } finally {
             props.close();
         }
@@ -398,50 +421,60 @@ const CadastroProdutos = (props) => {
 
     return (
         <ScrollView contentContainerStyle={styles.content}>
-            <Text style={styles.title}>Cadastrar produto</Text>
-            <Text style={styles.inputTitle}>Nome</Text>
-            <Input
-                placeholder='Nome do produto'
-                value={nome}
-                onChangeText={setNome}
-            />
-
-            <Text style={styles.inputTitle}>Categoria</Text>
-            <Picker
-                selectedValue={categoriaSelecionada.descricao}
-                style={{ height: 50, width: 300 }}
-                onValueChange={(itemValue, itemIndex) => {
-                    pickerChange(itemIndex);
-                }}>
-                {categorias.map(v => {
-                    return (<Picker.Item key={v.id} label={v.descricao} value={v.descricao} />);
-                })}
-            </Picker>
-
-            <View style={styles.buttonContainer}>
-                <Button
-                    title='Cancelar'
-                    buttonStyle={styles.button}
-                    onPress={props.close}
+            <Card containerStyle={styles.card}>
+                <View style ={styles.content}>
+                <Text style={styles.title}>Cadastrar produto</Text>
+                <Text style={styles.inputTitle}>Nome</Text>
+                <Input
+                    placeholder='Nome do produto'
+                    value={nome}
+                    onChangeText={setNome}
                 />
-                <Button
-                    title='Cadastrar'
-                    buttonStyle={styles.button}
-                    onPress={handle_cadastro}
-                    loading={load}
-                />
-            </View>
+
+                <Text style={styles.inputTitle}>Categoria</Text>
+                <Picker
+                    selectedValue={categoriaSelecionada.descricao}
+                    style={{ height: 50, width: 300 }}
+                    onValueChange={(itemValue, itemIndex) => {
+                        pickerChange(itemIndex);
+                    }}>
+                    {categorias.map(v => {
+                        return (<Picker.Item key={v.id} label={v.descricao} value={v.descricao} />);
+                    })}
+                </Picker>
+
+                <View style={styles.buttonContainer}>
+                    <Button
+                        title='Cancelar'
+                        buttonStyle={styles.button}
+                        onPress={props.close}
+                    />
+                    <Button
+                        title='Cadastrar'
+                        buttonStyle={styles.button}
+                        onPress={handle_cadastro}
+                        loading={load}
+                    />
+                </View>
+                </View>
+            </Card>
         </ScrollView>
     );
 };
 
 const EditaProduto = (props) => {
 
-    const [nome, setNome] = useState(props.item.nome);
-    const idProduto = props.item.idProduto;
+    const [nome, setNome] = useState('');
+    const [idProduto,setIdProduto] = useState('');
     const [categorias, setCategorias] = useState(props.categorias);
-    const [categoriaSelecionada, setCategoriaSelecionada] = useState(props.item.categoria);
+    const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
     const [load,setLoad] = useState(false);
+
+    useEffect(() => {
+        setNome(props.item.nome);
+        setIdProduto(props.item.idProduto);
+        setCategoriaSelecionada(props.item.categoria);
+     }, []);
 
     handle_edicao = async () => {
         try {
@@ -460,8 +493,9 @@ const EditaProduto = (props) => {
                     headers: { Authorization: usuario.token }
                 });
             setLoad(false);
-        } catch (e) {
-            ToastAndroid.show('Produto não foi editado')
+            ToastAndroid.show('Produto editado com sucesso')
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
         } finally {
             props.close();
         }
@@ -477,41 +511,45 @@ const EditaProduto = (props) => {
 
     return (
         <ScrollView contentContainerStyle={styles.content}>
-            <Text style={styles.title}>Editar produto</Text>
-            <Text style={styles.inputTitle}>Nome</Text>
-            <Input
-                placeholder='Nome do produto'
-                value={nome}
-                onChangeText={setNome}
-            />
-
-            <Text style={styles.inputTitle}>Categoria</Text>
-            <Picker
-                selectedValue={categoriaSelecionada.descricao}
-                style={{ height: 50, width: 300 }}
-                onValueChange={(itemValue, itemIndex) => {
-                    pickerChange(itemIndex);
-                    console.log(itemIndex);
-                }}>
-                {categorias.map(v => {
-                    return (<Picker.Item key={v.id} label={v.descricao} value={v.descricao} />);
-                })}
-            </Picker>
-
-            <View style={styles.buttonContainer}>
-                <Button
-                    title='Cancelar'
-                    buttonStyle={styles.button}
-                    onPress={props.close}
+            <Card containerStyle={styles.card}>
+                <View style ={styles.content}>
+                <Text style={styles.title}>Editar produto</Text>
+                <Text style={styles.inputTitle}>Nome</Text>
+                <Input
+                    placeholder='Nome do produto'
+                    value={nome}
+                    onChangeText={setNome}
                 />
-                <Button
-                    title='Editar'
-                    buttonStyle={styles.button}
-                    onPress={handle_edicao}
-                    loading={load}
-                />
-            </View>
-        </ScrollView>
+
+                <Text style={styles.inputTitle}>Categoria</Text>
+                <Picker
+                    selectedValue={categoriaSelecionada.descricao}
+                    style={{ height: 50, width: 300 }}
+                    onValueChange={(itemValue, itemIndex) => {
+                        pickerChange(itemIndex);
+                        console.log(itemIndex);
+                    }}>
+                    {categorias.map(v => {
+                        return (<Picker.Item key={v.id} label={v.descricao} value={v.descricao} />);
+                    })}
+                </Picker>
+
+                <View style={styles.buttonContainer}>
+                    <Button
+                        title='Cancelar'
+                        buttonStyle={styles.button}
+                        onPress={props.close}
+                    />
+                    <Button
+                        title='Editar'
+                        buttonStyle={styles.button}
+                        onPress={handle_edicao}
+                        loading={load}
+                    />
+                </View>
+             </View>
+        </Card>
+    </ScrollView>
     );
 };
 
@@ -532,7 +570,7 @@ const styles = StyleSheet.create({
     modal: {
         justifyContent: 'center',
         height: 400,
-        width: '97%'
+        width: '97%',
     },
     button: {
         marginRight: 10,
@@ -542,13 +580,18 @@ const styles = StyleSheet.create({
     content: {
         justifyContent: 'flex-start',
         alignItems: 'center',
-        paddingBottom: '10%'
+        paddingBottom: '6%'
     },
     buttonContainer: {
         marginTop: 25,
         flexDirection: 'row',
         justifyContent: 'space-around',
-    }
+    },
+    card: {
+		borderRadius: 10,
+		backgroundColor: '#FFF',
+		borderColor:'#000'
+	}
 });
 
 
