@@ -74,6 +74,7 @@ const AlterarSenhaCliente = (props) => {
                     userDados.nome = data.nome;
                     userDados.endereco = data.endereco;
                     userDados.telefone = data.telefone;
+                    userDados.senha = data.senha;
 
                     save(USER_CURRENTY, userDados);
                     // Limpando os campos.
