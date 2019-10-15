@@ -1,16 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
-    Image,
     ToastAndroid,
     StyleSheet,
+    KeyboardAvoidingView,
+    Text,
 } from 'react-native'
 
 import MenuButton from '../MenuButton';
+import IconMaterial from 'react-native-vector-icons/FontAwesome';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import { save, find } from '../../../services/banco';
 import { USER_CURRENTY } from '../../../services/key';
-import { Button, Input } from 'react-native-elements';
+import { Button, Input, Card } from 'react-native-elements';
 import api from '../../../services/api';
 
 const ConfiguracoesCliente = (props) => {
@@ -20,11 +22,11 @@ const ConfiguracoesCliente = (props) => {
     const [telefone, setTelefone] = useState('');
     const [endereco, setEndereco] = useState('');
 
-    useEffect(()=>{
+    useEffect(() => {
         carregarDados();
     }, []);
 
-    carregarDados = async () =>{
+    carregarDados = async () => {
         let userDadosRet = await find(USER_CURRENTY);
         setUserDados(userDadosRet);
     }
@@ -58,126 +60,120 @@ const ConfiguracoesCliente = (props) => {
 
         // Verifica se algum dado foi digitado.
         if (telefone != '' || nome != '' || endereco != '') {
-            
-            try {
-                const response = await api.post('/protegido/cliente/atualizar', 
-                {
-                    email: emailEnviar, 
-                    senha: senhaEnviar,
-                    endereco: enderecoEnviar,
-                    telefone: telefoneEnviar,
-                    nome: nomeEnviar
-                },
-                {headers: { Authorization: userDados.token }}
-            );
-        
-            if (response.status == 200) {
-                let data = response.data
-                userDados.nome = data.nome;
-                userDados.endereco = data.endereco;
-                userDados.telefone = data.telefone;
 
-                // Altera os dados salvos.
-                save(USER_CURRENTY, userDados);
-                // Limpa os campos onde o usuario digitou.
-                setEndereco('');
-                setNome('');
-                setTelefone('');
-                
-                ToastAndroid.show('Dados atualizados com sucesso!', ToastAndroid.SHORT);
+            try {
+                const response = await api.post('/protegido/cliente/atualizar',
+                    {
+                        email: emailEnviar,
+                        senha: senhaEnviar,
+                        endereco: enderecoEnviar,
+                        telefone: telefoneEnviar,
+                        nome: nomeEnviar
+                    },
+                    { headers: { Authorization: userDados.token } }
+                );
+
+                if (response.status == 200) {
+                    let data = response.data
+                    userDados.nome = data.nome;
+                    userDados.endereco = data.endereco;
+                    userDados.telefone = data.telefone;
+
+                    // Altera os dados salvos.
+                    save(USER_CURRENTY, userDados);
+                    // Limpa os campos onde o usuario digitou.
+                    setEndereco('');
+                    setNome('');
+                    setTelefone('');
+
+                    ToastAndroid.show('Dados atualizados com sucesso!', ToastAndroid.SHORT);
+                }
+            } catch (error) {
+                ToastAndroid.show('Erro, tente novamente mais tarde!', ToastAndroid.SHORT);
             }
-        } catch (error) {
-            ToastAndroid.show('Erro, tente novamente mais tarde!',ToastAndroid.SHORT);
-        }
         } else {
-            ToastAndroid.show('Insira algum dado para alterar!',ToastAndroid.SHORT);
+            ToastAndroid.show('Insira algum dado para alterar!', ToastAndroid.SHORT);
         }
     }
     return (
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title='Configurações' />
-            
-            <View style={ styles.childContainerTwo }>
-                <Image
-                   style={ styles.imgMain }
-                   source={require('../../../images/user.jpg')}
-                />
-            </View>
+            <View style={styles.mainContainer}>
+                <KeyboardAvoidingView>
+                    <Card containerStyle={styles.card}>
+                        <View style={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <IconMaterial
+                                name='user-circle-o'
+                                size={100}
+                                color='black'
+                                style={styles.icon_user}
+                            />
+                            <Text style={styles.text} >{userDados.email}</Text>
+                            <Input
+                                leftIcon={
+                                    <IconFont
+                                        name='user'
+                                        size={15}
+                                        color='black'
+                                        style={styles.icons}
+                                    />
+                                }
+                                placeholder={userDados.nome}
+                                autoCapitalize='words'
+                                value={nome}
+                                onChangeText={setNome}
+                                containerStyle={styles.input}
+                            />
+                            
+                            <Input
+                                leftIcon={
+                                    <IconFont
+                                        name='phone'
+                                        size={15}
+                                        color='black'
+                                        style={styles.icons}
+                                    />
+                                }
+                                placeholder={userDados.telefone}
+                                keyboardType='phone-pad'
+                                value={telefone}
+                                onChangeText={setTelefone}
+                                containerStyle={styles.input}
+                            />
+                            <Input
+                                leftIcon={
+                                    <IconFont
+                                        name='address-card'
+                                        size={15}
+                                        color='black'
+                                        style={styles.icons}
+                                    />
+                                }
+                                placeholder={userDados.endereco}
+                                autoCapitalize='words'
+                                value={endereco}
+                                onChangeText={setEndereco}
+                                containerStyle={styles.input}
 
-            <View style={ styles.childContainerThree }>
-                <Input
-                    leftIcon={
-                        <IconFont
-                            name='user'
-                            size={15}
-                            color='black'
-                            style={ styles.icons }
-                        />
-                    }
-                    placeholder={userDados.nome}
-                    autoCapitalize='words'
-                    value={nome}
-                    onChangeText={setNome}
-                    style={styles.input}
-                />
-                <Input
-                    leftIcon={
-                        <IconFont
-                            name='envelope'
-                            size={15}
-                            color='black'
-                            style={ styles.icons }
-                        />
-                    }
-                    placeholder={userDados.email}
-                    autoCapitalize='none'
-                    placeholderTextColor='#000000'
-                    editable={false}
-                    style={styles.input}
-                />
-                <Input
-                    leftIcon={
-                        <IconFont
-                            name='phone'
-                            size={15}
-                            color='black'
-                            style={ styles.icons }
-                        />
-                    }
-                    placeholder={userDados.telefone}
-                    keyboardType='phone-pad'
-                    value={telefone}
-                    onChangeText={setTelefone}
-                    style={styles.input}
-                />
-                <Input
-                    leftIcon={
-                        <IconFont
-                            name='address-card'
-                            size={15}
-                            color='black'
-                            style={ styles.icons }
-                        />
-                    }
-                    placeholder={userDados.endereco}
-                    autoCapitalize='words'
-                    value={endereco}
-                    onChangeText={setEndereco}
-                    style={styles.input}
-                />
-                <Button
-                    buttonStyle={ styles.buttonSenha }
-                    title='Alterar senha'
-                    onPress={_=>{props.navigation.navigate('AlterarSenha')}}
-                />
-            </View>
+                            />
+                            <View style={styles.forgotContainer}>
+                                <Button
+                                    buttonStyle={styles.button}
+                                    title='Alterar senha'
+                                    onPress={_ => { props.navigation.navigate('AlterarSenha') }}
+                                    titleStyle={styles.titleStyle}
+                                />
+                                <Button
+                                    buttonStyle={styles.button}
+                                    title='Salvar Configurações'
+                                    onPress={enviaDados}
+                                    titleStyle={styles.titleStyle}
+                                />
 
-            <View style={ styles.childContainerFour }>
-                <Button
-                    buttonStyle={ styles.button }
-                    title='Salvar Configurações'
-                    onPress={enviaDados}
-                />
+                            </View>
+                        </View>
+                    </Card>
+                </KeyboardAvoidingView>
             </View>
         </View>
     )
@@ -185,65 +181,54 @@ const ConfiguracoesCliente = (props) => {
 
 ConfiguracoesCliente.navigationOptions = {
     drawerLabel: 'Configurações',
-    drawerIcon:({focused, tintColor}) => (
+    drawerIcon: ({ focused, tintColor }) => (
         <IconFont
             name='cogs'
             size={20}
             color='black'
-            style={ styles.iconsDrawer }
+            style={styles.iconsDrawer}
         />
     )
 }
 
 const styles = StyleSheet.create({
-    mainContainer:{
-        flex: 1,
-        justifyContent : "space-around",
-        alignItems: 'center',
-        backgroundColor: '#ffffff'
+
+    card: {
+        width: '93%',
+        borderRadius: 10,
+        backgroundColor: '#FFF',
+
     },
-    // imagem
-    childContainerTwo:{
-        height: '25%', 
-        alignItems: "center",
-        justifyContent: "center",    
-    },
-    // informações
-    childContainerThree:{
-        height: '50%',
-        width: '100%',
+    mainContainer: {
+        flexGrow: 1,
         justifyContent: 'center',
-        alignItems: "center",
+        backgroundColor: '#ffffff',
     },
-    // botão
-    childContainerFour:{
-        height: '10%',
-        width: '100%',
-        alignItems: "center",
+    text: {
+        textAlign: 'center',
+        marginBottom: 10,
     },
-    button:{
+    forgotContainer: {
+        marginTop: 10,
+    },
+    button: {
+        width: 150,
         marginTop: 10,
         backgroundColor: '#0f6124',
     },
-    buttonSenha:{
-        marginTop: 5,
-        backgroundColor: '#0f6124',
-        borderRadius: 50,
-        width: '40%',
-        paddingEnd: '5%'
+    titleStyle: {
+        fontFamily: 'Roboto-Thin',
     },
-    imgHeader:{
-        width: 100,
-        height: 50,
+    icon_user: {
+        paddingBottom: 20,
     },
-    imgMain:{
-        flex: 1,
-        resizeMode: "contain",
-        borderRadius: 100,
+    input: {
+        marginBottom: 10,
     },
-    iconsDrawer: {
-		paddingRight: 2
-	},
+    icons:{
+        marginRight: 5,
+        paddingRight: 5,
+    }
 });
 
 export default ConfiguracoesCliente;
