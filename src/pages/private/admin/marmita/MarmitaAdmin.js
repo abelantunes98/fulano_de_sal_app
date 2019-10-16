@@ -7,7 +7,10 @@ import {
     StyleSheet,
 	Alert,
 	ToastAndroid,
-	ProgressBarAndroid
+	ProgressBarAndroid,
+	Modal,
+	ScrollView,
+	Picker
 } from 'react-native'
 import {Card,Button,Header, Input} from 'react-native-elements';
 
@@ -24,10 +27,70 @@ const MarmitaAdmin = (props) => {
 	const[data,setData] = useState([]);
 	const modalRef = useRef();
 	const [load,setLoad] = useState(false);
+	const [modalVisible,setModalVisible] = useState(false);
+
+	//dados do modal
+	const [idMarmita,setIdMarmita] = useState('');
+	const [loadModal, setLoadModal] = useState(false);
+    const [descricao, setDescricao] = useState('');
+    const [tipoMarmita, setTipoMarmita] = useState('TRADICIONAL');
+    const [valor, setValor] = useState('');
+	const [tipos, setTipos] = useState([]);
+	const [cadastrando,setCadastrando] = useState(false);
+	const [carnes,setCarnes] = useState('');
 
     useEffect(() => {
-        loadRepositories();
-      }, []);
+		loadRepositories();
+		setTipos([{ label: 'Tradicional', value: 'TRADICIONAL' }, { label: 'Com divisórias', value: 'DIVISORIA' }]);
+	  }, [modalVisible]);
+
+	handle_cadastro = async () => {
+        try {
+            setLoadModal(true);
+            let usuario = await find(USER_CURRENTY);
+            let marmita = {
+                'descricao': descricao,
+                'tipo': tipoMarmita,
+				'valor': valor,
+				'carnes':carnes
+            }
+            await api.post('/protegido/marmita/',
+                marmita,
+                {
+                    headers: { Authorization: usuario.token }
+                });
+            ToastAndroid.show("Marmita cadastrada com sucesso", ToastAndroid.SHORT);
+			setLoadModal(false);
+			setModalVisible(false);
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
+        } 
+	}
+	
+	handle_editar = async () => {
+        try {
+            setLoadModal(true);
+            let usuario = await find(USER_CURRENTY);
+
+            let marmitaSave = {
+                'idMarmita': idMarmita,
+                'descricao': descricao,
+                'tipoMarmita': tipoMarmita,
+				'valor': valor,
+				'carnes':carnes
+            }
+            await api.post('/protegido/marmita/atualizar',
+                marmitaSave,
+                {
+                    headers: { Authorization: usuario.token }
+                });
+            ToastAndroid.show("Marmita editada com sucesso", ToastAndroid.SHORT);
+			setLoadModal(false);
+			setModalVisible(false);
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
+        } 
+    }
 
     loadRepositories = async () => {
 		setLoad(true);
@@ -36,11 +99,7 @@ const MarmitaAdmin = (props) => {
 		setData(response.data);
 		setLoad(false);
 	}
-	
-	cadastrarMarmita = async () => {
-	
-	}
-     
+	  
     renderItem = ({ item }) => (
          <View >
             <Card containerStyle={styles.listItem}>
@@ -81,7 +140,7 @@ const MarmitaAdmin = (props) => {
       </View>
 	);
 	
-	function deleteItem(id, tipo, valor) {
+	deleteItem = (id, tipo, valor) => {
         Alert.alert(
             'Deletar marmita',
             `Tem certeza que deseja deletar a marmita tipo ${tipo} e valor R$ ${valor}?`,
@@ -92,7 +151,7 @@ const MarmitaAdmin = (props) => {
         );
     };
 
-    async function loadDeleteItem(id) {
+	loadDeleteItem = async (id) => {
         try {
             let usuario = await find(USER_CURRENTY);
             await api.delete('/protegido/marmita/remover',
@@ -103,17 +162,32 @@ const MarmitaAdmin = (props) => {
 			);
 			ToastAndroid.show('Deletado com Sucesso!',ToastAndroid.show);
             loadRepositories();
-        } catch (e) {
-            ToastAndroid.show(e.message)
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
         }
 	};
 
-	function openEditaPopUp(item) {
-        modalRef.current.open('editarMarmita', item);
+	openEditaPopUp = (marmita) => {
+		setIdMarmita(marmita.idMarmita);
+		setDescricao(marmita.descricao);
+		setTipoMarmita(marmita.tipoMarmita);
+		setValor(marmita.valor.toString());
+		setTipos([{ label: 'Tradicional', value: 'TRADICIONAL' }, { label: 'Com divisórias', value: 'DIVISORIA' }]);
+		setCarnes(marmita.carnes.toString());
+
+		setCadastrando(false);
+		setModalVisible(true);
     };
 
     openCadastroPopUp = () => {
-        modalRef.current.open('cadastroMarmita');
+		setCarnes('');
+		setDescricao('');
+		setTipoMarmita('TRADICIONAL');
+		setValor('');
+		setTipos([{ label: 'Tradicional', value: 'TRADICIONAL' }, { label: 'Com divisórias', value: 'DIVISORIA' }]);
+
+		setCadastrando(true);
+		setModalVisible(true);
     };
 
 
@@ -121,6 +195,90 @@ const MarmitaAdmin = (props) => {
         <View style={styles.mainContainer}>
         <MenuButton navigation={props.navigation} title='Marmitas'/>
         <View style={styles.mainContainer}>
+			
+			<Modal
+				style = {stylesModal.modal}
+				animationType='slide'
+				transparent={true}
+				visible={modalVisible}
+				presentationStyle={'overFullScreen'}
+				onRequestClose={() => {
+					setModalVisible(false);
+				}}>
+				<View style={stylesModal.content}>
+					<View style={stylesModal.viewModal}>
+						<ScrollView>
+							<Card containerStyle={stylesModal.card}>
+								<View style={{justifyContent:'center',alignItems:'center'}}>
+								<Text style={stylesModal.title}>Cadastrar Marmita</Text>
+								<Text style={stylesModal.inputTitle}>Tipo</Text>
+								<Picker
+									selectedValue={tipoMarmita}
+									style={{ height: 50, width: 300 }}
+									onValueChange={(tipo)=>{setTipoMarmita(tipo)}}>
+									{tipos.map(v => {
+										return (<Picker.Item key={v} label={v.label} value={v.value} />);
+									})}
+								</Picker>
+
+								<Text style={stylesModal.inputTitle}>Descrição</Text>
+								<Input
+									placeholder='Descricao'
+									value={descricao}
+									onChangeText={setDescricao}
+									multiline={true}
+								/>
+
+								<Text style={stylesModal.inputTitle}>Valor</Text>
+								<Input
+									placeholder='Valor'
+									value={valor}
+									onChangeText={setValor}
+									keyboardType={'numeric'}
+
+								/>
+
+								<Text style={stylesModal.inputTitle}>Quantidade de Carnes</Text>
+								<Input
+									placeholder='Carnes'
+									value={carnes}
+									onChangeText={setCarnes}
+									keyboardType={'numeric'}
+
+								/>
+
+								<View style={stylesModal.buttonContainer}>
+									<Button
+										title='Cancelar'
+										buttonStyle={stylesModal.button}
+										onPress={()=>{
+											setModalVisible(false);
+											setLoadModal(false);
+										}}
+									/>
+									{cadastrando &&
+									<Button
+										title='Cadastrar'
+										buttonStyle={stylesModal.button}
+										onPress={handle_cadastro}
+										loading={loadModal}
+									/>}
+									{!cadastrando &&
+									<Button
+										title='Editar'
+										buttonStyle={stylesModal.button}
+										onPress={handle_editar}
+										loading={loadModal}
+									/>
+									}
+								</View>
+								</View>
+							</Card>
+						</ScrollView> 
+						</View>
+				</View>
+			</Modal>
+
 			{!load && 
 			  <View style={{paddingBottom:70}}>
 				<FlatList
@@ -141,10 +299,6 @@ const MarmitaAdmin = (props) => {
                 />
             </TouchableOpacity>
         </View>
-		<ModalBox
-                ref={modalRef}
-                refresh={loadRepositories}
-            />
     </View>
     );
 }
@@ -160,6 +314,56 @@ MarmitaAdmin.navigationOptions = {
         />
     )
 }
+const stylesModal = StyleSheet.create({
+	viewModal:{
+		paddingTop:'20%',
+		width:'100%',
+		height:'100%',
+		backgroundColor:'rgba(0,0,0,0.6)',
+		zIndex:9,position:'absolute',
+		top:0,
+		left:0
+	},
+    title: {
+        marginTop: 25,
+        marginBottom: 25,
+        fontFamily: 'Oswald-Bold',
+        fontSize: 28,
+    },
+    inputTitle: {
+        alignSelf: 'flex-start',
+        fontFamily: 'Oswald-Regular',
+        fontSize: 16,
+        paddingTop: 10,
+        paddingLeft: 10
+    },
+    modal: {
+        justifyContent: 'center',
+        height: 400,
+		width: '97%',
+    },
+    button: {
+        marginRight: 10,
+        backgroundColor: '#0f6124',
+        width: 115,
+    },
+    content: {
+		flex:1,
+		flexDirection:'column',
+        justifyContent: 'center',
+		alignItems: 'center',
+    },
+    buttonContainer: {
+        marginTop: 25,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    card: {
+		borderRadius: 10,
+		backgroundColor: '#FFF',
+		borderColor:'#000'
+	}
+});
 
 const styles = StyleSheet.create({
 	mainContainer: {
@@ -226,5 +430,5 @@ const styles = StyleSheet.create({
 		marginBottom:25
 	}
 });
-
+	
 export default MarmitaAdmin;
