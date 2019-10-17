@@ -174,7 +174,7 @@ const ProdutosAdmin = (props) => {
 			ToastAndroid.show("Deletado com sucesso", ToastAndroid.show);
 			preLoad();
 		} catch (e) {
-			ToastAndroid.show(e.message)
+			ToastAndroid.show(e.response.data['message'],ToastAndroid.SHORT)
 		}
 	};
 
