@@ -24,7 +24,6 @@ import MarmitaAdmin from './pages/private/admin/marmita/MarmitaAdmin';
 import CategoriasAdmin from './pages/private/admin/CategoriasAdmin';
 import PerfilAdmin from './pages/private/admin/PerfilAdmin';
 import LogoutAdmin from './pages/private/admin/LogoutAdmin';
-import CadastroMarmita from './pages/private/admin/marmita/CadastroMarmita';
 
 // Navigator páginas admin
 const homeAdminNavigator = createDrawerNavigator({

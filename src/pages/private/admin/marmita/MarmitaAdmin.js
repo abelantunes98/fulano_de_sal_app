@@ -202,11 +202,11 @@ const MarmitaAdmin = (props) => {
 				transparent={true}
 				visible={modalVisible}
 				presentationStyle={'overFullScreen'}
+				onOrientationChange={'portrait'}
 				onRequestClose={() => {
 					setModalVisible(false);
 				}}>
-				<View style={stylesModal.content}>
-					<View style={stylesModal.viewModal}>
+					 <View style={stylesModal.viewModal}> 
 						<ScrollView>
 							<Card containerStyle={stylesModal.card}>
 								<View style={{justifyContent:'center',alignItems:'center'}}>
@@ -276,9 +276,7 @@ const MarmitaAdmin = (props) => {
 							</Card>
 						</ScrollView> 
 						</View>
-				</View>
 			</Modal>
-
 			{!load && 
 			  <View style={{paddingBottom:70}}>
 				<FlatList
@@ -316,13 +314,13 @@ MarmitaAdmin.navigationOptions = {
 }
 const stylesModal = StyleSheet.create({
 	viewModal:{
+		flex:1,
+		flexDirection:'column',
+		justifyContent:'center',
+		alignItems:'center',
+		paddingBottom:'2%',
 		paddingTop:'20%',
-		width:'100%',
-		height:'100%',
 		backgroundColor:'rgba(0,0,0,0.6)',
-		zIndex:9,position:'absolute',
-		top:0,
-		left:0
 	},
     title: {
         marginTop: 25,
@@ -339,8 +337,9 @@ const stylesModal = StyleSheet.create({
     },
     modal: {
         justifyContent: 'center',
-        height: 400,
 		width: '97%',
+		height:'100%'
+		
     },
     button: {
         marginRight: 10,
@@ -369,7 +368,7 @@ const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
 		justifyContent: 'center',
-		backgroundColor: '#ffffff'
+		backgroundColor: '#ffffff',
 	},
 	nome: {
 		color: '#000000',
