@@ -16,12 +16,21 @@ import api from '../../../services/api';
 import MenuButton from '../MenuButton';
 import IconMaterial from 'react-native-vector-icons/AntDesign';
 import IconButton from 'react-native-vector-icons/FontAwesome';
-import ModalBox from '../../../components/ModalBox';
+import Modal from 'react-native-modalbox';
 
 const CategoriasAdmin = (props) => {
     const [data, setData] = useState([]);
     const modalRef = useRef();
-    const [load,setLoad] = useState(false);
+    const [load, setLoad] = useState(false);
+    const [selectedItem, setSelectedItem] = useState({});
+    const [contentModal, setContentModal] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
+
+
+    const MODAL_CONTENT = {
+        'cadastrar': <CadastrarModalContent close={closeModal}></CadastrarModalContent>,
+        'editar': <EditarModalContent close={closeModal} item={selectedItem}></EditarModalContent>
+    }
 
     useEffect(() => {
         loadRepositories();
@@ -51,7 +60,7 @@ const CategoriasAdmin = (props) => {
                                     style={styles.iconsDrawer}
                                 />
                             }
-                            onPress={() => openEditaPopUp(item)}
+                            onPress={() => handle_editar(item)}
                         />
                         <Button
                             buttonStyle={styles.button}
@@ -63,7 +72,7 @@ const CategoriasAdmin = (props) => {
                                     style={styles.iconsDrawer}
                                 />
                             }
-                            onPress={() => deleteItem(item.id, item.descricao)}
+                            onPress={() => handle_delete(item)}
                         />
                     </View>
                     <View>
@@ -74,16 +83,22 @@ const CategoriasAdmin = (props) => {
         </View>
     );
 
-    function deleteItem(id, name) {
+    function handle_delete(item) {
         Alert.alert(
-            `Deletar '${name}'`,
+            `Deletar '${item.name}'`,
             'Tem certeza que deseja deletar essa categoria?',
             [
-                { text: 'Não'},
-                { text: 'Sim', onPress: () => loadDeleteItem(id) },
+                { text: 'Não' },
+                { text: 'Sim', onPress: () => loadDeleteItem(item.id) },
             ],
         );
     };
+
+    function handle_editar(item) {
+        setSelectedItem(item);
+        setContentModal(MODAL_CONTENT['editar']);
+        openModal();
+    }
 
     async function loadDeleteItem(id) {
         try {
@@ -100,27 +115,27 @@ const CategoriasAdmin = (props) => {
         }
     };
 
-    function openEditaPopUp(item) {
-        modalRef.current.open('editarCategoria', item);
+    openModal = () => {
+        setModalVisible(true);
     };
 
-    openCadastroPopUp = () => {
-        modalRef.current.open('cadastroCategoria');
+    closeModal = () => {
+        setModalVisible(false);
     };
 
     return (
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title="Categorias" />
             <View style={styles.mainContainer}>
-                <View style={{paddingBottom:70}}>
-                    {!load &&      
+                <View style={{ paddingBottom: 70 }}>
+                    {!load &&
                         <FlatList
-                            style={{ marginTop: 10,marginBottom:10 }}
+                            style={{ marginTop: 10, marginBottom: 10 }}
                             contentContainerStyle={styles.list}
                             data={data}
                             renderItem={renderItem}
                             keyExtractor={item => item.id.toString()}
-                        />}{load && <ProgressBarAndroid/>
+                        />}{load && <ProgressBarAndroid />
                     }
                 </View>
                 <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUp}>
@@ -132,10 +147,18 @@ const CategoriasAdmin = (props) => {
                     />
                 </TouchableOpacity>
             </View>
-            <ModalBox
-                ref={modalRef}
-                refresh={loadRepositories}
-            />
+            <Modal
+                style={stylesModal.modal}
+                animationType='slide'
+                transparent={true}
+                visible={modalVisible}
+                presentationStyle={'overFullScreen'}
+                onOrientationChange={'portrait'}
+                onRequestClose={() => {
+                    setModalVisible(false);
+                }}>
+                {contentModal}
+            </Modal>
         </View>
     )
 }
@@ -152,6 +175,124 @@ CategoriasAdmin.navigationOptions = {
     )
 }
 
+const CadastrarModalContent = ({ close }) => {
+
+    const [descricao, setDescricao] = useState('');
+    const [load, setLoad] = useState(false);
+
+    handle_cadastro = async () => {
+        try {
+            setLoad(true);
+            let usuario = await find(USER_CURRENTY);
+            await api.post('/protegido/categoria/',
+                { 'descricao': descricao },
+                {
+                    headers: { Authorization: usuario.token }
+                });
+            setLoad(false);
+            ToastAndroid.show('Categoria cadastrada com sucesso', ToastAndroid.SHORT);
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
+        } finally {
+            close();
+        }
+
+    }
+
+    return (
+        <ScrollView contentContainerStyle={styles.content}>
+            <Card containerStyle={styles.card}>
+                <View style={styles.content}>
+                    <Text style={styles.title}>Cadastrar categoria</Text>
+                    <Text style={styles.inputTitle}>Descrição</Text>
+                    <Input
+                        placeholder='Nome da categoria'
+                        value={descricao}
+                        onChangeText={setDescricao}
+                    />
+                    <View style={styles.buttonContainer}>
+                        <Button
+                            title='Cancelar'
+                            buttonStyle={styles.button}
+                            onPress={close}
+                        />
+                        <Button
+                            title='Cadastrar'
+                            buttonStyle={styles.button}
+                            onPress={handle_cadastro}
+                            loading={load}
+                        />
+                    </View>
+                </View>
+            </Card>
+        </ScrollView>
+    );
+};
+
+const EditarModalContent = ({ item, close }) => {
+
+    const [descricao, setDescricao] = useState('');
+    const [id, setId] = useState('');
+    const [load, setLoad] = useState(false);
+
+    useEffect(() => {
+        setDescricao(item.descricao);
+        setId(item.id);
+    }, []);
+
+    requestEditar = async () => {
+        try {
+            setLoad(true);
+            let usuario = await find(USER_CURRENTY);
+            await api.post('/protegido/categoria/atualizar',
+                {
+                    'descricao': descricao,
+                    'id': id
+                },
+                {
+                    headers: { Authorization: usuario.token }
+                });
+            setLoad(false);
+            ToastAndroid.show("Categoria editada com sucesso", ToastAndroid.SHORT);
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
+        } finally {
+            close();
+        }
+    };
+
+    return (
+        <View style={stylesModal.viewModal}>
+        <ScrollView>
+            <Card containerStyle={stylesModal.card}>
+                <View style={stylesModal.content}>
+                    <Text style={styles.title}>Editar categoria</Text>
+                    <Text style={styles.inputTitle}>Descrição</Text>
+                    <Input
+                        placeholder='Nome da categoria'
+                        value={descricao}
+                        onChangeText={setDescricao}
+                    />
+                    <View style={stylesModal.buttonContainer}>
+                        <Button
+                            title='Cancelar'
+                            buttonStyle={stylesModal.button}
+                            onPress={close}
+                        />
+                        <Button
+                            title='Editar'
+                            buttonStyle={stylesModal.button}
+                            onPress={requestEditar}
+                            loading={load}
+                        />
+                    </View>
+                </View>
+            </Card>
+        </ScrollView>
+        </View>
+    );
+};
+
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
@@ -159,8 +300,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff'
     },
     nome: {
-        fontWeight:'bold',
-		fontSize:16
+        fontWeight: 'bold',
+        fontSize: 16
     },
 
     list: {
@@ -181,10 +322,10 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end'
     },
     listItem: {
-		borderRadius: 10,
-		backgroundColor: '#FFF',
-		borderColor:'#000'
-	},
+        borderRadius: 10,
+        backgroundColor: '#FFF',
+        borderColor: '#000'
+    },
     iconsDrawer: {
         paddingRight: 2
     },
@@ -201,6 +342,56 @@ const styles = StyleSheet.create({
         backgroundColor: '#0f6124',
         borderRadius: 100
     }
+});
+
+const stylesModal = StyleSheet.create({
+	viewModal:{
+		flex:1,
+		flexDirection:'column',
+		justifyContent:'center',
+		alignItems:'center',
+		paddingBottom:'2%',
+		paddingTop:'20%',
+		backgroundColor:'rgba(0,0,0,0.6)',
+	},
+    title: {
+        marginTop: 25,
+        marginBottom: 25,
+        fontFamily: 'Oswald-Bold',
+        fontSize: 28,
+    },
+    inputTitle: {
+        alignSelf: 'flex-start',
+        fontFamily: 'Oswald-Regular',
+        fontSize: 16,
+        paddingTop: 10,
+        paddingLeft: 10
+    },
+    modal: {
+        justifyContent: 'center',
+		width: '97%',
+		height:'100%'
+		
+    },
+    button: {
+        marginRight: 10,
+        backgroundColor: '#0f6124',
+        width: 115,
+    },
+    content: {
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    buttonContainer: {
+        marginTop: 25,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    card: {
+		borderRadius: 10,
+		backgroundColor: '#FFF',
+		borderColor:'#000'
+	}
 });
 
 export default CategoriasAdmin;
