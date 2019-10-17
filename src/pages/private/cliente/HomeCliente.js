@@ -9,15 +9,13 @@ import {
 import MenuButton from '../MenuButton';
 import IconFont from 'react-native-vector-icons/FontAwesome';
 import { Button } from 'react-native-elements';
+import CardapioDoDia from './componentes/cardapioDoDia';
 import { find } from '../../../services/banco';
 import { USER_CURRENTY } from '../../../services/key';
-import CardapioDoDia from './componentes/cardapioDoDia';
-import api from '../../../services/api';
 
 const HomeCliente = (props) => {
     const [cliente, setCliente] = useState({});
     const [nome, setNome] = useState('');
-    const [cardapioDoDia, setCardapioDoDia] = useState({});
     const saudacao = `Bem vindo ${nome}`;
 
     useEffect(() => {
@@ -28,12 +26,6 @@ const HomeCliente = (props) => {
         let usuario = await find(USER_CURRENTY);
         setCliente(usuario);
         setNome(usuario.nome);
-
-        const response = await api.get('/protegido/categoria/listar', {
-			headers: { Authorization: usuario.token }
-        });
-        
-        console.log(response.data);
     }
 
     return (
