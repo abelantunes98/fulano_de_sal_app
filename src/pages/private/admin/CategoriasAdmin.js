@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createRef } from 'react';
+import React, { useState, useEffect} from 'react';
 import {
     View,
     Text,
@@ -7,8 +7,11 @@ import {
     StyleSheet,
     Alert,
     ProgressBarAndroid,
+    ScrollView,
+    ToastAndroid,
+    Modal
 } from 'react-native';
-import { Card, Button } from 'react-native-elements';
+import { Card, Button, Input } from 'react-native-elements';
 
 import { USER_CURRENTY } from '../../../services/key';
 import { find } from '../../../services/banco';
@@ -16,33 +19,113 @@ import api from '../../../services/api';
 import MenuButton from '../MenuButton';
 import IconMaterial from 'react-native-vector-icons/AntDesign';
 import IconButton from 'react-native-vector-icons/FontAwesome';
-import Modal from 'react-native-modalbox';
 
 const CategoriasAdmin = (props) => {
     const [data, setData] = useState([]);
-    const modalRef = useRef();
     const [load, setLoad] = useState(false);
-    const [selectedItem, setSelectedItem] = useState({});
-    const [contentModal, setContentModal] = useState('');
+    const [cadastrando, setCadastrando] = useState(false);
+    const [loadModal, setLoadModal] = useState(false);
+    const [nomeCategoria, setNomeCategoria] = useState('');
+    const [idCategoria, setIdCategoria] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
 
-
-    const MODAL_CONTENT = {
-        'cadastrar': <CadastrarModalContent close={closeModal}></CadastrarModalContent>,
-        'editar': <EditarModalContent close={closeModal} item={selectedItem}></EditarModalContent>
-    }
-
     useEffect(() => {
-        loadRepositories();
-    }, []);
+        preLoad();
+    }, [modalVisible]);
 
-    loadRepositories = async () => {
+    preLoad = async () => {
         setLoad(true);
-        let usuario = await find(USER_CURRENTY);
-        const response = await api.get('/protegido/categoria/listar', { headers: { Authorization: usuario.token } });
-        setData(response.data);
+        await loadRepositories();
         setLoad(false);
     }
+
+    loadRepositories = async () => {
+        let usuario = await find(USER_CURRENTY);
+        const response = await api.get('/protegido/categoria/listar',
+            { headers: { Authorization: usuario.token } });
+        setData(response.data);
+    }
+
+
+    openCadastroPopUpCategoria = () => {
+        setNomeCategoria('');
+        setCadastrando(true);
+        setModalVisible(true);
+    };
+
+    openEditaPopUpCategoria = (item) => {
+        setIdCategoria(item.id);
+        setNomeCategoria(item.descricao);
+        setCadastrando(false);
+        setModalVisible(true);
+    };
+
+    openDeletePopUpCategoria = (item) => {
+        setIdCategoria(item.id);
+        Alert.alert(
+            `Deletar '${item.descricao}'`,
+            'Tem certeza que deseja deletar essa categoria?',
+            [
+                { text: 'Não' },
+                { text: 'Sim', onPress: () => handle_delete() },
+            ],
+        );
+    };
+
+    handle_cadastro = async () => {
+        try {
+            setLoadModal(true);
+            let usuario = await find(USER_CURRENTY);
+            await api.post('/protegido/categoria/',
+                { 'descricao': nomeCategoria },
+                {
+                    headers: { Authorization: usuario.token }
+                });
+            ToastAndroid.show('Categoria cadastrada com sucesso', ToastAndroid.SHORT);
+            setLoadModal(false);
+            setModalVisible(false);
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
+        }
+    };
+
+    handle_editar = async () => {
+        try {
+            setLoadModal(true);
+            let usuario = await find(USER_CURRENTY);
+            await api.post('/protegido/categoria/atualizar',
+                {
+                    'descricao': nomeCategoria,
+                    'id': idCategoria
+                },
+                {
+                    headers: { Authorization: usuario.token }
+                });
+                
+            ToastAndroid.show("Categoria editada com sucesso", ToastAndroid.SHORT);
+            setLoadModal(false);
+            setModalVisible(false);
+
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
+        }
+    };
+
+    handle_delete = async () => {
+        try {
+            let usuario = await find(USER_CURRENTY);
+            await api.delete('/protegido/categoria/remover',
+                {
+                    headers: { Authorization: usuario.token },
+                    params: { 'id': parseInt(idCategoria) }
+                }
+            );
+            ToastAndroid.show("Deletado com sucesso", ToastAndroid.show);
+            preLoad();
+        } catch (e) {
+            ToastAndroid.show(e.message)
+        }
+    };
 
 
     renderItem = ({ item }) => (
@@ -60,7 +143,7 @@ const CategoriasAdmin = (props) => {
                                     style={styles.iconsDrawer}
                                 />
                             }
-                            onPress={() => handle_editar(item)}
+                            onPress={() => openEditaPopUpCategoria(item)}
                         />
                         <Button
                             buttonStyle={styles.button}
@@ -72,7 +155,7 @@ const CategoriasAdmin = (props) => {
                                     style={styles.iconsDrawer}
                                 />
                             }
-                            onPress={() => handle_delete(item)}
+                            onPress={() => openDeletePopUpCategoria(item)}
                         />
                     </View>
                     <View>
@@ -83,45 +166,6 @@ const CategoriasAdmin = (props) => {
         </View>
     );
 
-    function handle_delete(item) {
-        Alert.alert(
-            `Deletar '${item.name}'`,
-            'Tem certeza que deseja deletar essa categoria?',
-            [
-                { text: 'Não' },
-                { text: 'Sim', onPress: () => loadDeleteItem(item.id) },
-            ],
-        );
-    };
-
-    function handle_editar(item) {
-        setSelectedItem(item);
-        setContentModal(MODAL_CONTENT['editar']);
-        openModal();
-    }
-
-    async function loadDeleteItem(id) {
-        try {
-            let usuario = await find(USER_CURRENTY);
-            await api.delete('/protegido/categoria/remover',
-                {
-                    headers: { Authorization: usuario.token },
-                    params: { 'id': parseInt(id) }
-                }
-            );
-            loadRepositories();
-        } catch (e) {
-            ToastAndroid.show(e.message)
-        }
-    };
-
-    openModal = () => {
-        setModalVisible(true);
-    };
-
-    closeModal = () => {
-        setModalVisible(false);
-    };
 
     return (
         <View style={styles.mainContainer}>
@@ -138,7 +182,7 @@ const CategoriasAdmin = (props) => {
                         />}{load && <ProgressBarAndroid />
                     }
                 </View>
-                <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUp}>
+                <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUpCategoria}>
                     <IconButton
                         name='plus'
                         size={20}
@@ -157,7 +201,46 @@ const CategoriasAdmin = (props) => {
                 onRequestClose={() => {
                     setModalVisible(false);
                 }}>
-                {contentModal}
+                <View style={stylesModal.viewModal}>
+                    <ScrollView>
+                        <Card containerStyle={stylesModal.card}>
+                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                {!cadastrando && <Text style={stylesModal.title}>Editar Categoria</Text>}
+                                {cadastrando && <Text style={stylesModal.title}>Cadastrar Categoria</Text>}
+                                <Input
+                                    placeholder='Nome da categoria'
+                                    value={nomeCategoria}
+                                    onChangeText={setNomeCategoria}
+                                />
+                                <View style={stylesModal.buttonContainer}>
+                                    <Button
+                                        title='Cancelar'
+                                        buttonStyle={stylesModal.button}
+                                        onPress={() => {
+                                            setModalVisible(false);
+                                            setLoadModal(false);
+                                        }}
+                                    />
+                                    {cadastrando &&
+                                        <Button
+                                            title='Cadastrar'
+                                            buttonStyle={stylesModal.button}
+                                            onPress={handle_cadastro}
+                                            loading={loadModal}
+                                        />}
+                                    {!cadastrando &&
+                                        <Button
+                                            title='Editar'
+                                            buttonStyle={stylesModal.button}
+                                            onPress={handle_editar}
+                                            loading={loadModal}
+                                        />
+                                    }
+                                </View>
+                            </View>
+                        </Card>
+                    </ScrollView>
+                </View>
             </Modal>
         </View>
     )
@@ -174,124 +257,6 @@ CategoriasAdmin.navigationOptions = {
         />
     )
 }
-
-const CadastrarModalContent = ({ close }) => {
-
-    const [descricao, setDescricao] = useState('');
-    const [load, setLoad] = useState(false);
-
-    handle_cadastro = async () => {
-        try {
-            setLoad(true);
-            let usuario = await find(USER_CURRENTY);
-            await api.post('/protegido/categoria/',
-                { 'descricao': descricao },
-                {
-                    headers: { Authorization: usuario.token }
-                });
-            setLoad(false);
-            ToastAndroid.show('Categoria cadastrada com sucesso', ToastAndroid.SHORT);
-        } catch (error) {
-            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
-        } finally {
-            close();
-        }
-
-    }
-
-    return (
-        <ScrollView contentContainerStyle={styles.content}>
-            <Card containerStyle={styles.card}>
-                <View style={styles.content}>
-                    <Text style={styles.title}>Cadastrar categoria</Text>
-                    <Text style={styles.inputTitle}>Descrição</Text>
-                    <Input
-                        placeholder='Nome da categoria'
-                        value={descricao}
-                        onChangeText={setDescricao}
-                    />
-                    <View style={styles.buttonContainer}>
-                        <Button
-                            title='Cancelar'
-                            buttonStyle={styles.button}
-                            onPress={close}
-                        />
-                        <Button
-                            title='Cadastrar'
-                            buttonStyle={styles.button}
-                            onPress={handle_cadastro}
-                            loading={load}
-                        />
-                    </View>
-                </View>
-            </Card>
-        </ScrollView>
-    );
-};
-
-const EditarModalContent = ({ item, close }) => {
-
-    const [descricao, setDescricao] = useState('');
-    const [id, setId] = useState('');
-    const [load, setLoad] = useState(false);
-
-    useEffect(() => {
-        setDescricao(item.descricao);
-        setId(item.id);
-    }, []);
-
-    requestEditar = async () => {
-        try {
-            setLoad(true);
-            let usuario = await find(USER_CURRENTY);
-            await api.post('/protegido/categoria/atualizar',
-                {
-                    'descricao': descricao,
-                    'id': id
-                },
-                {
-                    headers: { Authorization: usuario.token }
-                });
-            setLoad(false);
-            ToastAndroid.show("Categoria editada com sucesso", ToastAndroid.SHORT);
-        } catch (error) {
-            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
-        } finally {
-            close();
-        }
-    };
-
-    return (
-        <View style={stylesModal.viewModal}>
-        <ScrollView>
-            <Card containerStyle={stylesModal.card}>
-                <View style={stylesModal.content}>
-                    <Text style={styles.title}>Editar categoria</Text>
-                    <Text style={styles.inputTitle}>Descrição</Text>
-                    <Input
-                        placeholder='Nome da categoria'
-                        value={descricao}
-                        onChangeText={setDescricao}
-                    />
-                    <View style={stylesModal.buttonContainer}>
-                        <Button
-                            title='Cancelar'
-                            buttonStyle={stylesModal.button}
-                            onPress={close}
-                        />
-                        <Button
-                            title='Editar'
-                            buttonStyle={stylesModal.button}
-                            onPress={requestEditar}
-                            loading={load}
-                        />
-                    </View>
-                </View>
-            </Card>
-        </ScrollView>
-        </View>
-    );
-};
 
 const styles = StyleSheet.create({
     mainContainer: {
@@ -345,15 +310,15 @@ const styles = StyleSheet.create({
 });
 
 const stylesModal = StyleSheet.create({
-	viewModal:{
-		flex:1,
-		flexDirection:'column',
-		justifyContent:'center',
-		alignItems:'center',
-		paddingBottom:'2%',
-		paddingTop:'20%',
-		backgroundColor:'rgba(0,0,0,0.6)',
-	},
+    viewModal: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: '2%',
+        paddingTop: '20%',
+        backgroundColor: 'rgba(0,0,0,0.6)',
+    },
     title: {
         marginTop: 25,
         marginBottom: 25,
@@ -369,9 +334,9 @@ const stylesModal = StyleSheet.create({
     },
     modal: {
         justifyContent: 'center',
-		width: '97%',
-		height:'100%'
-		
+        width: '97%',
+        height: '100%'
+
     },
     button: {
         marginRight: 10,
@@ -379,8 +344,8 @@ const stylesModal = StyleSheet.create({
         width: 115,
     },
     content: {
-        justifyContent:'center',
-        alignItems:'center'
+        justifyContent: 'center',
+        alignItems: 'center'
     },
     buttonContainer: {
         marginTop: 25,
@@ -388,10 +353,10 @@ const stylesModal = StyleSheet.create({
         justifyContent: 'space-around',
     },
     card: {
-		borderRadius: 10,
-		backgroundColor: '#FFF',
-		borderColor:'#000'
-	}
+        borderRadius: 10,
+        backgroundColor: '#FFF',
+        borderColor: '#000'
+    }
 });
 
 export default CategoriasAdmin;
