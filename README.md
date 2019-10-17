@@ -4,14 +4,15 @@
 ## Funcionalidades:
 > Breve exlicação sobre as funcionalidades do sistema.
 
-Existem dois tipos de usuário: Cliente e Administrador.
+Existem dois tipos de usuário: [Cliente](#Cliente) e [Administrador](#Administrador).
 
 ### Cliente:
 > Funcionalidades de um cliente.
 
     * Realiza Login.
     * Pode alterar seus dados: endereço, nome e/ou senha.
-    * Realiza um pedido, escolhendo o tipo de marmita e seus produtos que desejar, podendo deixar uma observação.
+    * Realiza um pedido, escolhendo o tipo de marmita e seus produtos que desejar, 
+      podendo deixar uma observação.
     * Recebe a confirmação quando o administrador confirmar/recusar o pedido.
 
 ### Administrador:
