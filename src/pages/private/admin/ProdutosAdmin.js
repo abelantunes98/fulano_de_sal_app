@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	View,
 	Text,
 	FlatList,
 	TouchableOpacity,
-	StyleSheet,ToastAndroid,
-	ScrollView, Alert, ProgressBarAndroid
+	StyleSheet, ToastAndroid,
+	ScrollView, Alert, ProgressBarAndroid, Modal, Picker
 } from 'react-native';
-import { Card, Button } from 'react-native-elements';
+import { Card, Button, Input } from 'react-native-elements';
 
 import { USER_CURRENTY } from '../../../services/key';
 import { find } from '../../../services/banco';
@@ -15,18 +15,25 @@ import api from '../../../services/api';
 import MenuButton from '../MenuButton';
 import IconMaterial from 'react-native-vector-icons/AntDesign';
 import IconButton from 'react-native-vector-icons/FontAwesome';
-import ModalBox from '../../../components/ModalBox';
+
 
 const ProdutosAdmin = (props) => {
 
 	const [load, setLoad] = useState(false);
+	const [modalVisible, setModalVisible] = useState(false);
 	const [data, setData] = useState([]);
 	const [categorias, setCategorias] = useState([]);
-	const modalRef = useRef();
+	const [cadastrando, setCadastrando] = useState(false);
+
+	const [loadModal, setLoadModal] = useState(false);
+	const [nome, setNome] = useState('');
+	const [idProduto, setIdProduto] = useState('');
+	const [categoriaSelecionada, setCategoriaSelecionada] = useState('');
+
 
 	useEffect(() => {
 		preLoad();
-	}, []);
+	}, [modalVisible]);
 
 	preLoad = async () => {
 		setLoad(true);
@@ -51,6 +58,58 @@ const ProdutosAdmin = (props) => {
 		setCategorias(response.data);
 	};
 
+	function pickerChange(index) {
+		categorias.map((v, i) => {
+			if (index === i) {
+				setCategoriaSelecionada({ id: v.id, descricao: v.descricao });
+			}
+		})
+	};
+
+	handle_cadastro = async () => {
+
+		try {
+			setLoadModal(true);
+			let usuario = await find(USER_CURRENTY);
+			await api.post('/protegido/produto/',
+				{ 'idCategoria': categoriaSelecionada.id, 'nome': nome },
+				{
+					headers: { Authorization: usuario.token }
+				});
+			ToastAndroid.show("Produto cadastrado com sucesso", ToastAndroid.SHORT);
+			setLoadModal(false);
+			setModalVisible(false);
+
+		} catch (error) {
+			ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
+		}
+
+
+	}
+	handle_editar = async () => {
+		try {
+			setLoadModal(true);
+			let usuario = await find(USER_CURRENTY);
+			await api.post('/protegido/produto/atualizar',
+				{
+					'categoria': {
+						'descricao': categoriaSelecionada.descricao,
+						'id': categoriaSelecionada.id
+					},
+					'nome': nome,
+					'idProduto': idProduto
+				},
+				{
+					headers: { Authorization: usuario.token }
+				});
+			setLoadModal(false);
+			setModalVisible(false);
+
+			ToastAndroid.show('Produto editado com sucesso', ToastAndroid.SHORT)
+		} catch (error) {
+			ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
+		}
+	};
 
 	renderItem = ({ item }) => (
 		<View>
@@ -67,7 +126,7 @@ const ProdutosAdmin = (props) => {
 									style={styles.iconsDrawer}
 								/>
 							}
-							onPress={() => openEditaPopUp(item, categorias)}
+							onPress={() => openEditaPopUpProduto(item)}
 
 						/>
 						<Button
@@ -119,30 +178,104 @@ const ProdutosAdmin = (props) => {
 		}
 	};
 
-	openCadastroPopUp = (item) => {
-		modalRef.current.open('cadastroProduto', item);
+	openCadastroPopUpProduto = () => {
+		setCategoriaSelecionada(categorias[0]);
+		setNome('');
+
+		setCadastrando(true);
+		setModalVisible(true);
+
 	};
 
-	function openEditaPopUp(item, categorias) {
-		modalRef.current.open('editarProduto', { item, categorias });
+	openEditaPopUpProduto = (item) => {
+		setIdProduto(item.idProduto);
+		setNome(item.nome);
+		setCategoriaSelecionada(item.categoria);
+
+		setCadastrando(false);
+		setModalVisible(true);
+
 	};
 
 	return (
 		<View style={styles.mainContainer}>
-			<MenuButton navigation={props.navigation} title="Produtos" />
+			<MenuButton navigation={props.navigation} title='Produtos' />
 			<View style={styles.mainContainer}>
-				{!load &&   
-					<View style={{paddingBottom:70}}>
+
+				<Modal
+					style={stylesModal.modal}
+					animationType='slide'
+					transparent={true}
+					visible={modalVisible}
+					presentationStyle={'overFullScreen'}
+					onOrientationChange={'portrait'}
+					onRequestClose={() => {
+						setModalVisible(false);
+					}}>
+					<View style={stylesModal.viewModal}>
+						<ScrollView>
+							<Card containerStyle={stylesModal.card}>
+								<View style={{ justifyContent: 'center', alignItems: 'center' }}>
+									{!cadastrando && <Text style={stylesModal.title}>Editar Produto</Text>}
+									{cadastrando && <Text style={stylesModal.title}>Cadastrar Produto</Text>}
+									<Input
+										placeholder='Nome do produto'
+										value={nome}
+										onChangeText={setNome}
+									/>
+									<Text style={stylesModal.inputTitle}>Categoria</Text>
+									<Picker
+										selectedValue={categoriaSelecionada.descricao}
+										style={{ height: 50, width: 300 }}
+										onValueChange={(itemValue, itemIndex) => {
+											pickerChange(itemIndex);
+										}}>
+										{categorias.map(v => {
+											return (<Picker.Item key={v.id} label={v.descricao} value={v.descricao} />);
+										})}
+									</Picker>
+									<View style={stylesModal.buttonContainer}>
+										<Button
+											title='Cancelar'
+											buttonStyle={stylesModal.button}
+											onPress={() => {
+												setModalVisible(false);
+												setLoadModal(false);
+											}}
+										/>
+										{cadastrando &&
+											<Button
+												title='Cadastrar'
+												buttonStyle={stylesModal.button}
+												onPress={handle_cadastro}
+												loading={loadModal}
+											/>}
+										{!cadastrando &&
+											<Button
+												title='Editar'
+												buttonStyle={stylesModal.button}
+												onPress={handle_editar}
+												loading={loadModal}
+											/>
+										}
+									</View>
+								</View>
+							</Card>
+						</ScrollView>
+					</View>
+				</Modal>
+				{!load &&
+					<View style={{ paddingBottom: 70 }}>
 						<FlatList
-								style={{ marginTop: 10 }}
-								contentContainerStyle={styles.list}
-								data={data}
-								renderItem={renderItem}
-								keyExtractor={item => item.idProduto.toString()}
-							/>
+							style={{ marginTop: 10 }}
+							contentContainerStyle={styles.list}
+							data={data}
+							renderItem={renderItem}
+							keyExtractor={item => item.idProduto.toString()}
+						/>
 					</View>
 				}{load && <ProgressBarAndroid />}
-				<TouchableOpacity style={styles.floatButton} onPress={() => openCadastroPopUp(categorias)}>
+				<TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUpProduto}>
 					<IconButton
 						name='plus'
 						size={20}
@@ -151,12 +284,8 @@ const ProdutosAdmin = (props) => {
 					/>
 				</TouchableOpacity>
 			</View>
-			<ModalBox
-				ref={modalRef}
-				refresh={preLoad}
-			/>
 		</View>
-	)
+	);
 };
 
 ProdutosAdmin.navigationOptions = {
@@ -178,12 +307,12 @@ const styles = StyleSheet.create({
 		backgroundColor: '#ffffff'
 	},
 	nome: {
-		fontWeight:'bold',
-		fontSize:16
+		fontWeight: 'bold',
+		fontSize: 16
 	},
 	categoria: {
-		fontWeight:'bold',
-		fontSize:10
+		fontWeight: 'bold',
+		fontSize: 10
 	},
 	list: {
 		paddingTop: 10,
@@ -205,7 +334,7 @@ const styles = StyleSheet.create({
 	listItem: {
 		borderRadius: 10,
 		backgroundColor: '#FFF',
-		borderColor:'#000'
+		borderColor: '#000'
 	},
 	iconsDrawer: {
 		paddingRight: 2
@@ -222,6 +351,57 @@ const styles = StyleSheet.create({
 		height: 70,
 		backgroundColor: '#0f6124',
 		borderRadius: 100
+	}
+});
+const stylesModal = StyleSheet.create({
+	viewModal: {
+		flex: 1,
+		flexDirection: 'column',
+		justifyContent: 'center',
+		alignItems: 'center',
+		paddingBottom: '2%',
+		paddingTop: '20%',
+		backgroundColor: 'rgba(0,0,0,0.6)',
+	},
+	title: {
+		marginTop: 25,
+		marginBottom: 25,
+		fontFamily: 'Oswald-Bold',
+		fontSize: 28,
+	},
+	inputTitle: {
+		alignSelf: 'flex-start',
+		fontFamily: 'Oswald-Regular',
+		fontSize: 16,
+		paddingTop: 10,
+		paddingLeft: 10
+	},
+	modal: {
+		justifyContent: 'center',
+		width: '97%',
+		height: '100%'
+
+	},
+	button: {
+		marginRight: 10,
+		backgroundColor: '#0f6124',
+		width: 115,
+	},
+	content: {
+		flex: 1,
+		flexDirection: 'column',
+		justifyContent: 'center',
+		alignItems: 'center',
+	},
+	buttonContainer: {
+		marginTop: 25,
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+	},
+	card: {
+		borderRadius: 10,
+		backgroundColor: '#FFF',
+		borderColor: '#000'
 	}
 });
 
