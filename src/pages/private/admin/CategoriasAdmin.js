@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, createRef } from 'react';
+import React, { useState, useEffect} from 'react';
 import {
     View,
     Text,
@@ -7,8 +7,11 @@ import {
     StyleSheet,
     Alert,
     ProgressBarAndroid,
+    ScrollView,
+    ToastAndroid,
+    Modal
 } from 'react-native';
-import { Card, Button } from 'react-native-elements';
+import { Card, Button, Input } from 'react-native-elements';
 
 import { USER_CURRENTY } from '../../../services/key';
 import { find } from '../../../services/banco';
@@ -16,24 +19,112 @@ import api from '../../../services/api';
 import MenuButton from '../MenuButton';
 import IconMaterial from 'react-native-vector-icons/AntDesign';
 import IconButton from 'react-native-vector-icons/FontAwesome';
-import ModalBox from '../../../components/ModalBox';
 
 const CategoriasAdmin = (props) => {
     const [data, setData] = useState([]);
-    const modalRef = useRef();
-    const [load,setLoad] = useState(false);
+    const [load, setLoad] = useState(false);
+    const [cadastrando, setCadastrando] = useState(false);
+    const [loadModal, setLoadModal] = useState(false);
+    const [nomeCategoria, setNomeCategoria] = useState('');
+    const [idCategoria, setIdCategoria] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
-        loadRepositories();
-    }, []);
+        preLoad();
+    }, [modalVisible]);
 
-    loadRepositories = async () => {
+    preLoad = async () => {
         setLoad(true);
-        let usuario = await find(USER_CURRENTY);
-        const response = await api.get('/protegido/categoria/listar', { headers: { Authorization: usuario.token } });
-        setData(response.data);
+        await loadRepositories();
         setLoad(false);
     }
+
+    loadRepositories = async () => {
+        let usuario = await find(USER_CURRENTY);
+        const response = await api.get('/protegido/categoria/listar',
+            { headers: { Authorization: usuario.token } });
+        setData(response.data);
+    }
+
+
+    openCadastroPopUpCategoria = () => {
+        setNomeCategoria('');
+        setCadastrando(true);
+        setModalVisible(true);
+    };
+
+    openEditaPopUpCategoria = (item) => {
+        setIdCategoria(item.id);
+        setNomeCategoria(item.descricao);
+        setCadastrando(false);
+        setModalVisible(true);
+    };
+
+    openDeletePopUpCategoria = (item) => {
+        Alert.alert(
+            `Deletar '${item.descricao}'`,
+            'Tem certeza que deseja deletar essa categoria?',
+            [
+                { text: 'Não' },
+                { text: 'Sim', onPress: () => handle_delete(item.id) },
+            ],
+        );
+    };
+
+    handle_cadastro = async () => {
+        try {
+            setLoadModal(true);
+            let usuario = await find(USER_CURRENTY);
+            await api.post('/protegido/categoria/',
+                { 'descricao': nomeCategoria },
+                {
+                    headers: { Authorization: usuario.token }
+                });
+            ToastAndroid.show('Categoria cadastrada com sucesso', ToastAndroid.SHORT);
+            setLoadModal(false);
+            setModalVisible(false);
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
+        }
+    };
+
+    handle_editar = async () => {
+        try {
+            setLoadModal(true);
+            let usuario = await find(USER_CURRENTY);
+            await api.post('/protegido/categoria/atualizar',
+                {
+                    'descricao': nomeCategoria,
+                    'id': idCategoria
+                },
+                {
+                    headers: { Authorization: usuario.token }
+                });
+                
+            ToastAndroid.show("Categoria editada com sucesso", ToastAndroid.SHORT);
+            setLoadModal(false);
+            setModalVisible(false);
+
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
+        }
+    };
+
+    handle_delete = async (id) => {
+        try {
+            let usuario = await find(USER_CURRENTY);
+            await api.delete('/protegido/categoria/remover',
+                {
+                    headers: { Authorization: usuario.token },
+                    params: { 'id': parseInt(id) }
+                }
+            );
+            ToastAndroid.show("Deletado com sucesso", ToastAndroid.SHORT);
+            preLoad();
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
+        }
+    };
 
 
     renderItem = ({ item }) => (
@@ -51,7 +142,7 @@ const CategoriasAdmin = (props) => {
                                     style={styles.iconsDrawer}
                                 />
                             }
-                            onPress={() => openEditaPopUp(item)}
+                            onPress={() => openEditaPopUpCategoria(item)}
                         />
                         <Button
                             buttonStyle={styles.button}
@@ -63,7 +154,7 @@ const CategoriasAdmin = (props) => {
                                     style={styles.iconsDrawer}
                                 />
                             }
-                            onPress={() => deleteItem(item.id, item.descricao)}
+                            onPress={() => openDeletePopUpCategoria(item)}
                         />
                     </View>
                     <View>
@@ -74,56 +165,22 @@ const CategoriasAdmin = (props) => {
         </View>
     );
 
-    function deleteItem(id, name) {
-        Alert.alert(
-            `Deletar '${name}'`,
-            'Tem certeza que deseja deletar essa categoria?',
-            [
-                { text: 'Não'},
-                { text: 'Sim', onPress: () => loadDeleteItem(id) },
-            ],
-        );
-    };
-
-    async function loadDeleteItem(id) {
-        try {
-            let usuario = await find(USER_CURRENTY);
-            await api.delete('/protegido/categoria/remover',
-                {
-                    headers: { Authorization: usuario.token },
-                    params: { 'id': parseInt(id) }
-                }
-            );
-            loadRepositories();
-        } catch (e) {
-            ToastAndroid.show(e.message)
-        }
-    };
-
-    function openEditaPopUp(item) {
-        modalRef.current.open('editarCategoria', item);
-    };
-
-    openCadastroPopUp = () => {
-        modalRef.current.open('cadastroCategoria');
-    };
 
     return (
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title="Categorias" />
             <View style={styles.mainContainer}>
-                <View style={{paddingBottom:70}}>
-                    {!load &&      
+                <View style={{ paddingBottom: 70 }}>
+                    {!load &&
                         <FlatList
-                            style={{ marginTop: 10,marginBottom:10 }}
+                            style={{ marginTop: 10, marginBottom: 10 }}
                             contentContainerStyle={styles.list}
                             data={data}
                             renderItem={renderItem}
                             keyExtractor={item => item.id.toString()}
-                        />}{load && <ProgressBarAndroid/>
-                    }
+                        />}{load && <ProgressBarAndroid />}
                 </View>
-                <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUp}>
+                <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUpCategoria}>
                     <IconButton
                         name='plus'
                         size={20}
@@ -132,10 +189,57 @@ const CategoriasAdmin = (props) => {
                     />
                 </TouchableOpacity>
             </View>
-            <ModalBox
-                ref={modalRef}
-                refresh={loadRepositories}
-            />
+            <Modal
+                style={stylesModal.modal}
+                animationType='slide'
+                transparent={true}
+                visible={modalVisible}
+                presentationStyle={'overFullScreen'}
+                onOrientationChange={'portrait'}
+                onRequestClose={() => {
+                    setModalVisible(false);
+                }}>
+                <View style={stylesModal.viewModal}>
+                    <ScrollView>
+                        <Card containerStyle={stylesModal.card}>
+                            <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                                {!cadastrando && <Text style={stylesModal.title}>Editar Categoria</Text>}
+                                {cadastrando && <Text style={stylesModal.title}>Cadastrar Categoria</Text>}
+                                <Input
+                                    placeholder='Nome da categoria'
+                                    value={nomeCategoria}
+                                    onChangeText={setNomeCategoria}
+                                />
+                                <View style={stylesModal.buttonContainer}>
+                                    <Button
+                                        title='Cancelar'
+                                        buttonStyle={stylesModal.button}
+                                        onPress={() => {
+                                            setModalVisible(false);
+                                            setLoadModal(false);
+                                        }}
+                                    />
+                                    {cadastrando &&
+                                        <Button
+                                            title='Cadastrar'
+                                            buttonStyle={stylesModal.button}
+                                            onPress={handle_cadastro}
+                                            loading={loadModal}
+                                        />}
+                                    {!cadastrando &&
+                                        <Button
+                                            title='Editar'
+                                            buttonStyle={stylesModal.button}
+                                            onPress={handle_editar}
+                                            loading={loadModal}
+                                        />
+                                    }
+                                </View>
+                            </View>
+                        </Card>
+                    </ScrollView>
+                </View>
+            </Modal>
         </View>
     )
 }
@@ -159,8 +263,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#ffffff'
     },
     nome: {
-        fontWeight:'bold',
-		fontSize:16
+        fontWeight: 'bold',
+        fontSize: 16
     },
 
     list: {
@@ -181,10 +285,10 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end'
     },
     listItem: {
-		borderRadius: 10,
-		backgroundColor: '#FFF',
-		borderColor:'#000'
-	},
+        borderRadius: 10,
+        backgroundColor: '#FFF',
+        borderColor: '#000'
+    },
     iconsDrawer: {
         paddingRight: 2
     },
@@ -200,6 +304,56 @@ const styles = StyleSheet.create({
         height: 70,
         backgroundColor: '#0f6124',
         borderRadius: 100
+    }
+});
+
+const stylesModal = StyleSheet.create({
+    viewModal: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: '2%',
+        paddingTop: '20%',
+        backgroundColor: 'rgba(0,0,0,0.6)',
+    },
+    title: {
+        marginTop: 25,
+        marginBottom: 25,
+        fontFamily: 'Oswald-Bold',
+        fontSize: 28,
+    },
+    inputTitle: {
+        alignSelf: 'flex-start',
+        fontFamily: 'Oswald-Regular',
+        fontSize: 16,
+        paddingTop: 10,
+        paddingLeft: 10
+    },
+    modal: {
+        justifyContent: 'center',
+        width: '97%',
+        height: '100%'
+
+    },
+    button: {
+        marginRight: 10,
+        backgroundColor: '#0f6124',
+        width: 115,
+    },
+    content: {
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    buttonContainer: {
+        marginTop: 25,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    card: {
+        borderRadius: 10,
+        backgroundColor: '#FFF',
+        borderColor: '#000'
     }
 });
 
