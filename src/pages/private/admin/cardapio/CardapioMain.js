@@ -6,9 +6,9 @@ import {
     ScrollView,
     StyleSheet,
     ProgressBarAndroid,
-    Alert,
+    Text,
 } from 'react-native'
-import { Button } from 'react-native-elements';
+import { Button, Card } from 'react-native-elements';
 
 import MenuButton from '../../MenuButton';
 import api from '../../../../services/api';
@@ -17,94 +17,33 @@ import { USER_CURRENTY } from '../../../../services/key'
 import IconMaterial from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import Categoria from './componentes/Categoria';
+import Cardapio from './componentes/Cardapio';
 
-const CardapioAdmin = (props) => {
-    const [categorias, setCategorias] = useState([])
-    const [produtosSelecionados, setProdutosSelecionados] = useState([])
-    const [user, setUser] = useState({});
+const CardapioMain = (props) => {
+    const [data, setData] = useState(Date);
+    const [cardapioDoDia, setCardapioDoDia] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        preLoad();
+        load();
     }, [])
 
-    preLoad = async () =>{
+    load = async () => {
         setLoading(true);
-        await loadCategorias();
-        setLoading(false);
-    }
-
-    loadCategorias = async () => {
         let usuario = await find(USER_CURRENTY);
-        const response = await api.get('/protegido/categoria/listar',{ headers: {Authorization: usuario.token,}});
-        setCategorias(response.data);
-        setUser(usuario);
-        setLoading(false);
-    }
 
-    itemJaExiste = ( item ) => {
-        // console.log(item);
-        let saida = false;
-        produtosSelecionados.forEach(element => {
-            if (element.value === item.value) {
-                saida = true;
-            }
+        const response = await api.get('/protegido/cardapio/ultimo', {
+            headers: { Authorization: usuario.token }
         });
-        return saida;
-    }
-
-    onProdutosSelecionados = ( item ) => {
-        if (itemJaExiste(item)) {
-            const p = produtosSelecionados.filter((e) => { return e.value !== item.value });
-            setProdutosSelecionados(p);
-        } else {
-            const p = [...produtosSelecionados, item];
-            setProdutosSelecionados(p);
-        }
+        console.log(response.data.categorias);
+        setData(response.data.data);
+        setCardapioDoDia(response.data.categorias);
+        setLoading(false);
     }
 
     renderItem = ({ item }) => (
-        <Categoria item={item} produtosSelecionados={onProdutosSelecionados} />
+        <Cardapio title={item.nome} produtos={item.produtos} />
     )
-
-    handlerSubmit = () => {
-        const ids_produtos = []
-        produtosSelecionados.map((produto) => ids_produtos.push(produto.value));
-        cadastrarCardapio(ids_produtos);
-    }
-
-    cadastrarCardapio = async (ids) => {
-        try {
-            const response = await api.post('/protegido/cardapio/',
-                {
-                    idProdutos: ids
-                },
-                {
-                    headers: {
-                        Authorization: user.token
-                    }
-                }
-            );
-            
-            Alert.alert(
-                'Cardápio',
-                'Cardápio cadastrado com sucesso',
-                [
-                    {
-                        text:'Ok', onPress: () => { 
-                            props.navigation.navigate('initNavigatorPage'); 
-                        }
-                    }
-                ],
-                {
-                    cancelable: false
-                },
-            );
-        } catch(error) {
-            ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
-        }
-    }
 
     return (
         <View style={ styles.mainContainer }>
@@ -115,9 +54,9 @@ const CardapioAdmin = (props) => {
                     <FlatList
                         style={{ marginTop: 50 }}
                         contentContainerStyle={styles.list}
-                        data={categorias}
+                        data={cardapioDoDia}
                         renderItem={renderItem}
-                        keyExtractor={categoria => categoria.id.toString()}
+                        keyExtractor={c => c.nome.toString()}
                     />
                     <View style={styles.forgotContainer}>
                         <Button 
@@ -129,7 +68,7 @@ const CardapioAdmin = (props) => {
                             }}
                             titleStyle={styles.titleStyle}
                             title='Cadastrar Cardápio'
-                            onPress={handlerSubmit}
+                            onPress={() => {}}
                         />
                     </View>
                 </ScrollView>
@@ -144,10 +83,10 @@ const CardapioAdmin = (props) => {
                 />
             </TouchableOpacity>
         </View>
-    )
+    );
 }
 
-CardapioAdmin.navigationOptions = {
+CardapioMain.navigationOptions = {
     drawerLabel: 'Cardápio',
     drawerIcon:({focused, tintColor}) => (
         <Icon
@@ -166,9 +105,10 @@ const styles = StyleSheet.create({
 		backgroundColor: '#ffffff'
     },
     listItem: {
-		backgroundColor: '#EEE',
-		marginTop: 10,
-		padding: 30
+		backgroundColor: '#FFF',
+		marginTop: 20,
+        padding: 30,
+        borderRadius: 10
 	},
     list: {
 		paddingHorizontal: 20,
@@ -201,7 +141,16 @@ const styles = StyleSheet.create({
         flex : 1, 
         justifyContent: 'center',
 		backgroundColor: '#ffffff'
-    }
+    },
+    listItem: {
+		backgroundColor: '#FFF',
+		marginTop: 20,
+        padding: 30,
+        borderRadius: 10
+	},
+    list: {
+		paddingHorizontal: 20,
+    },
 });
 
-export default CardapioAdmin;
+export default CardapioMain;

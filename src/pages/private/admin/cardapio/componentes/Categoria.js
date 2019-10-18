@@ -58,7 +58,7 @@ const Categoria = (props) => {
     return (
         <View >
             <Card containerStyle={styles.listItem}>
-                <Text style={{ textAlign: 'center' }}>{categoria.descricao}</Text>
+                <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>{categoria.descricao}</Text>
 
                 {produtos_ && <SelectMultiple 
                                     items={produtos_}
