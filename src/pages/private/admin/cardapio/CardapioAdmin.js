@@ -6,16 +6,14 @@ import {
     ScrollView,
     StyleSheet,
     ProgressBarAndroid,
+    ToastAndroid,
     Alert,
 } from 'react-native'
 import { Button } from 'react-native-elements';
 
-import MenuButton from '../../MenuButton';
 import api from '../../../../services/api';
 import { find } from '../../../../services/banco';
 import { USER_CURRENTY } from '../../../../services/key'
-import IconMaterial from 'react-native-vector-icons/FontAwesome';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Categoria from './componentes/Categoria';
 
@@ -86,21 +84,9 @@ const CardapioAdmin = (props) => {
                     }
                 }
             );
-            
-            Alert.alert(
-                'Cardápio',
-                'Cardápio cadastrado com sucesso',
-                [
-                    {
-                        text:'Ok', onPress: () => { 
-                            props.navigation.navigate('initNavigatorPage'); 
-                        }
-                    }
-                ],
-                {
-                    cancelable: false
-                },
-            );
+
+            ToastAndroid.show("Cardápio cadastrado!", ToastAndroid.SHORT);
+            props.fecharModal();
         } catch(error) {
             ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
         }
@@ -108,7 +94,6 @@ const CardapioAdmin = (props) => {
 
     return (
         <View style={ styles.mainContainer }>
-            <MenuButton navigation={props.navigation} title='Cardápio'/>
             <View style={ styles.mainContainer }>
                 {!loading && 
                 <ScrollView style={{marginBottom:40}}>
@@ -135,27 +120,7 @@ const CardapioAdmin = (props) => {
                 </ScrollView>
                 }{loading && <ProgressBarAndroid />}
             </View>
-            <TouchableOpacity style={styles.floatButton}>
-                <IconMaterial
-                    name='plus'
-                    size={20}
-                    color='#ffffff'
-                    style={ styles.iconsDrawer }
-                />
-            </TouchableOpacity>
         </View>
-    )
-}
-
-CardapioAdmin.navigationOptions = {
-    drawerLabel: 'Cardápio',
-    drawerIcon:({focused, tintColor}) => (
-        <Icon
-            name='restaurant-menu'
-            size={20}
-            color='black'
-            style={ styles.iconsDrawer }
-        />
     )
 }
 

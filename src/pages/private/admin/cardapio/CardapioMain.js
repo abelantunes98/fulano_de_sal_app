@@ -7,6 +7,7 @@ import {
     StyleSheet,
     ProgressBarAndroid,
     Text,
+    Modal,
 } from 'react-native'
 import { Button, Card } from 'react-native-elements';
 
@@ -18,17 +19,20 @@ import IconMaterial from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Cardapio from './componentes/Cardapio';
+import CardapioAdmin  from './CardapioAdmin';
 
 const CardapioMain = (props) => {
     const [data, setData] = useState(Date);
     const [cardapioDoDia, setCardapioDoDia] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [load, setLoad] = useState(false);
+	const [modalVisible,setModalVisible] = useState(false);
 
     useEffect(() => {
-        load();
-    }, [])
+        loadInit();
+    }, [modalVisible])
 
-    load = async () => {
+    loadInit = async () => {
         setLoading(true);
         let usuario = await find(USER_CURRENTY);
 
@@ -41,6 +45,14 @@ const CardapioMain = (props) => {
         setLoading(false);
     }
 
+    abrirModal = () => {
+		setModalVisible(true);
+    };
+
+    fecharModal = () => {
+        setModalVisible(false);
+    }
+
     renderItem = ({ item }) => (
         <Cardapio title={item.nome} produtos={item.produtos} />
     )
@@ -49,6 +61,22 @@ const CardapioMain = (props) => {
         <View style={ styles.mainContainer }>
             <MenuButton navigation={props.navigation} title='Cardápio'/>
             <View style={ styles.mainContainer }>
+                <Modal
+                    style = {stylesModal.modal}
+                    animationType='slide'
+                    transparent={true}
+                    visible={modalVisible}
+                    presentationStyle={'overFullScreen'}
+                    onOrientationChange={'portrait'}
+                    onRequestClose={() => {
+                        setModalVisible(false);
+                    }}>
+                    <View style={stylesModal.viewModal}> 
+                        <Card containerStyle={stylesModal.card}>                            
+                            <CardapioAdmin fecharModal={fecharModal} />
+                        </Card>
+                    </View>
+			    </Modal>
                 {!loading && 
                 <ScrollView style={{marginBottom:40}}>
                     <FlatList
@@ -58,23 +86,10 @@ const CardapioMain = (props) => {
                         renderItem={renderItem}
                         keyExtractor={c => c.nome.toString()}
                     />
-                    <View style={styles.forgotContainer}>
-                        <Button 
-                            buttonStyle={{
-                                marginTop: 10,
-                                marginBottom: 10,
-                                backgroundColor: '#0f6124',
-                                width: 115,
-                            }}
-                            titleStyle={styles.titleStyle}
-                            title='Cadastrar Cardápio'
-                            onPress={() => {}}
-                        />
-                    </View>
                 </ScrollView>
                 }{loading && <ProgressBarAndroid />}
             </View>
-            <TouchableOpacity style={styles.floatButton}>
+            <TouchableOpacity style={styles.floatButton} onPress={abrirModal}>
                 <IconMaterial
                     name='plus'
                     size={20}
@@ -97,6 +112,43 @@ CardapioMain.navigationOptions = {
         />
     )
 }
+
+const stylesModal = StyleSheet.create({
+	viewModal:{
+		flex:1,
+		flexDirection:'column',
+		justifyContent:'center',
+		alignItems:'center',
+		paddingBottom:'2%',
+		paddingTop:'20%',
+		backgroundColor:'rgba(0,0,0,0.6)',
+	},
+    title: {
+        marginTop: 25,
+        marginBottom: 25,
+        fontFamily: 'Oswald-Bold',
+        fontSize: 28,
+    },
+    inputTitle: {
+        alignSelf: 'flex-start',
+        fontFamily: 'Oswald-Regular',
+        fontSize: 16,
+        paddingTop: 10,
+        paddingLeft: 10
+    },
+    modal: {
+        justifyContent: 'center',
+		width: '97%',
+		height:'100%'
+		
+    },
+    card: {
+		borderRadius: 10,
+		backgroundColor: '#FFF',
+		borderColor:'#000'
+	}
+});
+
 
 const styles = StyleSheet.create({
     mainContainer: {
