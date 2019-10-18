@@ -61,13 +61,12 @@ const CategoriasAdmin = (props) => {
     };
 
     openDeletePopUpCategoria = (item) => {
-        setIdCategoria(item.id);
         Alert.alert(
             `Deletar '${item.descricao}'`,
             'Tem certeza que deseja deletar essa categoria?',
             [
                 { text: 'Não' },
-                { text: 'Sim', onPress: () => handle_delete() },
+                { text: 'Sim', onPress: () => handle_delete(item.id) },
             ],
         );
     };
@@ -111,19 +110,19 @@ const CategoriasAdmin = (props) => {
         }
     };
 
-    handle_delete = async () => {
+    handle_delete = async (id) => {
         try {
             let usuario = await find(USER_CURRENTY);
             await api.delete('/protegido/categoria/remover',
                 {
                     headers: { Authorization: usuario.token },
-                    params: { 'id': parseInt(idCategoria) }
+                    params: { 'id': parseInt(id) }
                 }
             );
-            ToastAndroid.show("Deletado com sucesso", ToastAndroid.show);
+            ToastAndroid.show("Deletado com sucesso", ToastAndroid.SHORT);
             preLoad();
-        } catch (e) {
-            ToastAndroid.show(e.message)
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
         }
     };
 
@@ -179,8 +178,7 @@ const CategoriasAdmin = (props) => {
                             data={data}
                             renderItem={renderItem}
                             keyExtractor={item => item.id.toString()}
-                        />}{load && <ProgressBarAndroid />
-                    }
+                        />}{load && <ProgressBarAndroid />}
                 </View>
                 <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUpCategoria}>
                     <IconButton
