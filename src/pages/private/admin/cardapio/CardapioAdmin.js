@@ -6,24 +6,20 @@ import {
     ScrollView,
     StyleSheet,
     ProgressBarAndroid,
+    ToastAndroid,
     Alert,
 } from 'react-native'
-import { Button} from 'react-native-elements';
+import { Button } from 'react-native-elements';
 
-import MenuButton from '../../MenuButton';
 import api from '../../../../services/api';
 import { find } from '../../../../services/banco';
 import { USER_CURRENTY } from '../../../../services/key'
-import IconMaterial from 'react-native-vector-icons/FontAwesome';
-import Icon from 'react-native-vector-icons/MaterialIcons';
 
 import Categoria from './componentes/Categoria';
-import Marmita from './componentes/Marmita';
 
 const CardapioAdmin = (props) => {
     const [categorias, setCategorias] = useState([])
     const [produtosSelecionados, setProdutosSelecionados] = useState([])
-    const [marmitaSelecionada, setMarmitaSelecionada] = useState(null);
     const [user, setUser] = useState({});
     const [loading, setLoading] = useState(false);
 
@@ -88,37 +84,23 @@ const CardapioAdmin = (props) => {
                     }
                 }
             );
-            
-            Alert.alert(
-                'Cardápio',
-                'Cardápio cadastrado com sucesso',
-                [
-                    {
-                        text:'Ok', onPress: () => { 
-                            props.navigation.navigate('initNavigatorPage'); 
-                        }
-                    }
-                ],
-                {
-                    cancelable: false
-                },
-            );
+
+            ToastAndroid.show("Cardápio cadastrado!", ToastAndroid.SHORT);
+            props.fecharModal();
         } catch(error) {
             ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
         }
     }
 
-    onMarmitaSelecionada = (marmita) => {
-        setMarmitaSelecionada(marmita.value);
+    cancelar = () => {
+        props.fecharModal();
     }
 
     return (
         <View style={ styles.mainContainer }>
-            <MenuButton navigation={props.navigation} title='Cardápio'/>
             <View style={ styles.mainContainer }>
                 {!loading && 
                 <ScrollView style={{marginBottom:40}}>
-                    <Marmita marmitaSelecionada={onMarmitaSelecionada} />
                     <FlatList
                         style={{ marginTop: 50 }}
                         contentContainerStyle={styles.list}
@@ -135,6 +117,17 @@ const CardapioAdmin = (props) => {
                                 width: 115,
                             }}
                             titleStyle={styles.titleStyle}
+                            title='Cancelar'
+                            onPress={cancelar}
+                        />
+                        <Button 
+                            buttonStyle={{
+                                marginTop: 10,
+                                marginBottom: 10,
+                                backgroundColor: '#0f6124',
+                                width: 115,
+                            }}
+                            titleStyle={styles.titleStyle}
                             title='Cadastrar Cardápio'
                             onPress={handlerSubmit}
                         />
@@ -142,27 +135,7 @@ const CardapioAdmin = (props) => {
                 </ScrollView>
                 }{loading && <ProgressBarAndroid />}
             </View>
-            <TouchableOpacity style={styles.floatButton}>
-                <IconMaterial
-                    name='plus'
-                    size={20}
-                    color='#ffffff'
-                    style={ styles.iconsDrawer }
-                />
-            </TouchableOpacity>
         </View>
-    )
-}
-
-CardapioAdmin.navigationOptions = {
-    drawerLabel: 'Cardápio',
-    drawerIcon:({focused, tintColor}) => (
-        <Icon
-            name='restaurant-menu'
-            size={20}
-            color='black'
-            style={ styles.iconsDrawer }
-        />
     )
 }
 
@@ -174,7 +147,7 @@ const styles = StyleSheet.create({
     },
     listItem: {
 		backgroundColor: '#EEE',
-		marginTop: 20,
+		marginTop: 10,
 		padding: 30
 	},
     list: {

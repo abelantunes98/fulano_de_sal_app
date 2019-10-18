@@ -19,6 +19,7 @@ import AlterarSenha from './pages/private/cliente/AlterarSenha'
 
 import PedidosAdmin from './pages/private/admin/PedidosAdmin';
 import CardapioAdmin from './pages/private/admin/cardapio/CardapioAdmin';
+import CardapioMain from './pages/private/admin/cardapio/CardapioMain';
 import ProdutosAdmin from './pages/private/admin/ProdutosAdmin';
 import MarmitaAdmin from './pages/private/admin/marmita/MarmitaAdmin';
 import CategoriasAdmin from './pages/private/admin/CategoriasAdmin';
@@ -28,7 +29,7 @@ import LogoutAdmin from './pages/private/admin/LogoutAdmin';
 // Navigator páginas admin
 const homeAdminNavigator = createDrawerNavigator({
     Pedidos: PedidosAdmin,
-    Cardápio: CardapioAdmin,
+    Cardápio: CardapioMain,
     Produtos: ProdutosAdmin,
     Marmitas: MarmitaAdmin,
     Categorias: CategoriasAdmin,
