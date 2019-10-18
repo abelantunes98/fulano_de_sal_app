@@ -72,7 +72,8 @@ const CardapioMain = (props) => {
                         setModalVisible(false);
                     }}>
                     <View style={stylesModal.viewModal}> 
-                        <Card containerStyle={stylesModal.card}>                            
+                        <Card containerStyle={stylesModal.card}>
+                            <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>Cadastrar Cardápio</Text>
                             <CardapioAdmin fecharModal={fecharModal} />
                         </Card>
                     </View>

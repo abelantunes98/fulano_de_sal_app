@@ -92,6 +92,10 @@ const CardapioAdmin = (props) => {
         }
     }
 
+    cancelar = () => {
+        props.fecharModal();
+    }
+
     return (
         <View style={ styles.mainContainer }>
             <View style={ styles.mainContainer }>
@@ -105,6 +109,17 @@ const CardapioAdmin = (props) => {
                         keyExtractor={categoria => categoria.id.toString()}
                     />
                     <View style={styles.forgotContainer}>
+                        <Button 
+                            buttonStyle={{
+                                marginTop: 10,
+                                marginBottom: 10,
+                                backgroundColor: '#0f6124',
+                                width: 115,
+                            }}
+                            titleStyle={styles.titleStyle}
+                            title='Cancelar'
+                            onPress={cancelar}
+                        />
                         <Button 
                             buttonStyle={{
                                 marginTop: 10,
