@@ -4,6 +4,7 @@ import {
     Text,
     StyleSheet,
     ScrollView,
+    ProgressBarAndroid,
 } from 'react-native';
 
 import MenuButton from '../MenuButton';
@@ -17,15 +18,18 @@ const HomeCliente = (props) => {
     const [cliente, setCliente] = useState({});
     const [nome, setNome] = useState('');
     const saudacao = `Bem vindo ${nome}`;
+    const [load,setLoad] = useState(false);
 
     useEffect(() => {
         loadInfo();
     }, [])
 
     loadInfo = async () => {
+        setLoad(true);
         let usuario = await find(USER_CURRENTY);
         setCliente(usuario);
         setNome(usuario.nome);
+        setLoad(false);
     }
 
     return (
@@ -35,7 +39,12 @@ const HomeCliente = (props) => {
             <Text style={styles.textTitle}>Cardápio do dia</Text>
 
             <ScrollView contentContainerStyle={styles.containerPedidos}>
-                <CardapioDoDia></CardapioDoDia>
+                {!load &&
+                <CardapioDoDia/>
+                }
+                {load &&
+                    <ProgressBarAndroid/>
+                }
             </ScrollView>
 
             <View style={{ height: 100,}}>

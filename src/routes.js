@@ -15,11 +15,9 @@ import HomeCliente from './pages/private/cliente/HomeCliente';
 import PedidosCliente from './pages/private/cliente/PedidosCliente';
 import ConfiguracoesCliente from './pages/private/cliente/ConfiguracoesCliente'
 import LogoutCliente from './pages/private/cliente/LogoutCliente'
-import AlterarSenha from './pages/private/cliente/AlterarSenha'
 import NovoPedido from './pages/private/cliente/NovoPedido'
 
 import PedidosAdmin from './pages/private/admin/PedidosAdmin';
-import CardapioAdmin from './pages/private/admin/cardapio/CardapioAdmin';
 import CardapioMain from './pages/private/admin/cardapio/CardapioMain';
 import ProdutosAdmin from './pages/private/admin/ProdutosAdmin';
 import MarmitaAdmin from './pages/private/admin/marmita/MarmitaAdmin';
@@ -44,7 +42,6 @@ const homeClienteNavigator = createDrawerNavigator({
     PedidosCliente: PedidosCliente,
     Novo: NovoPedido,
     Configuracoes: ConfiguracoesCliente,
-    AlterarSenha: AlterarSenha,
     Sair: LogoutCliente,
 },{
     contentOptions:{

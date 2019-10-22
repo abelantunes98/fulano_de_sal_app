@@ -5,6 +5,7 @@ import {
     FlatList,
     StyleSheet,
     View,
+    ProgressBarAndroid,
 } from 'react-native'
 
 import { Card } from 'react-native-elements';
@@ -17,12 +18,14 @@ import { find } from '../../../../services/banco';
 const CardapioDoDia = props => {
     const [data, setData] = useState(Date);
     const [cardapioDoDia, setCardapioDoDia] = useState({});
-
+    const [load,setLoad] = useState(false);
+    
     useEffect(() => {
         loadInfo();
-    }, [])
+    }, []);
 
     loadInfo = async () => {
+        setLoad(true);
         let usuario = await find(USER_CURRENTY);
 
         const response = await api.get('/protegido/cardapio/ultimo', {
@@ -33,6 +36,7 @@ const CardapioDoDia = props => {
             setData(response.data.data);
             setCardapioDoDia(response.data.categorias);
         }
+        setLoad(false);
     }
 
     function vazio(obj) {
@@ -57,17 +61,22 @@ const CardapioDoDia = props => {
     }
     if (!vazio(cardapioDoDia)) {
         return (
-            <FlatList
-                data={cardapioDoDia}
-                renderItem={({ item }) => (
-                    <Item
-                        title={item.nome}
-                        produtos={item.produtos}
+            <View>
+                {!load &&
+                    <FlatList
+                        data={cardapioDoDia}
+                        renderItem={({ item }) => (
+                            <Item
+                                title={item.nome}
+                                produtos={item.produtos}
+                            />
+                        )}
+                        // As chaves precisam ser Strings.
+                        keyExtractor={(item) => item.nome.toString()}
                     />
-                )}
-                // As chaves precisam ser Strings.
-                keyExtractor={(item) => item.nome.toString()}
-            />
+                }
+                {load && <ProgressBarAndroid/>}
+          </View>
         );
     } else {
         return (

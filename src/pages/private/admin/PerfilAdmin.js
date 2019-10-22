@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
-    Image,
     ToastAndroid,
     StyleSheet,
     ProgressBarAndroid,
     KeyboardAvoidingView,
+    Modal,
 } from 'react-native'
 
 import MenuButton from '../MenuButton';
@@ -20,6 +20,7 @@ import { find, save } from '../../../services/banco';
 import { criptografar } from '../../../services/criptografia';
 import { USER_CURRENTY } from '../../../services/key';
 import api from "../../../services/api";
+import { ScrollView } from 'react-native-gesture-handler';
 
 const PerfilAdmin = (props) => {
     const [admin, setAdmin] = useState({});
@@ -29,6 +30,17 @@ const PerfilAdmin = (props) => {
     const [novaSenhaConf, setNovaSenhaConf] = useState('');
     const [loading, setLoadind] = useState(false);
     const [load,setLoad] = useState(false);
+
+    //dados Modal
+
+    const [modalVisible,setModalVisible] = useState(false);
+	const [loadModal, setLoadModal] = useState(false);
+    const [cadastrando,setCadastrando] = useState(false);
+    const [senhaAdmin, setSenhaAdmin] = useState('');
+    const [confirmSenhaAdmin,setConfirmSenhaAdmin] = useState('');
+    const [nomeAdmin, setNomeAdmin] = useState('');
+    const [emailAdmin,setEmailAdmin] = useState('');
+
 
     useEffect(() => {
         loadAdmin();
@@ -115,10 +127,122 @@ const PerfilAdmin = (props) => {
         setLoad(false);
     }
 
+    handler_cadastrar = async () => {
+        setLoadModal(true);
+
+        if(senhaAdmin!='' && confirmSenhaAdmin != ''){
+            if(senhaAdmin==confirmSenhaAdmin){
+                let usuario = await find(USER_CURRENTY);
+		
+                let admin = {
+                    'email': emailAdmin,
+                    'nome': nomeAdmin,
+                    'senha': await criptografar(senhaAdmin),
+                }
+
+                try {
+                    await api.post(
+                        '/protegido/administrador/', 
+                        admin,
+                        { 
+                            headers: {
+                                Authorization: usuario.token
+                            }
+                        }
+                    );
+                    ToastAndroid.show("Administrador criado!", ToastAndroid.SHORT);
+                    setLoadModal(false);
+                    setModalVisible(false);
+                } catch(error) {
+                    // alguma informacao incorreta, a api devolve a msg de erro.
+                    ToastAndroid.show(error.response.data.message, ToastAndroid.SHORT);
+                    setLoadModal(false);
+                }
+            }else{
+                ToastAndroid.show("Senhas não coincidem!", ToastAndroid.SHORT);
+                setLoadModal(false);
+            }
+        }else{
+            ToastAndroid.show("Senhas não informadas!", ToastAndroid.SHORT);
+            setLoadModal(false);
+        }       
+	}
+
     return (
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title='Perfil'/>
             <View style={ styles.mainContainer }>
+
+            <Modal
+				style = {stylesModal.modal}
+				animationType='slide'
+				transparent={true}
+				visible={modalVisible}
+				presentationStyle={'overFullScreen'}
+				onOrientationChange={'portrait'}
+				onRequestClose={() => {
+					setModalVisible(false);
+				}}>
+					 <View style={stylesModal.viewModal}> 
+						<ScrollView>
+							<Card containerStyle={stylesModal.card}>
+								<View style={{justifyContent:'center',alignItems:'center'}}>
+								<Text style={stylesModal.title}>Cadastrar Administrador</Text>
+								
+								<Text style={stylesModal.inputTitle}>Nome</Text>
+								<Input
+									placeholder='Nome'
+									value={nomeAdmin}
+									onChangeText={setNomeAdmin}
+			
+								/>
+
+                                <Text style={stylesModal.inputTitle}>Email</Text>
+								<Input
+									placeholder='Email'
+									value={emailAdmin}
+									onChangeText={setEmailAdmin}
+									
+
+								/>
+
+								<Text style={stylesModal.inputTitle}>Senha</Text>
+								<Input
+									placeholder='Senha'
+									value={senhaAdmin}
+									onChangeText={setSenhaAdmin}
+									secureTextEntry={true}
+								/>
+
+								<Text style={stylesModal.inputTitle}>Confirmar Senha</Text>
+								<Input
+									placeholder='Confirmar Senha'
+									value={confirmSenhaAdmin}
+                                    onChangeText={setConfirmSenhaAdmin}
+                                    secureTextEntry={true}
+								/>
+								<View style={stylesModal.buttonContainer}>
+									<Button
+										title='Cadastrar'
+                                        buttonStyle={styles.button}
+										onPress={handler_cadastrar}
+                                        loading={loadModal}
+                                        titleStyle={styles.titleStyle}  
+									/>
+									<Button 
+                                    title='Cancelar'
+                                    buttonStyle={styles.button}
+                                    onPress={_=>{setModalVisible(false)}}
+                                    titleStyle={styles.titleStyle}  
+							      />
+									
+								</View>
+								</View>
+							</Card>
+						</ScrollView> 
+						</View>
+			</Modal>
+
             <KeyboardAvoidingView>
                 {!loading &&
                  <Card containerStyle={styles.card}>
@@ -191,7 +315,8 @@ const PerfilAdmin = (props) => {
                             onChangeText={setNovaSenhaConf}
                         />
                         <View style={styles.forgotContainer}>
-                            <Button title='Atualizar dados' buttonStyle={styles.button} titleStyle={styles.titleStyle} onPress={alterarDados} loading={load}/>
+                            <Button title='Atualizar' buttonStyle={styles.button} titleStyle={styles.titleStyle} onPress={alterarDados} loading={load}/>
+                            <Button title='Novo' buttonStyle={styles.button} titleStyle={styles.titleStyle} onPress={_=>{setModalVisible(true)}}/>
                         </View>
                     </View>
                 </Card>
@@ -213,6 +338,57 @@ PerfilAdmin.navigationOptions = {
         />
     )
 }
+const stylesModal = StyleSheet.create({
+	viewModal:{
+		flex:1,
+		flexDirection:'column',
+		justifyContent:'center',
+		alignItems:'center',
+		paddingBottom:'2%',
+		paddingTop:'20%',
+		backgroundColor:'rgba(0,0,0,0.6)',
+	},
+    title: {
+        marginTop: 25,
+        marginBottom: 25,
+        fontFamily: 'Oswald-Bold',
+        fontSize: 28,
+    },
+    inputTitle: {
+        alignSelf: 'flex-start',
+        fontFamily: 'Oswald-Regular',
+        fontSize: 16,
+        paddingTop: 10,
+        paddingLeft: 10
+    },
+    modal: {
+        justifyContent: 'center',
+		width: '97%',
+		height:'100%'
+		
+    },
+    button: {
+        marginRight: 10,
+        backgroundColor: '#0f6124',
+        width: 115,
+    },
+    content: {
+		flex:1,
+		flexDirection:'column',
+        justifyContent: 'center',
+		alignItems: 'center',
+    },
+    buttonContainer: {
+        marginTop: 25,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+    card: {
+		borderRadius: 10,
+		backgroundColor: '#FFF',
+		borderColor:'#000'
+	}
+});
 
 const styles = StyleSheet.create({
     card: {
@@ -244,13 +420,24 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     button: {
-        width:150,
-		marginTop: 10,
+        width:115,
+		margin: 10,
         backgroundColor: '#0f6124',
     },
     titleStyle:{
         fontFamily: 'Roboto-Thin',
     },
+
+    icons: {
+		paddingRight: 10
+    },
+
+    buttonCancel: {
+		marginTop: 10,
+        backgroundColor: '#82080a',
+        width: 115,
+    },
+    
     icon_user: {
         paddingBottom: 20,
     },

@@ -20,7 +20,7 @@ import {find} from '../../../../services/banco';
 import {USER_CURRENTY} from '../../../../services/key'
 import IconMaterial from 'react-native-vector-icons/FontAwesome';
 import IconButton from 'react-native-vector-icons/FontAwesome';
-import ModalBox from '../../../../components/ModalBox';
+
 
 const MarmitaAdmin = (props) => {
 
