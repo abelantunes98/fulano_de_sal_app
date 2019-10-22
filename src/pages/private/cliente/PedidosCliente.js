@@ -11,7 +11,6 @@ import MenuButton from '../MenuButton';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconButton from 'react-native-vector-icons/FontAwesome';
 import { Card, Button } from 'react-native-elements';
-import { node } from 'prop-types';
 
 const PedidosCliente = (props) => {
 
@@ -98,7 +97,10 @@ const PedidosCliente = (props) => {
                 />
             </View>
             <View>
-                <TouchableOpacity style={styles.floatButton}>
+                <TouchableOpacity 
+                    style={styles.floatButton}
+                    onPress={()=>{props.navigation.navigate('Novo')}}
+                >
                     <IconButton
                         name='plus'
                         size={20}
