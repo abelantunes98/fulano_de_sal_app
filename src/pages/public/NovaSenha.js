@@ -27,11 +27,10 @@ const SolicitacaoRecuperacao = (props) => {
             var email = await findString('email');
             let senhaCriptografada = await criptografar(novaSenha);
             try {
-                const response = await api.post('/publico/usuario/recuperarSenha', {
+                await api.post('/publico/usuario/recuperarSenha', {
                     email,
                     senha:senhaCriptografada
                 });
-                ToastAndroid.show(response.data['message'],ToastAndroid.SHORT);
             } catch(error) {
                 ToastAndroid.show(error.response.data['message'],ToastAndroid.SHORT);
             }
@@ -132,7 +131,9 @@ const styles = StyleSheet.create({
 	},
 	inforCard: {
         width: '93%',
-        borderRadius: 10
+        borderRadius: 10,
+		backgroundColor: '#FFF',
+		borderColor:'#000'
 	},
 	text: {
 		fontFamily: 'Oswald-Regular',
@@ -141,6 +142,11 @@ const styles = StyleSheet.create({
 	},
 	icons: {
 		paddingRight: 10
+	},
+	buttonContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		marginTop: 10,
 	},
 	button: {
 		marginTop: 10,

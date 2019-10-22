@@ -107,7 +107,9 @@ const styles = StyleSheet.create({
 	},
 	inforCard: {
         width: '93%',
-        borderRadius: 10
+        borderRadius: 10,
+		backgroundColor: '#FFF',
+		borderColor:'#000'
 	},
 	text: {
 		fontFamily: 'Oswald-Regular',
@@ -116,6 +118,11 @@ const styles = StyleSheet.create({
 	},
 	icons: {
 		paddingRight: 10
+	},
+	buttonContainer: {
+		flexDirection: 'row',
+		justifyContent: 'space-around',
+		marginTop: 10,
 	},
 	button: {
 		marginTop: 10,
