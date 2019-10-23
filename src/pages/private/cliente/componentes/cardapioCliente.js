@@ -9,7 +9,7 @@ import {
     ToastAndroid,
     Alert,
 } from 'react-native'
-import { Button } from 'react-native-elements';
+import { Button, Input } from 'react-native-elements';
 
 import api from '../../../../services/api';
 import { find } from '../../../../services/banco';
@@ -22,12 +22,14 @@ const CardapioCliente = (props) => {
     const [produtosSelecionados, setProdutosSelecionados] = useState([])
     const [user, setUser] = useState({});
     const [loading, setLoading] = useState(false);
+    // campo de observação
+    const [obs, setObs] = useState('');
 
     useEffect(() => {
         preLoad();
     }, [])
 
-    preLoad = async () =>{
+    preLoad = async () => {
         setLoading(true);
         await loadCategorias();
         setLoading(false);
@@ -35,14 +37,14 @@ const CardapioCliente = (props) => {
 
     loadCategorias = async () => {
         let usuario = await find(USER_CURRENTY);
-        const response = await api.get('/protegido/cardapio/ultimo',{ headers: {Authorization: usuario.token,}});
+        const response = await api.get('/protegido/cardapio/ultimo', { headers: { Authorization: usuario.token, } });
         console.log(response.data.categorias);
         setCategorias(response.data.categorias);
         setUser(usuario);
         setLoading(false);
     }
 
-    itemJaExiste = ( item ) => {
+    itemJaExiste = (item) => {
         // console.log(item);
         let saida = false;
         produtosSelecionados.forEach(element => {
@@ -53,7 +55,7 @@ const CardapioCliente = (props) => {
         return saida;
     }
 
-    onProdutosSelecionados = ( item ) => {
+    onProdutosSelecionados = (item) => {
         if (itemJaExiste(item)) {
             const p = produtosSelecionados.filter((e) => { return e.value !== item.value });
             setProdutosSelecionados(p);
@@ -66,10 +68,10 @@ const CardapioCliente = (props) => {
     renderItem = ({ item }) => (
         <Categoria item={item} produtosSelecionados={onProdutosSelecionados} />
     )
-    
+
     //implementar funcionalidade
     handlerSubmit = () => {
-        
+
         //depois da lógica, direcionar para tela de status
         props.navigation.navigate('pedidosCliente');
     }
@@ -79,43 +81,49 @@ const CardapioCliente = (props) => {
         props.fecharModal();
     }
 
+    // render da observacao
+    observacao = () => {
+        return <Input placeholder='Observações' value={obs} onChangeText={setObs} multiline={true} />
+    }
+
     return (
-        <View style={ styles.mainContainer }>
-            <View style={ styles.mainContainer }>
-                {!loading && 
-                <ScrollView style={{marginBottom:40}}>
-                    <FlatList
-                        style={{ marginTop: 50 }}
-                        contentContainerStyle={styles.list}
-                        data={categorias}
-                        renderItem={renderItem}
-                        keyExtractor={categoria => categoria.nome.toString()}
-                    />
-                    <View style={styles.forgotContainer}>
-                        <Button 
-                            buttonStyle={{
-                                marginTop: 10,
-                                marginBottom: 10,
-                                backgroundColor: '#0f6124',
-                                width: 115,
-                            }}
-                            titleStyle={styles.titleStyle}
-                            title='Cancelar'
-                            onPress={cancelar}
+        <View style={styles.mainContainer}>
+            <View style={styles.mainContainer}>
+                {!loading &&
+                    <ScrollView style={{ marginBottom: 40 }}>
+                        <FlatList
+                            style={{ marginTop: 50 }}
+                            contentContainerStyle={styles.list}
+                            data={categorias}
+                            renderItem={renderItem}
+                            ListFooterComponent={ observacao }
+                            keyExtractor={categoria => categoria.nome.toString()}
                         />
-                        <Button 
-                            buttonStyle={{
-                                marginTop: 10,
-                                marginBottom: 10,
-                                backgroundColor: '#0f6124',
-                                width: 115,
-                            }}
-                            titleStyle={styles.titleStyle}
-                            title='Enviar'
-                            onPress={handlerSubmit}
-                        />
-                    </View>
-                </ScrollView>
+                        <View style={styles.forgotContainer}>
+                            <Button
+                                buttonStyle={{
+                                    marginTop: 10,
+                                    marginBottom: 10,
+                                    backgroundColor: '#0f6124',
+                                    width: 115,
+                                }}
+                                titleStyle={styles.titleStyle}
+                                title='Cancelar'
+                                onPress={cancelar}
+                            />
+                            <Button
+                                buttonStyle={{
+                                    marginTop: 10,
+                                    marginBottom: 10,
+                                    backgroundColor: '#0f6124',
+                                    width: 115,
+                                }}
+                                titleStyle={styles.titleStyle}
+                                title='Enviar'
+                                onPress={handlerSubmit}
+                            />
+                        </View>
+                    </ScrollView>
                 }{loading && <ProgressBarAndroid />}
             </View>
         </View>
@@ -124,46 +132,46 @@ const CardapioCliente = (props) => {
 
 const styles = StyleSheet.create({
     mainContainer: {
-		flex : 1, 
-		justifyContent : 'center',
-		backgroundColor: '#ffffff'
+        flex: 1,
+        justifyContent: 'center',
+        backgroundColor: '#ffffff'
     },
     listItem: {
-		backgroundColor: '#EEE',
-		marginTop: 10,
-		padding: 30
-	},
-    list: {
-		paddingHorizontal: 20,
+        backgroundColor: '#EEE',
+        marginTop: 10,
+        padding: 30
     },
-    floatButton:{
-		borderWidth:1,
-        borderColor:'rgba(0,0,0,0.2)',
-        alignItems:'center',
-        justifyContent:'center',
-        width:70,
-        position: 'absolute',                                          
-        bottom: 10,                                                    
+    list: {
+        paddingHorizontal: 20,
+    },
+    floatButton: {
+        borderWidth: 1,
+        borderColor: 'rgba(0,0,0,0.2)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 70,
+        position: 'absolute',
+        bottom: 10,
         right: 25,
-        height:70,
-        backgroundColor:'#0f6124',
-        borderRadius:100,
+        height: 70,
+        backgroundColor: '#0f6124',
+        borderRadius: 100,
     },
     iconsDrawer: {
-		paddingRight: 2
+        paddingRight: 2
     },
     forgotContainer: {
         flexDirection: 'row',
         justifyContent: 'space-around',
         marginTop: 10,
     },
-    titleStyle:{
+    titleStyle: {
         fontFamily: 'Roboto-Thin'
     },
     mainLoading: {
-        flex : 1, 
+        flex: 1,
         justifyContent: 'center',
-		backgroundColor: '#ffffff'
+        backgroundColor: '#ffffff'
     }
 });
 
