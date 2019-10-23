@@ -16,7 +16,6 @@ import PedidosCliente from './pages/private/cliente/PedidosCliente';
 import ConfiguracoesCliente from './pages/private/cliente/ConfiguracoesCliente'
 import LogoutCliente from './pages/private/cliente/LogoutCliente'
 import NovoPedido from './pages/private/cliente/NovoPedido'
-import Pedido from './pages/private/cliente/Pedido'
 
 import PedidosAdmin from './pages/private/admin/PedidosAdmin';
 import CardapioMain from './pages/private/admin/cardapio/CardapioMain';
@@ -41,7 +40,6 @@ const homeAdminNavigator = createDrawerNavigator({
 const homeClienteNavigator = createDrawerNavigator({
     Home: HomeCliente,
     PedidosCliente: PedidosCliente,
-    Pedido: Pedido,
     Novo: NovoPedido,
     Configuracoes: ConfiguracoesCliente,
     Sair: LogoutCliente,

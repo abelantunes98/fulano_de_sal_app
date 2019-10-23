@@ -8,6 +8,7 @@ import {
     SafeAreaView,
     ScrollView,
     ProgressBarAndroid,
+    Modal,
 } from 'react-native'
 
 import MenuButton from '../MenuButton';
@@ -18,13 +19,16 @@ import { find } from '../../../services/banco';
 import { USER_CURRENTY } from '../../../services/key';
 import api from '../../../services/api';
 
+import CardapioCliente from './componentes/cardapioCliente';
+
 const NovoPedido = (props) => {
     const [marmitas, setMarmitas] = useState([]);
     const [load, setLoad] = useState(false);
+    const [modalVisible,setModalVisible] = useState(false);
 
     useEffect(() => {
         loadInfo();
-    }, []);
+    }, [modalVisible]);
 
     loadInfo = async () => {
         setLoad(true);
@@ -35,7 +39,7 @@ const NovoPedido = (props) => {
     }
 
     renderItem = ({ item }) => {
-        return <TouchableOpacity style={styles.touch} onPress={()=>{props.navigation.navigate('Pedido')}}>
+        return <TouchableOpacity style={styles.touch} onPress={()=>{ setModalVisible(true) }}>
             <Text style={[styles.text, {fontSize: 18, fontWeight: '500'}]}>{item.tipoMarmita}</Text>
             <Text style={[styles.text]}>Descricao: {item.descricao}</Text>
             <Text style={[styles.text]}>Quantidade de Carnes: {item.carnes}</Text>
@@ -43,9 +47,34 @@ const NovoPedido = (props) => {
         </TouchableOpacity>
     }
 
+    abrirModal = () => {
+		setModalVisible(true);
+    };
+
+    fecharModal = () => {
+        setModalVisible(false);
+    }
+
     return (
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title={'Marmitas'}></MenuButton>
+            <Modal
+                    style = {stylesModal.modal}
+                    animationType='slide'
+                    transparent={true}
+                    visible={modalVisible}
+                    presentationStyle={'overFullScreen'}
+                    onOrientationChange={'portrait'}
+                    onRequestClose={() => {
+                        setModalVisible(false);
+                    }}>
+                    <View style={stylesModal.viewModal}> 
+                        <Card containerStyle={stylesModal.card}>
+                            <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>Opções</Text>
+                            <CardapioCliente fecharModal={fecharModal} />
+                        </Card>
+                    </View>
+			    </Modal>
             <Text style={styles.title}>Escolha a marmita</Text>
             <ScrollView style={styles.scroll}>
                 {!load && <FlatList
@@ -72,6 +101,42 @@ NovoPedido.navigationOptions = {
     )
 
 }
+
+const stylesModal = StyleSheet.create({
+	viewModal:{
+		flex:1,
+		flexDirection:'column',
+		justifyContent:'center',
+		alignItems:'center',
+		paddingBottom:'2%',
+		paddingTop:'20%',
+		backgroundColor:'rgba(0,0,0,0.6)',
+	},
+    title: {
+        marginTop: 25,
+        marginBottom: 25,
+        fontFamily: 'Oswald-Bold',
+        fontSize: 28,
+    },
+    inputTitle: {
+        alignSelf: 'flex-start',
+        fontFamily: 'Oswald-Regular',
+        fontSize: 16,
+        paddingTop: 10,
+        paddingLeft: 10
+    },
+    modal: {
+        justifyContent: 'center',
+		width: '97%',
+		height:'100%'
+		
+    },
+    card: {
+		borderRadius: 10,
+		backgroundColor: '#FFF',
+		borderColor:'#000'
+	}
+});
 
 const styles = StyleSheet.create({
     mainContainer: {
