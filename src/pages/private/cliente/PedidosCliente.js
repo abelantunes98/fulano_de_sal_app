@@ -96,7 +96,6 @@ const PedidosCliente = (props) => {
                     keyExtractor={item => item.idProduto.toString()}
                 />
             </View>
-            <View>
                 <TouchableOpacity 
                     style={styles.floatButton}
                     onPress={()=>{props.navigation.navigate('Novo')}}
@@ -108,7 +107,6 @@ const PedidosCliente = (props) => {
                         style={ styles.iconsDrawer }
                     />
                 </TouchableOpacity>
-            </View>
         </View>
     )
 }
@@ -167,7 +165,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#ffffff',
     },
-    floatButton:{
+    floatButton: {
 		borderWidth: 1,
 		borderColor: 'rgba(0,0,0,0.2)',
 		alignItems: 'center',
@@ -179,7 +177,7 @@ const styles = StyleSheet.create({
 		height: 70,
 		backgroundColor: '#0f6124',
 		borderRadius: 100
-    },
+	},
     iconsDrawer: {
 		paddingRight: 2
     }
