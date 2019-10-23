@@ -94,7 +94,7 @@ const CardapioCliente = (props) => {
                             contentContainerStyle={styles.list}
                             data={categorias}
                             renderItem={renderItem}
-                            keyExtractor={categoria => categoria.nome.toString()}
+                            keyExtractor={categoria => categoria.idCategoria.toString()}
                         />
                         <View style={{marginTop: 40}}>
                             <Input placeholder='Observação. Ex: "pouco arroz", "deixar na casa ao lado", etc.' value={obs} onChangeText={setObs} multiline={true} />

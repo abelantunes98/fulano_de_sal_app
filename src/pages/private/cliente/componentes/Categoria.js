@@ -45,7 +45,7 @@ const Categoria = (props) => {
         // Busca os produtos dessa categorias.
         const novos_produtos = [];
         produtos.forEach(produto => {
-            const p = { label: produto.nome, value: produto.id };
+            const p = { label: produto.nome, value: produto.idCategoria };
             novos_produtos.push(p);
         });
         setProdutos_(novos_produtos);
