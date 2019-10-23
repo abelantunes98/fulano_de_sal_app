@@ -6,7 +6,8 @@ import {
 } from 'react-native';
 
 import { Card } from 'react-native-elements';
-import SelectMultiple from 'react-native-select-multiple';
+
+import SelectMultiple from "../../../../../components/SelectMultiple";
 
 import api from '../../../../../services/api';
 import { USER_CURRENTY } from '../../../../../services/key';
@@ -56,18 +57,18 @@ const Categoria = (props) => {
     }
 
     return (
-        <View >
+        <View>
             <Card containerStyle={styles.listItem}>
-                <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>{categoria.descricao}</Text>
-
-                {produtos_ && <SelectMultiple 
-                                    items={produtos_}
-                                    checkboxStyle={{ tintColor: 'green' }}
-                                    selectedCheckboxStyle={{ tintColor: 'green' }}
-                                    selectedItems={selectedProdutos} 
-                                    onSelectionsChange={onSelectionsChange} 
-                              />
-                }
+                <View>
+                    <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>{categoria.descricao}</Text>
+                    {
+                        produtos_.length > 0 && 
+                        <SelectMultiple 
+                            options={produtos_}
+                            onSelected={onSelectionsChange} 
+                        /> 
+                    }
+                </View>
             </Card>
         </View>
     )

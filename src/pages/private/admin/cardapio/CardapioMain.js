@@ -18,6 +18,8 @@ import { USER_CURRENTY } from '../../../../services/key'
 import IconMaterial from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
+import { SelectMultiple } from "../../../../components/SelectMultiple";
+
 import Cardapio from './componentes/Cardapio';
 import CardapioAdmin  from './CardapioAdmin';
 
