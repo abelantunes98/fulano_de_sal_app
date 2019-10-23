@@ -35,7 +35,7 @@ const NovoPedido = (props) => {
     }
 
     renderItem = ({ item }) => {
-        return <TouchableOpacity style={styles.touch} onPress={()=>{props.navigation.navigate('PedidosCliente')}}>
+        return <TouchableOpacity style={styles.touch} onPress={()=>{props.navigation.navigate('Pedido')}}>
             <Text style={[styles.text, {fontSize: 18, fontWeight: '500'}]}>{item.tipoMarmita}</Text>
             <Text style={[styles.text]}>Descricao: {item.descricao}</Text>
             <Text style={[styles.text]}>Quantidade de Carnes: {item.carnes}</Text>
