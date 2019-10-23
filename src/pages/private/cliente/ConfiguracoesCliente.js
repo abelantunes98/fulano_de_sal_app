@@ -17,7 +17,7 @@ import { USER_CURRENTY } from '../../../services/key';
 import { Button, Input, Card } from 'react-native-elements';
 import api from '../../../services/api';
 import { criptografar } from '../../../services/criptografia';
-import {PushNotification} from '../../../services/pushNotification';
+import {lancaNotificacao} from '../../../services/pushNotification';
 
 const ConfiguracoesCliente = (props) => {
 
@@ -41,14 +41,6 @@ const ConfiguracoesCliente = (props) => {
     carregarDados = async () => {
         let userDadosRet = await find(USER_CURRENTY);
         setUserDados(userDadosRet);
-    }
-
-    lancaNotificacao = async () => {
-        PushNotification.localNotificationSchedule({
-            //... You can use all the options from localNotifications
-            message: "My Notification Message", // (required)
-            date: new Date(Date.now() + 60 * 1000) // in 60 secs
-          });
     }
 
     enviaDados = async () => {
@@ -335,7 +327,7 @@ const ConfiguracoesCliente = (props) => {
                                 <Button
                                     buttonStyle={styles.button}
                                     title='Alterar senha'
-                                    onPress={lancaNotificacao} //setModalVisible(true)
+                                    onPress={_ => {lancaNotificacao('Titulo teste', 'Testando notificação', 2)}} //setModalVisible(true)
                                     titleStyle={styles.titleStyle}
                                 />
                                 <Button

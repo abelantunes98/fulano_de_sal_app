@@ -1,14 +1,15 @@
 var PushNotification = require("react-native-push-notification");
 
 PushNotification.configure({
+
   // (optional) Called when Token is generated (iOS and Android)
   onRegister: function(token) {
-    console.log("TOKEN:", token);
+    console.log('TOKEN:', token);
   },
 
   // (required) Called when a remote or local notification is opened or received
   onNotification: function(notification) {
-    console.log("NOTIFICATION:", notification);
+    console.log('NOTIFICATION:', notification);
 
     // process the notification
 
@@ -38,4 +39,15 @@ PushNotification.configure({
   requestPermissions: true
 });
 
-export {PushNotification}
+// O tempo em segundos antes de exibir a notificação.
+async function lancaNotificacao(titulo, mensagem, tempo) {
+  PushNotification.localNotificationSchedule({
+     
+      message: mensagem, // (required)
+      date: new Date(Date.now() + tempo * 1000), // in 60 secs
+      priority: "high",
+      title: titulo
+    });
+}
+
+export {lancaNotificacao};
