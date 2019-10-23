@@ -7,7 +7,7 @@ const SelectMultiple = (props) => {
     const [optionsSelect, setOptionsSelect] = useState(props.options);
 
     useEffect(() => {
-        //preprocessOption();
+        preprocessOption();
     }, []);
 
     preprocessOption = () => {

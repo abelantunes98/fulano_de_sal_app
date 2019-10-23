@@ -44,7 +44,7 @@ const Categoria = (props) => {
         // Busca os produtos dessa categorias.
         const novos_produtos = [];
         produtos.forEach(produto => {
-            const p = { label: produto.nome, value: produto.idCategoria };
+            const p = { label: produto.nome, value: produto.id };
             novos_produtos.push(p);
         });
         setProdutos_(novos_produtos);
@@ -56,14 +56,18 @@ const Categoria = (props) => {
     }
 
     return (
-        <View >
+        <View>
             <Card containerStyle={styles.listItem}>
-                <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>{categoria.nome}</Text>
-                {produtos_.length > 0 && 
-                <SelectMultiple 
-                    options={produtos_}
-                    onSelected={onSelectionsChange} 
-                />}
+                <View>
+                    <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>{categoria.nome}</Text>
+                    {
+                        produtos_.length > 0 && 
+                        <SelectMultiple
+                            options={produtos_}
+                            onSelected={onSelectionsChange} 
+                        />
+                    }
+                </View>
             </Card>
         </View>
     )
