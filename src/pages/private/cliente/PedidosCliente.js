@@ -23,7 +23,10 @@ const PedidosCliente = (props) => {
     loadRepositories = async () => {
         let dat = [{data: '07/10/2019', idProduto: 'test', preco: 5.0, status: 'ok'}, 
         {data: '08/10/2019', idProduto: 'test2', preco: 5.0, status: 'pendente'},
-        {data: '08/10/2019', idProduto: 'test3', preco: 5.0, status: 'erro'}];
+        {data: '08/10/2019', idProduto: 'test3', preco: 5.0, status: 'erro'}, 
+        {data: '07/10/2019', idProduto: 'test4', preco: 5.0, status: 'ok'}, 
+        {data: '08/10/2019', idProduto: 'test5', preco: 5.0, status: 'pendente'},
+        {data: '08/10/2019', idProduto: 'test6', preco: 5.0, status: 'erro'}];
         setData(dat);
 	};
 
@@ -131,6 +134,7 @@ const styles = StyleSheet.create({
     dados: {
         textAlign: 'right',
         fontWeight: 'bold',
+        marginTop: 0
     },
 	button: {
 		backgroundColor: '#FFF',
@@ -147,7 +151,7 @@ const styles = StyleSheet.create({
     },
     status: {
         flex: 1,
-		height: 70,
+		height: 15,
 		width: 80,
         backgroundColor: '#FFF'
     },
@@ -159,7 +163,7 @@ const styles = StyleSheet.create({
 	listItem: {
 		borderRadius: 10,
 		backgroundColor: '#FFF',
-		borderColor:'#000'
+        borderColor:'#000',
 	},
     mainContainer: {
         flex: 1,
