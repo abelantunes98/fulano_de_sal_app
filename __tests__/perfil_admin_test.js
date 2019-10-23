@@ -1,4 +1,8 @@
 const mockReturnValues = {
+	'USER_CURRENTY': {
+		nome: "Rick",
+		email: "richelton14@gmail.com"
+	},
 	arrayOne: JSON.stringify(['red', 'blue']),
 	objectOne: JSON.stringify({
 		isATest: true,
@@ -64,20 +68,71 @@ jest.mock('@react-native-community/async-storage', () => ({
 	})),
 }));
 
+jest.mock("NativeModules", () => ({
+	UIManager: {
+	  RCTView: () => ({
+		directEventTypes: {}
+	  })
+	},
+	KeyboardObserver: {},
+	RNGestureHandlerModule: {
+	  attachGestureHandler: jest.fn(),
+	  createGestureHandler: jest.fn(),
+	  dropGestureHandler: jest.fn(),
+	  updateGestureHandler: jest.fn(),
+	  State: {},
+	  Directions: {}
+	}
+}))
+
 import React from 'react';
 jest.unmock("../src/services/banco");
 
 import renderer from 'react-test-renderer';
 import Enzyme from 'enzyme';
-import { shallow } from 'enzyme';
+import { shallow, mount} from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 
 Enzyme.configure({ adapter: new Adapter() });
 import PerfilAdmin from "../src/pages/private/admin/PerfilAdmin";
+import { Modal } from 'react-native';
+
 
 describe('PerfilAdmin', () => {
-    it('Snapshot', async () => {
-        const tree = shallow(<PerfilAdmin />);
-        expect(tree).toMatchSnapshot();
-    });
+	let tree;
+	const setState = jest.fn();
+	const useStateSpy = jest.spyOn(React, 'useState')
+	useStateSpy.mockImplementation((init) => [init, setState]);
+	
+	beforeEach(() => {
+		tree = Enzyme.shallow(<PerfilAdmin />);
+	});
+	
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
+	it('Snapshot', async () => {
+		expect(tree).toMatchSnapshot();
+	});
+
+	it("Styles da View", async () => {
+		expect(tree.prop('style')).toEqual({
+			flexGrow : 1, 
+			justifyContent : 'center',
+			backgroundColor: '#ffffff',
+		});
+	});
+
+	it("Existência de apenas um modal", async () => {
+		expect(tree.find(Modal)).toHaveLength(1);
+	});
+
+	it("Styles Modal", async () => {
+		expect(tree.find(Modal).prop('style')).toEqual({
+			"height": "100%",
+			"justifyContent": "center",
+			"width": "97%",
+		});
+	});
 });
