@@ -69,8 +69,7 @@ const NovoPedido = (props) => {
                         setModalVisible(false);
                     }}>
                     <View style={stylesModal.viewModal}> 
-                        <Card containerStyle={stylesModal.card}>
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>Opções</Text>
+                        <Card containerStyle={stylesModal.card}>                          
                             <CardapioCliente fecharModal={fecharModal} />
                         </Card>
                     </View>

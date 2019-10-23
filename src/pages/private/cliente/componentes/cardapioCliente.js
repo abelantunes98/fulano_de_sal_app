@@ -8,6 +8,7 @@ import {
     ProgressBarAndroid,
     ToastAndroid,
     Alert,
+    Text,
 } from 'react-native'
 import { Button, Input } from 'react-native-elements';
 
@@ -81,24 +82,23 @@ const CardapioCliente = (props) => {
         props.fecharModal();
     }
 
-    // render da observacao
-    observacao = () => {
-        return <Input placeholder='Observações' value={obs} onChangeText={setObs} multiline={true} />
-    }
-
+    
     return (
         <View style={styles.mainContainer}>
             <View style={styles.mainContainer}>
                 {!loading &&
                     <ScrollView style={{ marginBottom: 40 }}>
+                        <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16, margin: 20 }}>OPÇÕES</Text>
                         <FlatList
-                            style={{ marginTop: 50 }}
+                            style={{ marginTop: 20 }}
                             contentContainerStyle={styles.list}
                             data={categorias}
                             renderItem={renderItem}
-                            ListFooterComponent={ observacao }
                             keyExtractor={categoria => categoria.nome.toString()}
                         />
+                        <View style={{marginTop: 40}}>
+                            <Input placeholder='Observação. Ex: "pouco arroz", "deixar na casa ao lado", etc.' value={obs} onChangeText={setObs} multiline={true} />
+                        </View>
                         <View style={styles.forgotContainer}>
                             <Button
                                 buttonStyle={{

@@ -9,18 +9,39 @@ import { Card } from 'react-native-elements';
 import SelectMultiple from 'react-native-select-multiple';
 
 
+import api from '../../../../services/api';
+import { find } from '../../../../services/banco';
+import { USER_CURRENTY } from '../../../../services/key'
+
+
 const Categoria = (props) => {
     const [categoria, setCategoria] = useState( props.item );
     const [selectedProdutos, setSelectedProdutos] = useState([]);
-    const [produtos, setProdutos] = useState(props.item.produtos);
+    const [produtos, setProdutos] = useState([]);
     const [produtos_, setProdutos_] = useState([]);
 
     useEffect(() => {
-        loadProdutos();
+        init = async () => {
+            let usuario = await find(USER_CURRENTY);
+            const response = await api.get('/protegido/cardapio/ultimoPorCategoria',
+                {
+                    headers: {
+                        Authorization: usuario.token
+                    },
+                    params: {
+                        idCategoria: categoria.idCategoria
+                    }
+                }
+            );
+            setProdutos(response.data);
+            
+            loadProdutos();
+        }
+
+        init();
     }, []);
 
     loadProdutos = () => {
-        console.log(produtos);
         // Busca os produtos dessa categorias.
         const novos_produtos = [];
         produtos.forEach(produto => {
@@ -55,7 +76,7 @@ const Categoria = (props) => {
 
 const styles = StyleSheet.create({
     listItem: {
-		backgroundColor: '#FFF',
+		backgroundColor: '#FFFFFF',
 		marginTop: 20,
         padding: 30,
         borderRadius: 10
