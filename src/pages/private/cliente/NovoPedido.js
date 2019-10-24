@@ -25,6 +25,8 @@ const NovoPedido = (props) => {
     const [marmitas, setMarmitas] = useState([]);
     const [load, setLoad] = useState(false);
     const [modalVisible,setModalVisible] = useState(false);
+    const [qtdCarnes, setQtdCarnes] = useState(1);
+    const [idMarmita, setIdMarmita] = useState({});
 
     useEffect(() => {
         loadInfo();
@@ -38,8 +40,14 @@ const NovoPedido = (props) => {
         setLoad(false);
     }
 
+    selectedMarmita = (qtdCarnes, idMarmita) => {
+        setQtdCarnes(qtdCarnes);
+        setIdMarmita(idMarmita);
+        abrirModal();
+    }
+
     renderItem = ({ item }) => {
-        return <TouchableOpacity style={styles.touch} onPress={()=>{ setModalVisible(true) }}>
+        return <TouchableOpacity style={styles.touch} onPress={()=>{ selectedMarmita(item.carnes, item.idMarmita) }}>
             <Text style={[styles.text, {fontSize: 18, fontWeight: '500'}]}>{item.tipoMarmita}</Text>
             <Text style={[styles.text]}>Descricao: {item.descricao}</Text>
             <Text style={[styles.text]}>Quantidade de Carnes: {item.carnes}</Text>
@@ -70,7 +78,7 @@ const NovoPedido = (props) => {
                     }}>
                     <View style={stylesModal.viewModal}> 
                         <Card containerStyle={stylesModal.card}>                          
-                            <CardapioCliente fecharModal={fecharModal} />
+                            <CardapioCliente idMarmita={idMarmita} qtdCarnes={qtdCarnes} fecharModal={fecharModal} />
                         </Card>
                     </View>
 			    </Modal>

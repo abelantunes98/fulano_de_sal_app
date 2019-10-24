@@ -9,6 +9,7 @@ import {
     ToastAndroid,
     Alert,
     Text,
+    Picker,
 } from 'react-native'
 import { Button, Input } from 'react-native-elements';
 
@@ -23,11 +24,18 @@ const CardapioCliente = (props) => {
     const [produtosSelecionados, setProdutosSelecionados] = useState([])
     const [user, setUser] = useState({});
     const [loading, setLoading] = useState(false);
+    const [tipoPagamento, setTipoPagamento] = useState('DINHEIRO');
+    const [tipos, setTipos] = useState([])
+    // const [ids, setIds] = useState([]);
     // campo de observação
     const [obs, setObs] = useState('');
 
+    // recebe a quantidade de carne passada pelo props
+    const [qtdCarnes, setQtdCarnes] = useState(props.qtdCarnes);
+
     useEffect(() => {
         preLoad();
+        setTipos([{ label: 'Dinheiro', value: 'DINHEIRO' }, { label: 'Cartão', value: 'CARTAO' }]);
     }, [])
 
     preLoad = async () => {
@@ -38,6 +46,7 @@ const CardapioCliente = (props) => {
 
     loadCategorias = async () => {
         let usuario = await find(USER_CURRENTY);
+        console.log(usuario);
         const response = await api.get('/protegido/cardapio/ultimo', { headers: { Authorization: usuario.token, } });
         console.log(response.data.categorias);
         setCategorias(response.data.categorias);
@@ -46,7 +55,6 @@ const CardapioCliente = (props) => {
     }
 
     itemJaExiste = (item) => {
-        // console.log(item);
         let saida = false;
         produtosSelecionados.forEach(element => {
             if (element.value === item.value) {
@@ -66,15 +74,55 @@ const CardapioCliente = (props) => {
         }
     }
 
-    renderItem = ({ item }) => (
-        <Categoria item={item} produtosSelecionados={onProdutosSelecionados} />
-    )
+    renderItem = ({ item }) => {
+        return <Categoria qtdCarnes={qtdCarnes} item={item} produtosSelecionados={onProdutosSelecionados} />
+    }
 
-    //implementar funcionalidade
-    handlerSubmit = () => {
+    confirmar = () => {
+        Alert.alert(
+            `${user.nome}, confirmar pedido para`,
+            `${user.endereco}?\n\nCaso tenha informado outro endereço nas observações, ignorar.`,
+            [
+                { text: 'Não' },
+                { text: 'Sim', onPress: () => handlerSubmit() },
+            ],
+        );
+    }
 
-        //depois da lógica, direcionar para tela de status
-        props.navigation.navigate('pedidosCliente');
+    handlerSubmit = async () => {
+        try{
+            setLoading(true);
+            console.log(produtosSelecionados);
+            let pedido = buildPedido(produtosSelecionados);
+    
+            await api.post('/protegido/pedido/',
+                pedido,
+                {
+                    headers: { Authorization: user.token }
+                });
+            
+            ToastAndroid.show("Obrigado! Aguarde a confirmação =)", ToastAndroid.SHORT);
+            props.fecharModal();
+            setLoading(false);
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
+        } 
+    }
+
+    buildPedido = (prodSelecionados) =>{
+        const ids = [];
+       
+        prodSelecionados.forEach(produto => {
+            ids.push(produto.value);
+        });
+        
+        return {
+            "email": user.email,
+            "idMarmita": props.idMarmita,
+            "idProdutos": ids,
+            "observacoes": obs,
+            "tipoPagamento": tipoPagamento,
+        }
     }
 
 
@@ -96,6 +144,17 @@ const CardapioCliente = (props) => {
                             renderItem={renderItem}
                             keyExtractor={categoria => categoria.idCategoria.toString()}
                         />
+                        <View>
+                            <Text style={styles.inputTitle}>Escolha o Pagamento</Text>
+                            <Picker
+                                selectedValue={tipoPagamento}
+                                style={{ height: 50, width: 300 }}
+                                onValueChange={(tipo)=>{setTipoPagamento(tipo)}}>
+                                {tipos.map(v => {
+                                    return (<Picker.Item key={v} label={v.label} value={v.value} />);
+                                })}
+                            </Picker>
+                        </View>
                         <View style={{marginTop: 40}}>
                             <Input placeholder='Observação. Ex: "pouco arroz", "deixar na casa ao lado", etc.' value={obs} onChangeText={setObs} multiline={true} />
                         </View>
@@ -120,7 +179,8 @@ const CardapioCliente = (props) => {
                                 }}
                                 titleStyle={styles.titleStyle}
                                 title='Enviar'
-                                onPress={handlerSubmit}
+                                onPress={confirmar}
+                                loading={loading}
                             />
                         </View>
                     </ScrollView>
@@ -172,7 +232,14 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         backgroundColor: '#ffffff'
-    }
+    },
+    inputTitle: {
+        alignSelf: 'center',
+        fontFamily: 'Oswald-Regular',
+        fontSize: 16,
+        margin: 20,
+        padding: 10,
+    },
 });
 
 export default CardapioCliente;

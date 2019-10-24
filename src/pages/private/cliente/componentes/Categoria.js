@@ -3,6 +3,7 @@ import {
     View,
     Text,
     StyleSheet,
+    ToastAndroid,
 } from 'react-native';
 
 import { Card } from 'react-native-elements';
@@ -18,6 +19,22 @@ const Categoria = (props) => {
     const [selectedProdutos, setSelectedProdutos] = useState([]);
     const [produtos, setProdutos] = useState([]);
     const [produtos_, setProdutos_] = useState([]);
+
+    //qtd de carnes fornecida pelo props de cardapioCliente
+    const [qtdCarnes, setQtdCarnes] = useState(props.qtdCarnes);
+
+    qtdCerta = (nomeCategoria) => {
+        let nomeLower = nomeCategoria.toLowerCase();
+        let qtd = 1;
+        if(nomeLower.includes('carne')){
+            qtd = qtdCarnes;
+        }else if(nomeLower.includes('acompanhamento') || nomeLower.includes('salada')){
+            // zero pois será feita uma verificação de restrinção 
+            qtd = 0;
+        }
+        console.log(qtd);
+        return qtd;
+    }
 
     useEffect(() => {
         init = async () => {
@@ -36,7 +53,6 @@ const Categoria = (props) => {
             
             loadProdutos();
         }
-
         init();
     }, []);
 
@@ -51,8 +67,50 @@ const Categoria = (props) => {
     }
 
     onSelectionsChange = (data, item) => {
-        setSelectedProdutos(data);
-        props.produtosSelecionados(item);
+        console.log(data);
+        console.log(item);
+        console.log('tamanho do array: ' + data.length);
+        console.log('nome da categoria: ' + categoria.nome);
+        // setSelectedProdutos(data);
+        let _qtd = qtdCerta(categoria.nome);
+        console.log('quantidade retornada: ' + _qtd);
+        if(!_qtd == 0){
+            // só pode selecionar 1
+            if(_qtd == 1){
+                data.length > 1 ? printInvalid(_qtd) : sucess();
+            }else{
+                // seleção de carnes
+                data.length > qtdCarnes + 1 ? printInvalid(_qtd) : sucess();
+            }
+        }else{
+            //seleção livre ( salada ou acompanhamento )
+            sucess();
+        }
+
+        printInvalid = (qtd) => (ToastAndroid.show(`Desculpe, mas só pode selecionar ${qtd} para ${categoria.nome}`, ToastAndroid.SHORT));
+
+        sucess = () => {
+            console.log('chegou');
+            setSelectedProdutos(data);
+            props.produtosSelecionados(item);
+        }
+        // props.produtosSelecionados(item);
+    }
+
+    
+
+    // verifica a substring no nome da categoria para pegar a quantidade certa para restringir
+    qtdCerta = (nomeCategoria) => {
+        let nomeLower = nomeCategoria.toLowerCase();
+        let qtd = 1;
+        if(nomeLower.includes('carne')){
+            qtd = qtdCarnes;
+        }else if(nomeLower.includes('acompanhamento') || nomeLower.includes('salada')){
+            // zero pois será feita uma verificação de restrinção 
+            qtd = 0;
+        }
+        console.log(qtd);
+        return qtd;
     }
 
     return (
