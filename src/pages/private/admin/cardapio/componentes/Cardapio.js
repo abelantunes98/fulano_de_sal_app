@@ -36,10 +36,9 @@ const styles = StyleSheet.create({
 		backgroundColor: '#ffffff'
     },
     listItem: {
+        borderRadius: 10,
 		backgroundColor: '#FFF',
-		marginTop: 20,
-        padding: 15,
-        borderRadius: 10
+		borderColor:'#000'
 	},
     list: {
 		paddingHorizontal: 20,

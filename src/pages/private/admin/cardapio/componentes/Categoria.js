@@ -76,10 +76,9 @@ const Categoria = (props) => {
 
 const styles = StyleSheet.create({
     listItem: {
+		borderRadius: 10,
 		backgroundColor: '#FFF',
-		marginTop: 20,
-        padding: 30,
-        borderRadius: 10
+		borderColor:'#000'
 	},
     list: {
 		paddingHorizontal: 20,

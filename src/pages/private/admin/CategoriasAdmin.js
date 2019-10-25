@@ -170,7 +170,6 @@ const CategoriasAdmin = (props) => {
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title="Categorias" />
             <View style={styles.mainContainer}>
-                <View style={{ paddingBottom: 70 }}>
                     {!load &&
                         <FlatList
                             style={{ marginTop: 10, marginBottom: 10 }}
@@ -178,8 +177,9 @@ const CategoriasAdmin = (props) => {
                             data={data}
                             renderItem={renderItem}
                             keyExtractor={item => item.id.toString()}
+                            ListFooterComponent={View}
+					        ListFooterComponentStyle={{height:100}}
                         />}{load && <ProgressBarAndroid />}
-                </View>
                 <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUpCategoria}>
                     <IconButton
                         name='plus'

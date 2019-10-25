@@ -278,15 +278,15 @@ const MarmitaAdmin = (props) => {
 						</View>
 			</Modal>
 			{!load && 
-			  <View style={{paddingBottom:70}}>
 				<FlatList
 					style={{ marginTop: 10 }}
 					contentContainerStyle={styles.list}
 					data={data}
 					renderItem={renderItem}
 					keyExtractor={item => item.idMarmita.toString()}
+					ListFooterComponent={View}
+					ListFooterComponentStyle={{height:100}}
 				/>
-			</View>
 			}{load &&<ProgressBarAndroid />}
             <TouchableOpacity style={styles.floatButton} onPress={openCadastroPopUp}>
                 <IconButton

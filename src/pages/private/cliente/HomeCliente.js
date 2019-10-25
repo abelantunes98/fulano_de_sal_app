@@ -38,23 +38,14 @@ const HomeCliente = (props) => {
             <MenuButton navigation={props.navigation} title={saudacao} />
             <Text style={styles.textTitle}>Cardápio do dia</Text>
 
-            <ScrollView contentContainerStyle={styles.containerPedidos}>
+            <ScrollView style={{marginBottom:'20%'}}>
                 {!load &&
                 <CardapioDoDia/>
                 }
                 {load &&
                     <ProgressBarAndroid/>
                 }
-            </ScrollView>
-
-            <View style={{ height: 100,}}>
-                <Button
-                    title='Novo Pedido'
-                    titleStyle={{ fontSize: 18 }}
-                    buttonStyle={styles.buttonPedido}
-                    onPress={() => { props.navigation.navigate('PedidosCliente') }}
-                />
-            </View>
+            </ScrollView>    
         </View>
     )
 }
@@ -73,6 +64,20 @@ HomeCliente.navigationOptions = {
 }
 
 const styles = StyleSheet.create({
+    floatButton: {
+        zIndex:10,
+		borderWidth: 1,
+		borderColor: 'rgba(0,0,0,0.2)',
+		alignItems: 'center',
+		justifyContent: 'center',
+		width: 70,
+		position: 'absolute',
+		bottom: 10,
+		right: 25,
+		height: 70,
+		backgroundColor: '#0f6124',
+		borderRadius: 100
+	},
     mainContainer: {
         flexGrow: 1,
         justifyContent: 'space-between',

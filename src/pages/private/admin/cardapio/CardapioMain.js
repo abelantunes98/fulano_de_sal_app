@@ -81,13 +81,15 @@ const CardapioMain = (props) => {
                     </View>
 			    </Modal>
                 {!loading && 
-                <ScrollView style={{marginBottom:40}}>
+                <ScrollView>
                     <FlatList
                         style={{ marginTop: 50 }}
                         contentContainerStyle={styles.list}
                         data={cardapioDoDia}
                         renderItem={renderItem}
                         keyExtractor={c => c.nome.toString()}
+                        ListFooterComponent={View}
+					    ListFooterComponentStyle={{height:100}}
                     />
                 </ScrollView>
                 }{loading && <ProgressBarAndroid />}

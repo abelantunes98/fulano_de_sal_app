@@ -107,6 +107,7 @@ const CardapioAdmin = (props) => {
                         data={categorias}
                         renderItem={renderItem}
                         keyExtractor={categoria => categoria.id.toString()}
+                        
                     />
                     <View style={styles.forgotContainer}>
                         <Button 
@@ -128,7 +129,7 @@ const CardapioAdmin = (props) => {
                                 width: 115,
                             }}
                             titleStyle={styles.titleStyle}
-                            title='Cadastrar Cardápio'
+                            title='Cadastrar'
                             onPress={handlerSubmit}
                         />
                     </View>

@@ -73,6 +73,8 @@ const CardapioDoDia = props => {
                         )}
                         // As chaves precisam ser Strings.
                         keyExtractor={(item) => item.nome.toString()}
+                        ListFooterComponent={View}
+					    ListFooterComponentStyle={{height:200}}
                     />
                 }
                 {load && <ProgressBarAndroid/>}

@@ -100,7 +100,7 @@ const PedidosAdmin = (props) => {
 
     renderItem = ({ item }) => {
         return (
-            <Card containerStyle={{ margin: 0 }}>
+            <Card containerStyle={styles.card}>
                 <View style={styles.cardContent}>
                     <View style={{ flexGrow: 5 }}>
                         <Text style={styles.nome}>{item.cliente}</Text>
@@ -172,6 +172,11 @@ PedidosAdmin.navigationOptions = {
 }
 
 const styles = StyleSheet.create({
+    card: {
+        borderRadius: 10,
+		backgroundColor: '#FFF',
+		borderColor:'#000'
+    },
     mainContainer: {
         flex: 1,
         justifyContent: 'center',
