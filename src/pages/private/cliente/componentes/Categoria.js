@@ -52,50 +52,37 @@ const Categoria = (props) => {
     }
 
     onSelectionsChange = (data, item) => {
-        console.log('data no onSelections Change: ', data);
-        console.log('item no onSelectionChages',item);
-        console.log('tamanho do array: ' + data.length);
-        console.log('nome da categoria: ' + item.nomeCategoria);
-        // setSelectedProdutos(data);
         let _qtd = qtdCerta(item.nomeCategoria);
-        console.log('quantidade retornada: ' + _qtd);
         if(!_qtd == 0){
             // só pode selecionar 1
             if(_qtd == 1){
-                props.qtdSelecionada(_qtd, 0);
-                data.length > 1 ? printInvalid(_qtd, item) : sucess(data, item);
+                data.length > 1 ? decision(data, item, _qtd, true) : decision(data, item, _qtd, false);
             }else{
                 // seleção de carnes
-                data.length > qtdCarnes + 1 ? printInvalid(_qtd, item) : sucess(data, item);
-                
+                data.length > qtdCarnes ? decision(data, item, qtdCarnes, true) : decision(data, item, qtdCarnes, false);
             }
         }else{
-            //seleção livre ( salada ou acompanhamento )
-            props.qtdSelecionada(0, 2);
-            sucess(data, item);
+            //seleção livre ( salada, acompanhamento, bebidas... )
+            decision(data, item, null, false);
         }
-        // props.produtosSelecionados(item);
     }
 
-    printInvalid = (qtd, item) => (ToastAndroid.show(`Só pode selecionar ${qtd} para ${item.nomeCategoria}`, ToastAndroid.SHORT));
-
-    sucess = (data,item) => {
-        console.log('chegou no sucess');
-        console.log('dados: ' , data);
-        console.log('item: ' , item);
-    
-        setSelectedProdutos(data);
-        props.produtosSelecionados(item);
+    decision = (data, item, qtdMax, decision) =>{
+        if(decision){
+            item.checked = false;
+            ToastAndroid.show(`Só pode selecionar ${qtdMax} para ${item.nomeCategoria}`, ToastAndroid.SHORT);
+        }else{
+            setSelectedProdutos(data);
+            props.produtosSelecionados(item);
+        }
     }
-
-    
 
     // verifica a substring no nome da categoria para pegar a quantidade certa para restringir
     qtdCerta = (nomeCategoria) => {
         let nomeLower = nomeCategoria.toLowerCase();
         let qtd = 1;
         if(nomeLower.includes('carne')){
-            qtd = qtdCarnes;
+            qtd = qtdCarnes + 1;
         }else if(nomeLower.includes('acompanhamento') || nomeLower.includes('salada') || nomeLower.includes('bebida') ){
             // zero pois será feita uma verificação de restrinção 
             qtd = 0;

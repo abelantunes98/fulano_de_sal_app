@@ -28,9 +28,7 @@ const CardapioCliente = (props) => {
     const [tipos, setTipos] = useState([])
     const [obs, setObs] = useState('');
     const [qtdCarnes, setQtdCarnes] = useState(props.qtdCarnes);
-    const [somaSelecionados, setSomaSelecionados] = useState(0);
-    const [somaSelecionados2, setSomaSelecionados2] = useState(0);
-
+    
     useEffect(() => {
         preLoad();
         setTipos([{ label: 'Dinheiro', value: 'DINHEIRO' }, { label: 'Cartão', value: 'CARTAO' }]);
@@ -44,77 +42,55 @@ const CardapioCliente = (props) => {
 
     loadCategorias = async () => {
         let usuario = await find(USER_CURRENTY);
-        console.log(usuario);
         const response = await api.get('/protegido/cardapio/ultimo', { headers: { Authorization: usuario.token, } });
-        console.log(response.data.categorias);
         setCategorias(response.data.categorias);
         setUser(usuario);
         setLoading(false);
     }
 
-    itemJaExiste = (item) => {
-        let saida = false;
-        produtosSelecionados.forEach(element => {
-            if (element.value === item.value) {
-                saida = true;
-            }
-        });
-        return saida;
-    }
+    // itemJaExiste = (item) => {
+    //     let saida = false;
+    //     produtosSelecionados.forEach(element => {
+    //         if (element.value === item.value) {
+    //             saida = true;
+    //         }
+    //     });
+    //     return saida;
+    // }
 
     /**
      * qtd: quantidade de itens selecionados que só podem ser 1
      * qtd2: categoria que pode haver mais de 1 item selecionado
      */
-    onQtdSelecionada = (qtd, qtd2) => {
-        let soma = qtd + somaSelecionados;
-        let soma2 = qtd2 + somaSelecionados2;
-        setSomaSelecionados(soma);
-        setSomaSelecionados2(soma2);
-    }
 
     onProdutosSelecionados = (item) => {
-        if (itemJaExiste(item)) {
+        if(!item.checked){
             const p = produtosSelecionados.filter((e) => { return e.value !== item.value });
             setProdutosSelecionados(p);
-        } else {
+        }else{
             const p = [...produtosSelecionados, item];
             setProdutosSelecionados(p);
         }
     }
 
     renderItem = ({ item }) => {
-        return <Categoria qtdCarnes={qtdCarnes} item={item} qtdSelecionada={onQtdSelecionada} produtosSelecionados={onProdutosSelecionados} />
+        return <Categoria qtdCarnes={qtdCarnes} item={item}  produtosSelecionados={onProdutosSelecionados} />
     }
 
     confirmar = () => {
-        console.log('produtos selecionados: ');
-        console.log(produtosSelecionados);
-        
-        console.log('tamanho:' + produtosSelecionados.length);
-        console.log(somaSelecionados);
-
-
-        
-        console.log((produtosSelecionados.length - (qtdCarnes + (somaSelecionados2 / 2))));
-        if(somaSelecionados <= (produtosSelecionados.length - (qtdCarnes + somaSelecionados2 / 2))){
-            Alert.alert(
-                `${user.nome}, confirmar pedido para`,
-                `${user.endereco}?\n\nCaso tenha informado outro endereço nas observações, ignorar.`,
-                [
-                    { text: 'Não' },
-                    { text: 'Sim', onPress: () => handlerSubmit() },
-                ],
-            );
-        }else {
-            ToastAndroid.show('Mais itens selecionados do que o permitido!', ToastAndroid.SHORT);
-        }
+        Alert.alert(
+            `${user.nome}, confirmar pedido para`,
+            `${user.endereco}?\n\nCaso tenha informado outro endereço nas observações, ignorar.`,
+            [
+                { text: 'Não' },
+                { text: 'Sim', onPress: () => handlerSubmit() },
+            ],
+        );
     }
 
     handlerSubmit = async () => {
         try{
             setLoading(true);
-            console.log(produtosSelecionados);
             let pedido = buildPedido(produtosSelecionados);
     
             await api.post('/protegido/pedido/',
