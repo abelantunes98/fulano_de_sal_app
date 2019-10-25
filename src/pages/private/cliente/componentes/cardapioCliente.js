@@ -26,12 +26,10 @@ const CardapioCliente = (props) => {
     const [loading, setLoading] = useState(false);
     const [tipoPagamento, setTipoPagamento] = useState('DINHEIRO');
     const [tipos, setTipos] = useState([])
-    // const [ids, setIds] = useState([]);
-    // campo de observação
     const [obs, setObs] = useState('');
-
-    // recebe a quantidade de carne passada pelo props
     const [qtdCarnes, setQtdCarnes] = useState(props.qtdCarnes);
+    const [somaSelecionados, setSomaSelecionados] = useState(0);
+    const [somaSelecionados2, setSomaSelecionados2] = useState(0);
 
     useEffect(() => {
         preLoad();
@@ -64,6 +62,17 @@ const CardapioCliente = (props) => {
         return saida;
     }
 
+    /**
+     * qtd: quantidade de itens selecionados que só podem ser 1
+     * qtd2: categoria que pode haver mais de 1 item selecionado
+     */
+    onQtdSelecionada = (qtd, qtd2) => {
+        let soma = qtd + somaSelecionados;
+        let soma2 = qtd2 + somaSelecionados2;
+        setSomaSelecionados(soma);
+        setSomaSelecionados2(soma2);
+    }
+
     onProdutosSelecionados = (item) => {
         if (itemJaExiste(item)) {
             const p = produtosSelecionados.filter((e) => { return e.value !== item.value });
@@ -75,18 +84,31 @@ const CardapioCliente = (props) => {
     }
 
     renderItem = ({ item }) => {
-        return <Categoria qtdCarnes={qtdCarnes} item={item} produtosSelecionados={onProdutosSelecionados} />
+        return <Categoria qtdCarnes={qtdCarnes} item={item} qtdSelecionada={onQtdSelecionada} produtosSelecionados={onProdutosSelecionados} />
     }
 
     confirmar = () => {
-        Alert.alert(
-            `${user.nome}, confirmar pedido para`,
-            `${user.endereco}?\n\nCaso tenha informado outro endereço nas observações, ignorar.`,
-            [
-                { text: 'Não' },
-                { text: 'Sim', onPress: () => handlerSubmit() },
-            ],
-        );
+        console.log('produtos selecionados: ');
+        console.log(produtosSelecionados);
+        
+        console.log('tamanho:' + produtosSelecionados.length);
+        console.log(somaSelecionados);
+
+
+        
+        console.log((produtosSelecionados.length - (qtdCarnes + (somaSelecionados2 / 2))));
+        if(somaSelecionados <= (produtosSelecionados.length - (qtdCarnes + somaSelecionados2 / 2))){
+            Alert.alert(
+                `${user.nome}, confirmar pedido para`,
+                `${user.endereco}?\n\nCaso tenha informado outro endereço nas observações, ignorar.`,
+                [
+                    { text: 'Não' },
+                    { text: 'Sim', onPress: () => handlerSubmit() },
+                ],
+            );
+        }else {
+            ToastAndroid.show('Mais itens selecionados do que o permitido!', ToastAndroid.SHORT);
+        }
     }
 
     handlerSubmit = async () => {
