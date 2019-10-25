@@ -52,8 +52,8 @@ const Categoria = (props) => {
     }
 
     onSelectionsChange = (data, item) => {
-        console.log(data);
-        console.log(item);
+        console.log('data no onSelections Change: ', data);
+        console.log('item no onSelectionChages',item);
         console.log('tamanho do array: ' + data.length);
         console.log('nome da categoria: ' + item.nomeCategoria);
         // setSelectedProdutos(data);
@@ -80,9 +80,9 @@ const Categoria = (props) => {
     printInvalid = (qtd, item) => (ToastAndroid.show(`Só pode selecionar ${qtd} para ${item.nomeCategoria}`, ToastAndroid.SHORT));
 
     sucess = (data,item) => {
-        console.log('chegou');
-        console.log('dados: ' + data);
-        console.log('item: ' + item);
+        console.log('chegou no sucess');
+        console.log('dados: ' , data);
+        console.log('item: ' , item);
     
         setSelectedProdutos(data);
         props.produtosSelecionados(item);
