@@ -20,7 +20,6 @@ const Categoria = (props) => {
     const [produtos_, setProdutos_] = useState([]);
 
     useEffect(() => {
-       
         init = async () => {
             let usuario = await find(USER_CURRENTY);
             const response = await api.get('/protegido/produto/listarPorCategoria',
@@ -45,13 +44,14 @@ const Categoria = (props) => {
         // Busca os produtos dessa categorias.
         const novos_produtos = [];
         produtos.forEach(produto => {
-            const p = { label: produto.nome, value: produto.idProduto };
+            const p = { label: produto.nome, value: produto.idProduto, nomeCategoria: categoria.descricao };
             novos_produtos.push(p);
         });
         setProdutos_(novos_produtos);
     }
 
     onSelectionsChange = (data, item) => {
+        console.log(item);
         setSelectedProdutos(data);
         props.produtosSelecionados(item);
     }

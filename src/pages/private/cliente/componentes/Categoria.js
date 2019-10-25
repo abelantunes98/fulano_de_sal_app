@@ -60,7 +60,7 @@ const Categoria = (props) => {
         // Busca os produtos dessa categorias.
         const novos_produtos = [];
         produtos.forEach(produto => {
-            const p = { label: produto.nome, value: produto.id };
+            const p = { label: produto.nome, value: produto.id, nomeCategoria: categoria.nome };
             novos_produtos.push(p);
         });
         setProdutos_(novos_produtos);
@@ -70,7 +70,7 @@ const Categoria = (props) => {
         console.log(data);
         console.log(item);
         console.log('tamanho do array: ' + data.length);
-        console.log('nome da categoria: ' + categoria.nome);
+        console.log('nome da categoria: ' + item.nomeCategoria);
         // setSelectedProdutos(data);
         let _qtd = qtdCerta(categoria.nome);
         console.log('quantidade retornada: ' + _qtd);
@@ -86,6 +86,7 @@ const Categoria = (props) => {
             //seleção livre ( salada ou acompanhamento )
             sucess();
         }
+        // props.produtosSelecionados(item);
 
         printInvalid = (qtd) => (ToastAndroid.show(`Desculpe, mas só pode selecionar ${qtd} para ${categoria.nome}`, ToastAndroid.SHORT));
 
@@ -94,7 +95,6 @@ const Categoria = (props) => {
             setSelectedProdutos(data);
             props.produtosSelecionados(item);
         }
-        // props.produtosSelecionados(item);
     }
 
     
