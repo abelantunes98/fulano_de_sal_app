@@ -13,7 +13,7 @@ const SelectMultiple = (props) => {
     preprocessOption = () => {
         const aux = [];
         props.options.forEach(e => {
-            const op = { label: e.label, value: e.value, checked: false };
+            const op = { label: e.label, value: e.value, checked: false, nomeCategoria: e.nomeCategoria };
             aux.push(op);
         });
 

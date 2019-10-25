@@ -62,9 +62,10 @@ const CardapioAdmin = (props) => {
         }
     }
 
-    renderItem = ({ item }) => (
-        <Categoria item={item} produtosSelecionados={onProdutosSelecionados} />
-    )
+    renderItem = ({ item }) => {
+        console.log(item);
+        return (<Categoria item={item} produtosSelecionados={onProdutosSelecionados} />);
+    }
 
     handlerSubmit = () => {
         const ids_produtos = []
@@ -105,7 +106,7 @@ const CardapioAdmin = (props) => {
                         style={{ marginTop: 50 }}
                         contentContainerStyle={styles.list}
                         data={categorias}
-                        renderItem={renderItem}
+                        renderItem={({ item }) => <Categoria item={item} produtosSelecionados={onProdutosSelecionados} />}
                         keyExtractor={categoria => categoria.id.toString()}
                         
                     />
