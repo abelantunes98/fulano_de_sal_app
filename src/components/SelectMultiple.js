@@ -21,7 +21,13 @@ const SelectMultiple = (props) => {
     }
 
     onSelected = (data, item) => {
-        props.onSelected(optionsSelect, item);
+        const aux = [];
+        data.forEach(element => {
+            if(element.checked){
+                aux.push(element);
+            }
+        });
+        props.onSelected(aux, item);
     }
 
     return (

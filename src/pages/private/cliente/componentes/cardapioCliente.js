@@ -26,13 +26,9 @@ const CardapioCliente = (props) => {
     const [loading, setLoading] = useState(false);
     const [tipoPagamento, setTipoPagamento] = useState('DINHEIRO');
     const [tipos, setTipos] = useState([])
-    // const [ids, setIds] = useState([]);
-    // campo de observação
     const [obs, setObs] = useState('');
-
-    // recebe a quantidade de carne passada pelo props
     const [qtdCarnes, setQtdCarnes] = useState(props.qtdCarnes);
-
+    
     useEffect(() => {
         preLoad();
         setTipos([{ label: 'Dinheiro', value: 'DINHEIRO' }, { label: 'Cartão', value: 'CARTAO' }]);
@@ -46,36 +42,39 @@ const CardapioCliente = (props) => {
 
     loadCategorias = async () => {
         let usuario = await find(USER_CURRENTY);
-        console.log(usuario);
         const response = await api.get('/protegido/cardapio/ultimo', { headers: { Authorization: usuario.token, } });
-        console.log(response.data.categorias);
         setCategorias(response.data.categorias);
         setUser(usuario);
         setLoading(false);
     }
 
-    itemJaExiste = (item) => {
-        let saida = false;
-        produtosSelecionados.forEach(element => {
-            if (element.value === item.value) {
-                saida = true;
-            }
-        });
-        return saida;
-    }
+    // itemJaExiste = (item) => {
+    //     let saida = false;
+    //     produtosSelecionados.forEach(element => {
+    //         if (element.value === item.value) {
+    //             saida = true;
+    //         }
+    //     });
+    //     return saida;
+    // }
+
+    /**
+     * qtd: quantidade de itens selecionados que só podem ser 1
+     * qtd2: categoria que pode haver mais de 1 item selecionado
+     */
 
     onProdutosSelecionados = (item) => {
-        if (itemJaExiste(item)) {
+        if(!item.checked){
             const p = produtosSelecionados.filter((e) => { return e.value !== item.value });
             setProdutosSelecionados(p);
-        } else {
+        }else{
             const p = [...produtosSelecionados, item];
             setProdutosSelecionados(p);
         }
     }
 
     renderItem = ({ item }) => {
-        return <Categoria qtdCarnes={qtdCarnes} item={item} produtosSelecionados={onProdutosSelecionados} />
+        return <Categoria qtdCarnes={qtdCarnes} item={item}  produtosSelecionados={onProdutosSelecionados} />
     }
 
     confirmar = () => {
@@ -92,7 +91,6 @@ const CardapioCliente = (props) => {
     handlerSubmit = async () => {
         try{
             setLoading(true);
-            console.log(produtosSelecionados);
             let pedido = buildPedido(produtosSelecionados);
     
             await api.post('/protegido/pedido/',
