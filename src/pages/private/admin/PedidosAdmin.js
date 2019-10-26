@@ -7,83 +7,34 @@ import {
     FlatList,
     ProgressBarAndroid,
     TouchableOpacity,
+    Modal,
+    ToastAndroid,
 } from 'react-native'
 
 import { Card, Button } from 'react-native-elements';
 
-
+import { USER_CURRENTY } from '../../../services/key';
+import { find } from '../../../services/banco';
+import api from '../../../services/api';
 import MenuButton from '../MenuButton';
 import IconMaterial from 'react-native-vector-icons/MaterialCommunityIcons';
 import IconButton from 'react-native-vector-icons/FontAwesome';
 
-const EXAMPLE_DATA = {
-    pedidos: [
-        {
-            id: 0,
-            cliente: "Matheus",
-            data: "10:30",
-            valor: "R$ 5,00"
-        },
-        {
-            id: 1,
-            cliente: "Rick",
-            data: "10:45",
-            valor: "R$ 5,00"
-        },
-        {
-            id: 2,
-            cliente: "Eduardo",
-            data: "10:46",
-            valor: "R$ 5,00"
-        },
-        {
-            id: 3,
-            cliente: "Samuel",
-            data: "10:47",
-            valor: "R$ 5,00"
-        },
-        {
-            id: 4,
-            cliente: "Vinícius",
-            data: "10:48",
-            valor: "R$ 5,00"
-        },
-        {
-            id: 5,
-            cliente: "Hércules",
-            data: "10:49",
-            valor: "R$ 5,00"
-        },
-        {
-            id: 6,
-            cliente: "Hércules",
-            data: "10:49",
-            valor: "R$ 5,00"
-        },
-        {
-            id: 7,
-            cliente: "Hércules",
-            data: "10:49",
-            valor: "R$ 5,00"
-        },
-        {
-            id: 8,
-            cliente: "Hércules",
-            data: "10:49",
-            valor: "R$ 5,00"
-        },
-    ]
-};
 
 const PedidosAdmin = (props) => {
 
-    const [data, setData] = useState(EXAMPLE_DATA.pedidos);
+    const [data, setData] = useState({});
     const [load, setLoad] = useState(false);
+    const [selectedItem, setSelectedItem] = useState({});
+    const [modalVisible, setModalVisible] = useState(false);
+    const [loadModal, setLoadModal] = useState(false);
 
 
     useEffect(() => {
-        setData(EXAMPLE_DATA.pedidos);
+        preLoad();
     }, []);
+
+
 
     preLoad = async () => {
         setLoad(true);
@@ -92,10 +43,56 @@ const PedidosAdmin = (props) => {
     };
 
     loadRepositories = async () => {
-        /*   let usuario = await find(USER_CURRENTY);
-          const response = await api.get('/protegido/pedido/listarAdmin',
-              { headers: { Authorization: usuario.token } }); */
-        setData(EXAMPLE_DATA.pedidos);
+        let usuario = await find(USER_CURRENTY);
+        const response = await api.get('/protegido/pedido/listarAdmin',
+            { headers: { Authorization: usuario.token } });
+        setData(response.data.pedidos);
+    };
+
+    confirmarPedido = async (id) => {
+        try {
+            setLoadModal(true);
+            let usuario = await find(USER_CURRENTY);
+            const response = await api.get('/protegido/pedido/confirmar',
+                { 
+                    headers: { Authorization: usuario.token },
+                    params: { 'id': parseInt(id) }, 
+                }
+            );
+            ToastAndroid.show('Pedido confirmado com sucesso!', ToastAndroid.SHORT);
+        } catch (error) {
+            ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
+        } finally {
+            closeItemModal();
+        }
+    };
+
+    openItemModal = (item) => {
+        setSelectedItem(item);
+        setModalVisible(true);
+    };
+
+    closeItemModal = () => {
+        setModalVisible(false);
+        setLoadModal(false);
+        setSelectedItem({});
+        preLoad();
+    };
+
+
+
+    renderProduto = ({ item }) => {
+        return (
+            <>
+                <Text style={{ ...stylesModal.fieldContent, fontWeight: 'bold' }}>{item}</Text>
+                <View style={{ marginLeft: 10 }}>
+                    <FlatList
+                        data={selectedItem.produtos[item]}
+                        renderItem={({ item }) => <Text style={stylesModal.fieldContent}>{item.nome}</Text>}
+                        keyExtractor={item => item.id}
+                    />
+                </View>
+            </>);
     };
 
     renderItem = ({ item }) => {
@@ -103,15 +100,16 @@ const PedidosAdmin = (props) => {
             <Card containerStyle={styles.card}>
                 <View style={styles.cardContent}>
                     <View style={{ flexGrow: 5 }}>
-                        <Text style={styles.nome}>{item.cliente}</Text>
+                        <Text style={item.confirmado ? styles.nomeConfirmado : styles.nome}>{item.cliente.nome}</Text>
                         <View></View>
-                        <Text style={{ fontSize: 12 }}>{item.valor}</Text>
+                        <Text style={{ fontSize: 12 }}>R$ {item.marmita.valor},00</Text>
                         <View></View>
                         <Text style={{ fontSize: 10, marginTop: 5 }}>{item.data}</Text>
                     </View>
                     <View style={styles.buttons}>
                         <Button
                             buttonStyle={styles.button}
+                            onPress={() => openItemModal(item)}
                             icon={
                                 <IconButton
                                     name='chevron-right'
@@ -139,19 +137,101 @@ const PedidosAdmin = (props) => {
                             contentContainerStyle={styles.list}
                             data={data}
                             renderItem={renderItem}
-                            keyExtractor={item => item.id.toString()}
+                            keyExtractor={item => item.idPedido.toString()}
                             ListFooterComponent={View}
-                            ListFooterComponentStyle={{height:100}}
+                            ListFooterComponentStyle={{ height: 100 }}
                         />}{load && <ProgressBarAndroid />}
                 </View>
-                    <TouchableOpacity style={styles.floatButton}>
-                        <IconButton
-                            name='refresh'
-                            size={20}
-                            color='#ffffff'
-                            style={styles.iconsDrawer}
-                        />
-                    </TouchableOpacity>
+                <TouchableOpacity style={styles.floatButton} onPress={preLoad}>
+                    <IconButton
+                        name='refresh'
+                        size={20}
+                        color='#ffffff'
+                        style={styles.iconsDrawer}
+                    />
+                </TouchableOpacity>
+                <Modal
+                    style={stylesModal.modal}
+                    animationType='slide'
+                    transparent={true}
+                    visible={modalVisible}
+                    presentationStyle={'overFullScreen'}
+                    onOrientationChange={'portrait'}
+                    onRequestClose={() => {
+                        setModalVisible(false);
+                    }}>
+                    <View style={stylesModal.viewModal}>
+                        <ScrollView style={{width: '90%'}}>
+                            <Card containerStyle={stylesModal.card}>
+                                <Text style={stylesModal.title}>Pedido</Text>
+
+                                {modalVisible &&
+                                    <View>
+                                        <Text style={stylesModal.sectionTitle}>Cliente</Text>
+
+                                        <Text style={stylesModal.fieldTitle}>Nome</Text>
+                                        <Text style={stylesModal.fieldContent}>{selectedItem.cliente.nome}</Text>
+
+                                        <Text style={stylesModal.fieldTitle}>Endereço</Text>
+                                        <Text style={stylesModal.fieldContent}>{selectedItem.cliente.endereco}</Text>
+
+                                        <Text style={stylesModal.fieldTitle}>Telefone</Text>
+                                        <Text style={stylesModal.fieldContent}>{selectedItem.cliente.telefone}</Text>
+
+
+                                        <Text style={stylesModal.sectionTitle}>Marmita</Text>
+
+                                        <Text style={stylesModal.fieldTitle}>Produtos selecionados</Text>
+
+                                        <FlatList
+                                            data={Object.getOwnPropertyNames(selectedItem.produtos)}
+                                            renderItem={renderProduto}
+                                            keyExtractor={item => item.toString()}
+                                        />
+
+                                        <Text style={stylesModal.fieldTitle}>Valor</Text>
+                                        <Text style={stylesModal.fieldContent}>R$ {selectedItem.marmita.valor},00</Text>
+
+                                        <Text style={stylesModal.fieldTitle}>Tipo do pagamento</Text>
+                                        <Text style={stylesModal.fieldContent}>{selectedItem.tipoPagamento}</Text>
+
+                                        <Text style={stylesModal.fieldTitle}>Descrição</Text>
+                                        <Text style={stylesModal.fieldContent}>{selectedItem.marmita.descricao}</Text>
+
+                                        <Text style={stylesModal.fieldTitle}>Tipo</Text>
+                                        <Text style={stylesModal.fieldContent}>{selectedItem.marmita.tipoMarmita}</Text>
+
+                                        <Text style={stylesModal.fieldTitle}>Qnt. de carnes</Text>
+                                        <Text style={stylesModal.fieldContent}>{selectedItem.marmita.carnes}</Text>
+
+                                        <Text style={stylesModal.fieldTitle}>Observações</Text>
+                                        <Text style={stylesModal.fieldContent}>{selectedItem.observacoes}</Text>
+
+                                        <Text style={stylesModal.fieldTitle}>Data e hora</Text>
+                                        <Text style={stylesModal.fieldContent}>{selectedItem.data}</Text>
+
+                                        <Text style={stylesModal.fieldTitle}>Confirmado</Text>
+                                        <Text style={{...stylesModal.fieldContent, color: selectedItem.confirmado ? 'green' : 'red'}}>{selectedItem.confirmado ? 'SIM' : 'NÃO'}</Text>
+
+                                        <View style={stylesModal.buttonContainer}>
+                                            <Button
+                                                title='Cancelar'
+                                                buttonStyle={stylesModal.button}
+                                                onPress={() => closeItemModal()}
+                                            />
+                                            {!selectedItem.confirmado && <Button
+                                                title='Confirmar'
+                                                buttonStyle={stylesModal.button}
+                                                loading={loadModal}
+                                                onPress={() => confirmarPedido(selectedItem.idPedido)}
+                                            />}
+                                        </View>
+                                    </View>
+                                }
+                            </Card>
+                        </ScrollView>
+                    </View>
+                </Modal>
             </View>
 
         </View>
@@ -174,8 +254,8 @@ PedidosAdmin.navigationOptions = {
 const styles = StyleSheet.create({
     card: {
         borderRadius: 10,
-		backgroundColor: '#FFF',
-		borderColor:'#000'
+        backgroundColor: '#FFF',
+        borderColor: '#000'
     },
     mainContainer: {
         flex: 1,
@@ -204,6 +284,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 16
     },
+    nomeConfirmado: {
+        fontWeight: 'bold',
+        textDecorationStyle: 'solid',
+        textDecorationLine: 'line-through',
+        textDecorationColor: '#C2C2D6',
+        color: '#C2C2D6',
+        fontSize: 16
+    },
     subtexto: {
         fontWeight: 'bold',
         fontSize: 10
@@ -221,20 +309,65 @@ const styles = StyleSheet.create({
         backgroundColor: '#0f6124',
         borderRadius: 100
     },
-    /*
-   
-    list: {
-        padding: 0,
-    },
-    listItem: {
-        backgroundColor: '#FFF',
-        borderColor: '#ccd2db',
-    },
-
-         ,
-    iconsDrawer: {
-        paddingRight: 2
-    },
-    */
 });
+
+const stylesModal = StyleSheet.create({
+    modal: {
+        justifyContent: 'center',
+    },
+    viewModal: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: '2%',
+        paddingTop: '20%',
+        backgroundColor: 'rgba(0,0,0,0.6)',
+    },
+    card: {
+        borderRadius: 10,
+        backgroundColor: '#FFF',
+        borderColor: '#000'
+    },
+    title: {
+        marginTop: 25,
+        marginBottom: 25,
+        fontFamily: 'Oswald-Bold',
+        fontSize: 28,
+        alignSelf: 'center',
+    },
+    sectionTitle: {
+        marginTop: 10,
+        marginBottom: 10,
+        fontFamily: 'Oswald-Bold',
+        fontSize: 20,
+        alignSelf: 'center',
+    },
+    fieldTitle: {
+        alignSelf: 'flex-start',
+        fontFamily: 'Oswald-Regular',
+        fontSize: 16,
+        fontWeight: 'bold',
+        paddingTop: 10,
+        paddingLeft: 10
+    },
+    fieldContent: {
+        alignSelf: 'flex-start',
+        fontFamily: 'Oswald-Regular',
+        fontSize: 14,
+        paddingTop: 10,
+        paddingLeft: 10
+    },
+    button: {
+        marginRight: 10,
+        backgroundColor: '#0f6124',
+        width: 115,
+    },
+    buttonContainer: {
+        marginTop: 25,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
+})
+
 export default PedidosAdmin;
