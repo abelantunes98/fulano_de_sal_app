@@ -52,6 +52,7 @@ const PedidosCliente = (props) => {
         setData(dat);
     };
 
+    // O parâmetro status vem com o pedido da API: pedido.confirmado
     function defineIconeStatus(status) {
         if (status) {
             return 'check-circle-o';
@@ -66,6 +67,14 @@ const PedidosCliente = (props) => {
         } else {
             return '#FFFF00';
         }
+    }
+    
+    retornaStatusMsg = (status) => {   
+        let statusMsg = 'Pendente';
+        if (status) {
+            statusMsg = 'Confirmado';
+        }
+        ToastAndroid.show('Status do pedido: ' + statusMsg + "!", ToastAndroid.SHORT);
     }
 
     openItemModal = (item) => {
@@ -86,15 +95,6 @@ const PedidosCliente = (props) => {
         setSelectedItem({});
         preLoad();
     };
-
-    retornaStatusMsg = (status) => {
-        
-        let statusMsg = 'Pendente';
-        if (status) {
-            statusMsg = 'Confirmado';
-        }
-        ToastAndroid.show('Status do pedido: ' + statusMsg + "!", ToastAndroid.SHORT);
-    }
 
     renderProduto = ({ item }) => {
         return (
