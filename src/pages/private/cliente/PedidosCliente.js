@@ -6,7 +6,9 @@ import {
     ToastAndroid,
     Alert,
     TouchableOpacity,
-    StyleSheet,
+    Modal,
+    ScrollView,
+    StyleSheet
 } from 'react-native'
 
 import MenuButton from '../MenuButton';
@@ -21,6 +23,10 @@ import { USER_CURRENTY } from '../../../services/key';
 const PedidosCliente = (props) => {
 
     const [data, setData] = useState([]);
+    const [selectedItem, setSelectedItem] = useState({});
+    const [load, setLoad] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [loadModal, setLoadModal] = useState(false);
 
     useEffect(() => {
         loadRepositories();
@@ -32,8 +38,10 @@ const PedidosCliente = (props) => {
         try {
             let userDados = await find(USER_CURRENTY);
             const response = await api.get('/protegido/pedido/listarCliente/',
-                { headers: { Authorization: userDados.token },
-                  params:  { email: userDados.email }});
+                {
+                    headers: { Authorization: userDados.token },
+                    params: { email: userDados.email }
+                });
 
             if (response.status == 200) {
                 dat = response.data.pedidos;
@@ -60,11 +68,54 @@ const PedidosCliente = (props) => {
         }
     }
 
+    openItemModal = (item) => {
+        setSelectedItem(item);
+        setModalVisible(true);
+    };
+
+
+    preLoad = async () => {
+        setLoad(true);
+        await loadRepositories();
+        setLoad(false);
+    };
+
+    closeItemModal = () => {
+        setModalVisible(false);
+        setLoadModal(false);
+        setSelectedItem({});
+        preLoad();
+    };
+
+    retornaStatusMsg = (status) => {
+        
+        let statusMsg = 'Pendente';
+        if (status) {
+            statusMsg = 'Confirmado';
+        }
+        ToastAndroid.show('Status do pedido: ' + statusMsg + "!", ToastAndroid.SHORT);
+    }
+
+    renderProduto = ({ item }) => {
+        return (
+            <>
+                <Text style={{ ...stylesModal.fieldContent, fontWeight: 'bold' }}>{item}:</Text>
+                <View style={{ marginLeft: 10 }}>
+                    <FlatList
+                        data={selectedItem.produtos[item]}
+                        renderItem={({ item }) => <Text style={stylesModal.fieldContent}>{item.nome}</Text>}
+                        keyExtractor={item => item.id}
+                    />
+                </View>
+            </>);
+    };
+
     renderItem = ({ item }) => (
         <Card containerStyle={styles.listItem}>
             <View>
                 <View style={styles.buttons}>
                     <Button
+                        onPress={() => openItemModal(item)}
                         buttonStyle={styles.button}
                         icon={
                             <IconButton
@@ -79,6 +130,7 @@ const PedidosCliente = (props) => {
                 <View style={styles.statusPosition}>
                     <Button
                         buttonStyle={styles.status}
+                        onPress={() => {retornaStatusMsg(item.confirmado)}}
                         icon={
                             <IconButton
                                 name={defineIconeStatus(item.confirmado)}
@@ -120,6 +172,70 @@ const PedidosCliente = (props) => {
                     style={styles.iconsDrawer}
                 />
             </TouchableOpacity>
+
+            <Modal
+                style={stylesModal.modal}
+                animationType='slide'
+                transparent={true}
+                visible={modalVisible}
+                presentationStyle={'overFullScreen'}
+                onOrientationChange={'portrait'}
+                onRequestClose={() => {
+                    setModalVisible(false);
+                }}>
+                <View style={stylesModal.viewModal}>
+                    <ScrollView style={{ width: '90%' }}>
+                        <Card containerStyle={stylesModal.card}>
+                            <Text style={stylesModal.title}>Pedido</Text>
+
+                            {modalVisible &&
+                                <View>
+
+                                    <Text style={stylesModal.fieldTitle}>Produtos selecionados:</Text>
+
+                                    <FlatList
+                                        data={Object.getOwnPropertyNames(selectedItem.produtos)}
+                                        renderItem={renderProduto}
+                                        keyExtractor={item => item.toString()}
+                                    />
+
+                                    <Text style={stylesModal.fieldTitle}>Valor:</Text>
+                                    <Text style={stylesModal.fieldContent}>R$ {selectedItem.marmita.valor},00</Text>
+
+                                    <Text style={stylesModal.fieldTitle}>Tipo do pagamento:</Text>
+                                    <Text style={stylesModal.fieldContent}>{selectedItem.tipoPagamento}</Text>
+
+                                    <Text style={stylesModal.fieldTitle}>Descrição:</Text>
+                                    <Text style={stylesModal.fieldContent}>{selectedItem.marmita.descricao}</Text>
+
+                                    <Text style={stylesModal.fieldTitle}>Tipo:</Text>
+                                    <Text style={stylesModal.fieldContent}>{selectedItem.marmita.tipoMarmita}</Text>
+
+                                    <Text style={stylesModal.fieldTitle}>Qnt. de carnes:</Text>
+                                    <Text style={stylesModal.fieldContent}>{selectedItem.marmita.carnes}</Text>
+
+                                    <Text style={stylesModal.fieldTitle}>Observações:</Text>
+                                    <Text style={stylesModal.fieldContent}>{selectedItem.observacoes}</Text>
+
+                                    <Text style={stylesModal.fieldTitle}>Data e hora:</Text>
+                                    <Text style={stylesModal.fieldContent}>{selectedItem.data}</Text>
+
+                                    <Text style={stylesModal.fieldTitle}>Confirmado:</Text>
+                                    <Text style={{ ...stylesModal.fieldContent, color: selectedItem.confirmado ? 'green' : 'red' }}>{selectedItem.confirmado ? 'SIM' : 'NÃO'}</Text>
+
+                                    <View style={stylesModal.buttonContainer}>
+                                        <Button
+                                            title='Fechar'
+                                            buttonStyle={stylesModal.button}
+                                            onPress={() => closeItemModal()}
+                                        />
+                                    </View>
+                                </View>
+                            }
+                        </Card>
+                    </ScrollView>
+                </View>
+            </Modal>
         </View>
     )
 }
@@ -195,6 +311,65 @@ const styles = StyleSheet.create({
     iconsDrawer: {
         paddingRight: 2
     }
+});
+
+const stylesModal = StyleSheet.create({
+    modal: {
+        justifyContent: 'center',
+    },
+    viewModal: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingBottom: '2%',
+        paddingTop: '20%',
+        backgroundColor: 'rgba(0,0,0,0.6)',
+    },
+    card: {
+        borderRadius: 10,
+        backgroundColor: '#FFF',
+        borderColor: '#000'
+    },
+    title: {
+        marginTop: 25,
+        marginBottom: 25,
+        fontFamily: 'Oswald-Bold',
+        fontSize: 28,
+        alignSelf: 'center',
+    },
+    sectionTitle: {
+        marginTop: 10,
+        marginBottom: 10,
+        fontFamily: 'Oswald-Bold',
+        fontSize: 20,
+        alignSelf: 'center',
+    },
+    fieldTitle: {
+        alignSelf: 'flex-start',
+        fontFamily: 'Oswald-Regular',
+        fontSize: 16,
+        fontWeight: 'bold',
+        paddingTop: 10,
+        paddingLeft: 10
+    },
+    fieldContent: {
+        alignSelf: 'flex-start',
+        fontFamily: 'Oswald-Regular',
+        fontSize: 14,
+        paddingTop: 10,
+        paddingLeft: 10
+    },
+    button: {
+        marginRight: 10,
+        backgroundColor: '#0f6124',
+        width: 115,
+    },
+    buttonContainer: {
+        marginTop: 25,
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+    },
 });
 
 export default PedidosCliente;
