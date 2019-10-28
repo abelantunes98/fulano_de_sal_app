@@ -134,7 +134,7 @@ const CardapioCliente = (props) => {
             <View style={styles.mainContainer}>
                 {!loading &&
                     <ScrollView style={{ marginBottom: 40 }}>
-                        <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16, margin: 20 }}>OPÇÕES</Text>
+                        <Text style={styles.title}>Opções</Text>
                         <FlatList
                             style={{ marginTop: 20 }}
                             contentContainerStyle={styles.list}
@@ -225,6 +225,13 @@ const styles = StyleSheet.create({
     },
     titleStyle: {
         fontFamily: 'Roboto-Thin'
+    },
+    title: {
+        textAlign: 'center',
+        marginTop: 25,
+        marginBottom: 25,
+        fontFamily: 'Oswald-Bold',
+        fontSize: 28,
     },
     mainLoading: {
         flex: 1,

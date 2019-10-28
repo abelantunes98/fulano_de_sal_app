@@ -168,11 +168,12 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'column',
     },
-    title:{
-        fontSize: 20,
-        fontWeight: '700',
-        padding: 20,
-        marginTop: 10,
+    title: {
+        textAlign: 'center',
+        marginTop: 25,
+        marginBottom: 25,
+        fontFamily: 'Oswald-Bold',
+        fontSize: 28,
     },
     text:{
         margin: 5,

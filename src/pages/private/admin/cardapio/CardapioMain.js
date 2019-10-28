@@ -75,7 +75,7 @@ const CardapioMain = (props) => {
                     }}>
                     <View style={stylesModal.viewModal}> 
                         <Card containerStyle={stylesModal.card}>
-                            <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 16 }}>Cadastrar Cardápio</Text>
+                            <Text style={stylesModal.title}>Cadastrar Cardápio</Text>
                             <CardapioAdmin fecharModal={fecharModal} />
                         </Card>
                     </View>
@@ -129,6 +129,7 @@ const stylesModal = StyleSheet.create({
 		backgroundColor:'rgba(0,0,0,0.6)',
 	},
     title: {
+        textAlign: 'center',
         marginTop: 25,
         marginBottom: 25,
         fontFamily: 'Oswald-Bold',

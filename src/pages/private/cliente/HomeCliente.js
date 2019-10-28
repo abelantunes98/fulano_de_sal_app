@@ -36,7 +36,7 @@ const HomeCliente = (props) => {
 
         <View style={styles.mainContainer}>
             <MenuButton navigation={props.navigation} title={saudacao} />
-            <Text style={styles.textTitle}>Cardápio do dia</Text>
+            <Text style={styles.title}>Cardápio do dia</Text>
 
             <ScrollView style={{marginBottom:'20%'}}>
                 {!load &&
@@ -64,6 +64,13 @@ HomeCliente.navigationOptions = {
 }
 
 const styles = StyleSheet.create({
+    title: {
+        textAlign: 'center',
+        marginTop: 25,
+        marginBottom: 25,
+        fontFamily: 'Oswald-Bold',
+        fontSize: 28,
+    },
     floatButton: {
         zIndex:10,
 		borderWidth: 1,
