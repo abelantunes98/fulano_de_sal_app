@@ -63,9 +63,9 @@ const PedidosCliente = (props) => {
 
     function defineCorStatus(status) {
         if (status) {
-            return '#32CD32';
+            return '#43870f';
         } else {
-            return '#FFFF00';
+            return '#8c7c14';
         }
     }
     
@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
     },
     status: {
         flex: 1,
-        height: 15,
+        height: 10,
         width: 80,
         backgroundColor: '#FFF'
     },
