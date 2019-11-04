@@ -100,8 +100,8 @@ const CardapioCliente = (props) => {
                 });
             
             ToastAndroid.show("Obrigado! Aguarde a confirmação =)", ToastAndroid.SHORT);
-            props.fecharModal();
             setLoading(false);
+            props.fecharModal();
         } catch (error) {
             ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
         } 
