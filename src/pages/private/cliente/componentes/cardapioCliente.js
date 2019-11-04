@@ -25,13 +25,12 @@ const CardapioCliente = (props) => {
     const [user, setUser] = useState({});
     const [loading, setLoading] = useState(false);
     const [tipoPagamento, setTipoPagamento] = useState('DINHEIRO');
-    const [tipos, setTipos] = useState([])
+    const [tipos, setTipos] = useState([{ label: 'Dinheiro', value: 'DINHEIRO' }, { label: 'Cartão', value: 'CARTAO' }])
     const [obs, setObs] = useState('');
     const [qtdCarnes, setQtdCarnes] = useState(props.qtdCarnes);
     
     useEffect(() => {
         preLoad();
-        setTipos([{ label: 'Dinheiro', value: 'DINHEIRO' }, { label: 'Cartão', value: 'CARTAO' }]);
     }, [])
 
     preLoad = async () => {
@@ -83,7 +82,7 @@ const CardapioCliente = (props) => {
             `${user.endereco}?\n\nCaso tenha informado outro endereço nas observações, ignorar.`,
             [
                 { text: 'Não' },
-                { text: 'Sim', onPress: () => handlerSubmit() },
+                { text: 'Sim', onPress: async () => await handlerSubmit() },
             ],
         );
     }
@@ -98,13 +97,12 @@ const CardapioCliente = (props) => {
                 {
                     headers: { Authorization: user.token }
                 });
-            
+
             ToastAndroid.show("Obrigado! Aguarde a confirmação =)", ToastAndroid.SHORT);
-            setLoading(false);
             props.fecharModal();
         } catch (error) {
             ToastAndroid.show(error.response.data['message'], ToastAndroid.SHORT);
-        } 
+        }
     }
 
     buildPedido = (prodSelecionados) =>{
