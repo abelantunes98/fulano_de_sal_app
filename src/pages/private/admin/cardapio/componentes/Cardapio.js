@@ -41,16 +41,16 @@ const styles = StyleSheet.create({
 		borderColor:'#000'
 	},
     list: {
+        paddingTop: 10,
 		paddingHorizontal: 20,
     },
     title: {
         textAlign: 'center',
         fontWeight: 'bold',
-        fontSize: 16,
+        fontSize: 22,
     },
     produtos: {
-        padding: 3,
-        margin: 8,
+        margin: 5,
         color: '#aaaaaa',
         fontWeight: '700',
         fontSize: 16,
