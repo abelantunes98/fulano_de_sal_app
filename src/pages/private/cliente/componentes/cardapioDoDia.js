@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
     },
     title: {
-        fontSize: 16,
+        fontSize: 22,
         textAlign: 'center',
         padding: 10,
         marginBottom: 5,
@@ -112,14 +112,14 @@ const styles = StyleSheet.create({
         fontSize: 22,
     },
     options: {
+        paddingTop: 10,
         flex: 1,
         justifyContent: 'space-around',
         flexDirection: 'column',
 
     },
     produtos: {
-        padding: 3,
-        margin: 8,
+        margin: 5,
         color: '#aaaaaa',
         fontWeight: '700',
         fontSize: 16,
