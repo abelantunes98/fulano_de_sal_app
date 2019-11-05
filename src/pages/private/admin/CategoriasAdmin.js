@@ -285,9 +285,13 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end'
     },
     listItem: {
-        borderRadius: 10,
         backgroundColor: '#FFF',
-        borderColor: '#000'
+		borderColor: '#FFF',
+		elevation:6,
+		shadowOffset: { width: 5, height: 5 },
+		shadowColor: "black",
+		shadowOpacity: 0.5,
+		shadowRadius: 10
     },
     iconsDrawer: {
         paddingRight: 2

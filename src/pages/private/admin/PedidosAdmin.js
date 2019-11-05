@@ -253,14 +253,18 @@ PedidosAdmin.navigationOptions = {
 
 const styles = StyleSheet.create({
     card: {
-        borderRadius: 10,
         backgroundColor: '#FFF',
-        borderColor: '#000'
+		borderColor: '#FFF',
+		elevation:6,
+		shadowOffset: { width: 5, height: 5 },
+		shadowColor: "black",
+		shadowOpacity: 0.5,
+		shadowRadius: 10
     },
     mainContainer: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: '#ffffff',
+        backgroundColor: '#FEFEFE',
     },
     button: {
         backgroundColor: '#FFF',

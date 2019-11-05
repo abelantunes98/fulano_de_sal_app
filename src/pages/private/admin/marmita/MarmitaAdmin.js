@@ -367,8 +367,8 @@ const stylesModal = StyleSheet.create({
 const styles = StyleSheet.create({
 	mainContainer: {
 		flex: 1,
-		justifyContent: 'center',
-		backgroundColor: '#ffffff',
+        justifyContent: 'center',
+        backgroundColor: '#FEFEFE'
 	},
 	nome: {
 		color: '#000000',
@@ -397,9 +397,13 @@ const styles = StyleSheet.create({
 		paddingHorizontal: 16
 	},
 	listItem: {
-		borderRadius: 10,
 		backgroundColor: '#FFF',
-		borderColor:'#000'
+		borderColor: '#FFF',
+		elevation:6,
+		shadowOffset: { width: 5, height: 5 },
+		shadowColor: "black",
+		shadowOpacity: 0.5,
+		shadowRadius: 10
 	},
 	iconsDrawer: {
 		paddingRight: 2

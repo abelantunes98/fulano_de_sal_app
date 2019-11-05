@@ -33,12 +33,16 @@ const styles = StyleSheet.create({
     mainContainer: {
 		flex : 1, 
 		justifyContent : 'center',
-		backgroundColor: '#ffffff'
+		backgroundColor: '#FEFEFE'
     },
     listItem: {
-        borderRadius: 10,
-		backgroundColor: '#FFF',
-		borderColor:'#000'
+        backgroundColor: '#FFF',
+		borderColor: '#FFF',
+		elevation:6,
+		shadowOffset: { width: 5, height: 5 },
+		shadowColor: "black",
+		shadowOpacity: 0.5,
+        shadowRadius: 10,   
 	},
     list: {
         paddingTop: 10,
