@@ -112,9 +112,7 @@ const ProdutosAdmin = (props) => {
 	};
 
 	renderItem = ({ item }) => (
-		//Eduardo: melhorei, como é só uma estilização, deixei aqui mesmo
-		//Se achar melhor, coloca lá em styles. Só mudar o num ae
-		<View style={{ marginBottom: 20 }}>
+		<View style={{marginVertical: 0 }}>
 			<Card containerStyle={styles.listItem}>
 				<View style = {styles.items}>
 					<View style={styles.buttons}>
@@ -268,7 +266,7 @@ const ProdutosAdmin = (props) => {
 				</Modal>
 				{!load &&
 						<FlatList
-							style={{ marginTop: 10 }}
+							style={{ marginTop: 24 }}
 							contentContainerStyle={styles.list}
 							data={data}
 							renderItem={renderItem}
@@ -353,6 +351,8 @@ const styles = StyleSheet.create({
 		paddingRight: 3
 	},
 	listItem: {
+		marginTop:0,
+		marginBottom:9,
 		backgroundColor: '#FFF',
 		borderColor: '#FFF',
 		elevation:6,
