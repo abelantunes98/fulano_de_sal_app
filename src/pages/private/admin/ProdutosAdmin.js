@@ -114,7 +114,7 @@ const ProdutosAdmin = (props) => {
 	renderItem = ({ item }) => (
 		<View>
 			<Card containerStyle={styles.listItem}>
-				<View>
+				<View style = {styles.items}>
 					<View style={styles.buttons}>
 						<Button
 							buttonStyle={styles.button}
@@ -143,7 +143,7 @@ const ProdutosAdmin = (props) => {
 
 						/>
 					</View>
-					<View>
+					<View style = {styles.texto}>
 						<Text style={styles.nome}>{item.nome}</Text>
 						<Text style={styles.categoria}>{item.categoria.descricao}</Text>
 					</View>
@@ -311,12 +311,29 @@ const styles = StyleSheet.create({
 		fontSize: 16
 	},
 	categoria: {
+		color: '#FFFFFF',
+		borderRadius:4,
+		backgroundColor: "green",
 		fontWeight: 'bold',
-		fontSize: 10
+		fontSize: 10,
+		padding:3,
+		marginTop:6
 	},
 	list: {
 		paddingTop: 10,
-		paddingHorizontal: 16
+		paddingHorizontal: 16,
+		
+	},
+	items:{
+		flexDirection:'row-reverse',
+		width:'100%',
+		aspectRatio: 4/1
+	},
+	texto:
+	{	alignItems:'flex-start',
+		flexDirection:'column',
+		justifyContent:'flex-end',
+		width: '70%'
 	},
 	button: {
 		backgroundColor: '#FFF',
@@ -328,8 +345,10 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	buttons: {
+		width: '30%',
 		flexDirection: 'row',
-		justifyContent: 'flex-end'
+		justifyContent: 'flex-end',
+		paddingRight: 3
 	},
 	listItem: {
 		backgroundColor: '#FFF',
