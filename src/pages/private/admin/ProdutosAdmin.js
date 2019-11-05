@@ -112,7 +112,9 @@ const ProdutosAdmin = (props) => {
 	};
 
 	renderItem = ({ item }) => (
-		<View>
+		//Eduardo: melhorei, como é só uma estilização, deixei aqui mesmo
+		//Se achar melhor, coloca lá em styles. Só mudar o num ae
+		<View style={{ marginBottom: 20 }}>
 			<Card containerStyle={styles.listItem}>
 				<View style = {styles.items}>
 					<View style={styles.buttons}>
