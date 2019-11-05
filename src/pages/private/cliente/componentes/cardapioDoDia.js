@@ -129,10 +129,12 @@ const styles = StyleSheet.create({
         paddingTop: 15,
         paddingBottom: 10,
         paddingHorizontal: 20,
-        borderWidth: 1,
-        borderRadius: 10,
-        backgroundColor: '#FFF',
-        borderColor: '#000'
+        borderColor: '#FFF',
+		elevation:6,
+		shadowOffset: { width: 5, height: 5 },
+		shadowColor: "black",
+		shadowOpacity: 0.5,
+		shadowRadius: 10
     },
 });
 

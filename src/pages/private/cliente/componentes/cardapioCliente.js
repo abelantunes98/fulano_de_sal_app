@@ -134,7 +134,7 @@ const CardapioCliente = (props) => {
                     <ScrollView style={{ marginBottom: 40 }}>
                         <Text style={styles.title}>Opções</Text>
                         <FlatList
-                            style={{ marginTop: 20 }}
+                            style={{ marginTop: 20, marginBottom: 20, paddingBottom: 10 }}
                             contentContainerStyle={styles.list}
                             data={categorias}
                             renderItem={renderItem}
@@ -152,7 +152,7 @@ const CardapioCliente = (props) => {
                             </Picker>
                         </View>
                         <View style={{marginTop: 40}}>
-                            <Input placeholder='Observação. Ex: "pouco arroz", "deixar na casa ao lado", etc.' value={obs} onChangeText={setObs} multiline={true} />
+                            <Input placeholder='Observação. Ex.: "pouco arroz", "deixar na casa ao lado", etc.' value={obs} onChangeText={setObs} multiline={true} />
                         </View>
                         <View style={styles.forgotContainer}>
                             <Button

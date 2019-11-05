@@ -36,6 +36,10 @@ const SelectMultiple = (props) => {
                 {optionsSelect.map(e => {
                     return (
                     <CheckBox
+                        containerStyle={{
+                            backgroundColor: 'transparent',
+                            borderColor: 'transparent',
+                        }}
                         key={e.value}
                         title={e.label}
                         checked={e.checked}

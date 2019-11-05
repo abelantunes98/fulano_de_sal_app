@@ -94,7 +94,7 @@ const Categoria = (props) => {
         <View>
             <Card containerStyle={styles.listItem}>
                 <View>
-                    <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 22 }}>{categoria.nome}</Text>
+                    <Text style={{ textAlign: 'center', fontWeight: 'bold', fontSize: 22, marginBottom: 20 }}>{categoria.nome}</Text>
                     {
                         produtos_.length > 0 && 
                         <SelectMultiple
@@ -110,10 +110,16 @@ const Categoria = (props) => {
 
 const styles = StyleSheet.create({
     listItem: {
-		backgroundColor: '#FFFFFF',
-		marginTop: 20,
+        marginTop: 20,
+        marginBottom: 3,
         padding: 30,
-        borderRadius: 10
+        backgroundColor: '#FFFFFF',
+		borderColor: '#FFFFFF',
+		elevation:6,
+		shadowOffset: { width: 5, height: 5 },
+		shadowColor: "black",
+		shadowOpacity: 0.5,
+        shadowRadius: 10,   
 	},
     list: {
 		paddingHorizontal: 20,

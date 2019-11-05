@@ -48,7 +48,7 @@ const NovoPedido = (props) => {
 
     renderItem = ({ item }) => {
         return <TouchableOpacity style={styles.touch} onPress={()=>{ selectedMarmita(item.carnes, item.idMarmita) }}>
-            <Text style={[styles.text, {fontSize: 18, fontWeight: '500'}]}>{item.tipoMarmita}</Text>
+            <Text style={[styles.text, {fontSize: 18, fontWeight: '600'}]}>{item.tipoMarmita}</Text>
             <Text style={[styles.text]}>Descricao: {item.descricao}</Text>
             <Text style={[styles.text]}>Quantidade de Carnes: {item.carnes}</Text>
             <Text style={[{alignSelf: 'flex-end'}]}>Valor: R$ {item.valor}</Text>
@@ -157,13 +157,17 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     touch:{
+        backgroundColor: '#fefefe',
+        borderColor: '#FFF',
+		elevation:6,
+		shadowOffset: { width: 5, height: 5 },
+		shadowColor: "black",
+		shadowOpacity: 0.5,
+		shadowRadius: 10,
         width: 300,
         height: 130,
-        backgroundColor: '#eeeeee',
         padding: 10,
         margin: 10,
-        borderWidth: 1,
-        borderColor: 'black',
         borderRadius: 10,
         flex: 1,
         flexDirection: 'column',
