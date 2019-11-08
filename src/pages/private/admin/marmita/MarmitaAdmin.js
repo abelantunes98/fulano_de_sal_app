@@ -12,7 +12,7 @@ import {
 	ScrollView,
 	Picker
 } from 'react-native'
-import {Card,Button,Header, Input} from 'react-native-elements';
+import {Card,Button,Input} from 'react-native-elements';
 
 import MenuButton from '../../MenuButton';
 import api from '../../../../services/api';
@@ -25,7 +25,6 @@ import IconButton from 'react-native-vector-icons/FontAwesome';
 const MarmitaAdmin = (props) => {
 
 	const[data,setData] = useState([]);
-	const modalRef = useRef();
 	const [load,setLoad] = useState(false);
 	const [modalVisible,setModalVisible] = useState(false);
 
@@ -101,9 +100,9 @@ const MarmitaAdmin = (props) => {
 	}
 	  
     renderItem = ({ item }) => (
-         <View >
+         <View style = {{marginVertical: 0}}>
             <Card containerStyle={styles.listItem}>
-				<View>
+				<View style = {styles.items}>
 					<View style={styles.buttons}>
 						<Button 
 							buttonStyle={styles.button}
@@ -130,7 +129,7 @@ const MarmitaAdmin = (props) => {
 							onPress={() => deleteItem(item.idMarmita, item.tipoMarmita, item.valor)}
 						/>
 					</View>
-					<View>
+					<View style = {styles.texto}>
                         <Text style={{fontWeight:'bold',fontSize:16}}>{item.tipoMarmita}</Text>
 						<View></View>
 						<Text style={{fontWeight:'bold',fontSize:10}}> R$ {item.valor},00</Text>
@@ -210,7 +209,8 @@ const MarmitaAdmin = (props) => {
 						<ScrollView>
 							<Card containerStyle={stylesModal.card}>
 								<View style={{justifyContent:'center',alignItems:'center'}}>
-								<Text style={stylesModal.title}>Cadastrar Marmita</Text>
+								{!cadastrando && <Text style={stylesModal.title}>Editar Marmita</Text>}
+								{cadastrando && <Text style={stylesModal.title}>Cadastrar Marmita</Text>}
 								<Text style={stylesModal.inputTitle}>Tipo</Text>
 								<Picker
 									selectedValue={tipoMarmita}
@@ -279,7 +279,7 @@ const MarmitaAdmin = (props) => {
 			</Modal>
 			{!load && 
 				<FlatList
-					style={{ marginTop: 10 }}
+					style={{ marginTop: 24 }}
 					contentContainerStyle={styles.list}
 					data={data}
 					renderItem={renderItem}
@@ -370,15 +370,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         backgroundColor: '#FEFEFE'
 	},
-	nome: {
-		color: '#000000',
-		fontSize: 18,
-		marginBottom: 15
-	},
-	categoria: {
-		color: '#000000',
-		fontSize: 9
-	},
 	button: {
 		backgroundColor: '#FFF',
 		borderRadius: 100,
@@ -389,19 +380,34 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 	},
 	buttons: {
+		width: '30%',
 		flexDirection: 'row',
-		justifyContent: 'flex-end'
+		justifyContent: 'flex-end',
+		paddingRight: 3
 	},
 	list: {
 		paddingTop: 10,
 		paddingHorizontal: 16
 	},
+	items:{
+		flexDirection:'row-reverse',
+		width:'100%',
+		aspectRatio: 4/1
+	},
+	texto:
+	{	alignItems:'flex-start',
+		flexDirection:'column',
+		justifyContent:'flex-end',
+		width: '70%'
+	},
 	listItem: {
+		marginTop:0,
+		marginBottom:9,
 		backgroundColor: '#FFF',
 		borderColor: '#FFF',
 		elevation:6,
 		shadowOffset: { width: 5, height: 5 },
-		shadowColor: "black",
+		shadowColor: 'black',
 		shadowOpacity: 0.5,
 		shadowRadius: 10
 	},
@@ -420,17 +426,6 @@ const styles = StyleSheet.create({
 		height: 70,
 		backgroundColor: '#0f6124',
 		borderRadius: 100
-	},
-	header:{
-		backgroundColor: '#0f6124',
-		justifyContent: 'space-around',
-		height:56
-	},
-	tileHeader:{
-		color: '#FFF',
-		fontFamily: 'Roboto-Thin',
-		fontSize:20,
-		marginBottom:25
 	}
 });
 	
