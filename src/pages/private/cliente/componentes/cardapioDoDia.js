@@ -40,7 +40,7 @@ const CardapioDoDia = props => {
     }
 
     function vazio(obj) {
-        return Object.entries(obj).length === 0 && obj.constructor === Object;
+        return obj==null || Object.entries(obj).length === 0 && obj.constructor === Object;
     }
 
     function Item({ title, produtos }) {
@@ -83,7 +83,7 @@ const CardapioDoDia = props => {
     } else {
         return (
             <View style={{ padding: 10 }}>
-                <Text style={{ fontSize: 20, textAlign: "center" }}>Desculpe, mas ainda não temos o cardápio.</Text>
+                <Text style={{ fontSize: 20, textAlign: "center" }}>Desculpe, mas ainda não temos um cardápio disponível.</Text>
             </View>
         );
     }

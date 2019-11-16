@@ -8,6 +8,7 @@ import {
     ProgressBarAndroid,
     Text,
     Modal,
+    ToastAndroid,
 } from 'react-native'
 import { Button, Card } from 'react-native-elements';
 
@@ -18,8 +19,6 @@ import { USER_CURRENTY } from '../../../../services/key'
 import IconMaterial from 'react-native-vector-icons/FontAwesome';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-import { SelectMultiple } from "../../../../components/SelectMultiple";
-
 import Cardapio from './componentes/Cardapio';
 import CardapioAdmin  from './CardapioAdmin';
 
@@ -28,7 +27,10 @@ const CardapioMain = (props) => {
     const [cardapioDoDia, setCardapioDoDia] = useState([]);
     const [loading, setLoading] = useState(false);
     const [load, setLoad] = useState(false);
-	const [modalVisible,setModalVisible] = useState(false);
+    const [modalVisible,setModalVisible] = useState(false);
+    const [liberado,setLiberado] = useState(false);
+    const [loadingLiberar, setLoadingLiberar] = useState(false);
+    const [loadingBloquear,setLoadingBloquear] = useState(false);
 
     useEffect(() => {
         loadInit();
@@ -38,12 +40,12 @@ const CardapioMain = (props) => {
         setLoading(true);
         let usuario = await find(USER_CURRENTY);
 
-        const response = await api.get('/protegido/cardapio/ultimo', {
+        const response = await api.get('/protegido/cardapio/ultimoAdmin', {
             headers: { Authorization: usuario.token }
         });
-        console.log(response.data.categorias);
         setData(response.data.data);
         setCardapioDoDia(response.data.categorias);
+        setLiberado(response.data.liberado);
         setLoading(false);
     }
 
@@ -59,9 +61,37 @@ const CardapioMain = (props) => {
         <Cardapio title={item.nome} produtos={item.produtos} />
     )
 
+    handler_bloquear = async () => {
+        setLoadingBloquear(true);
+        let usuario = await find(USER_CURRENTY);
+
+        const response = await api.get('/protegido/cardapio/bloquear', {
+            headers: { Authorization: usuario.token }
+        });
+        setLoadingBloquear(false);
+        loadInit();
+        ToastAndroid.show("Cardápio bloqueado para realização de pedidos!",ToastAndroid.LONG);
+    }
+
+    handler_liberar = async () => {
+        setLoadingLiberar(true);
+        let usuario = await find(USER_CURRENTY);
+
+        const response = await api.get('/protegido/cardapio/liberar', {
+            headers: { Authorization: usuario.token }
+        });
+        setLoadingLiberar(false);
+        loadInit();
+        ToastAndroid.show("Cardápio liberado para realização de pedidos!",ToastAndroid.LONG);
+    }
+    vazio = (obj) => {
+        return obj==null || Object.entries(obj).length === 0 && obj.constructor === Object;
+    }
+
     return (
         <View style={ styles.mainContainer }>
-            <MenuButton navigation={props.navigation} title='Cardápio'/>
+            <MenuButton navigation={props.navigation} title='Cardápio do dia'/>
+            
             <View style={ styles.mainContainer }>
                 <Modal
                     style = {stylesModal.modal}
@@ -80,7 +110,7 @@ const CardapioMain = (props) => {
                         </Card>
                     </View>
 			    </Modal>
-                {!loading && 
+                {!loading &&
                 <ScrollView>
                     <FlatList
                         style={{ marginTop: 50 }}
@@ -89,8 +119,26 @@ const CardapioMain = (props) => {
                         renderItem={renderItem}
                         keyExtractor={c => c.nome.toString()}
                         ListFooterComponent={View}
-					    ListFooterComponentStyle={{height:100}}
+					    ListFooterComponentStyle={{height:60}}
                     />
+                    <View style={styles.forgotContainer}>
+                            {!liberado && <Button 
+                                title='Liberar'
+                                buttonStyle={styles.buttonLiberar}
+                                onPress={handler_liberar}  
+                                titleStyle={styles.titleStyle} 
+                                loading={loadingLiberar}
+                            />
+                            }{liberado &&
+                            <Button 
+                                title='Bloquear'
+                                buttonStyle={styles.buttonBloquear}
+                                onPress={handler_bloquear}  
+                                titleStyle={styles.titleStyle} 
+                                loading={loadingBloquear}
+                            />
+                            }
+                        </View>
                 </ScrollView>
                 }{loading && <ProgressBarAndroid />}
             </View>
@@ -209,6 +257,18 @@ const styles = StyleSheet.create({
     list: {
 		paddingHorizontal: 20,
     },
+    buttonLiberar: {
+		marginTop: 10,
+        backgroundColor: '#0f6124',
+        width: 115,
+        marginBottom:50
+    },
+    buttonBloquear: {
+		marginTop: 10,
+        backgroundColor: '#82080a',
+        width: 115,
+        marginBottom:50
+	}
 });
 
 export default CardapioMain;
