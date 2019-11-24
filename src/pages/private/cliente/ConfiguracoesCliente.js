@@ -34,6 +34,8 @@ const ConfiguracoesCliente = (props) => {
     const [senhaAtual, setSenhaAtual] = useState('');
     const [novaSenha2, setNovaSenha2] = useState('');
 
+    const [loadingAtualizar,setLoadingAtualizar] = useState(false); 
+
     useEffect(() => {
         carregarDados();
     }, []);
@@ -43,7 +45,8 @@ const ConfiguracoesCliente = (props) => {
         setUserDados(userDadosRet);
     }
 
-    enviaDados = async () => {
+    atualizaDados = async () => {
+        setLoadingAtualizar(true);
         /*
          O usuario pode alterar quantos dados quiser, exceto o E-mail, caso ele
          decida alterar só um, como o nome, os outros parâmetros são preenchidos
@@ -71,7 +74,7 @@ const ConfiguracoesCliente = (props) => {
         }
 
         // Verifica se algum dado foi digitado.
-        if (telefone != '' || nome != '' || endereco != '') {
+       if (telefone != '' || nome != '' || endereco != '') {
 
             try {
                 const response = await api.post('/protegido/cliente/atualizar',
@@ -106,6 +109,7 @@ const ConfiguracoesCliente = (props) => {
         } else {
             ToastAndroid.show('Insira algum dado para alterar!', ToastAndroid.SHORT);
         }
+        setLoadingAtualizar(false);
     }
 
     enviaDados = async () => {
@@ -327,14 +331,15 @@ const ConfiguracoesCliente = (props) => {
                                 <Button
                                     buttonStyle={styles.button}
                                     title='Alterar senha'
-                                    onPress={_ => {lancaNotificacao('Titulo teste', 'Testando notificação', 2)}} //setModalVisible(true)
+                                    onPress={_ => {setModalVisible(true)}} //lancaNotificacao('Titulo teste', 'Testando notificação', 2)
                                     titleStyle={styles.titleStyle}
                                 />
                                 <Button
                                     buttonStyle={styles.button}
                                     title='Atualizar'
-                                    onPress={enviaDados}
+                                    onPress={atualizaDados}
                                     titleStyle={styles.titleStyle}
+                                    loading = {loadingAtualizar}
                                 />
 
                             </View>
